@@ -23,11 +23,8 @@ private:
 		D3DXMATRIX projection;
 	};
 
-	void InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
-
 	void SetShaderParameters(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX);
-	void RenderShader(ID3D11DeviceContext*, int);
 
 	ID3D11VertexShader* vertexShader;
 	ID3D11PixelShader* pixelShader;

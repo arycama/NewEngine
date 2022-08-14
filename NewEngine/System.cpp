@@ -3,8 +3,7 @@
 System::System()
 {
 	// Initialize the widht and height of the screen to zero before sending the variables into the function.
-	int screenWidth = 0;
-	int screenHeight = 0;
+	int screenWidth = 0, screenHeight = 0;
 
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);

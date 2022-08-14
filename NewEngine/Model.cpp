@@ -5,10 +5,8 @@ Model::Model(ID3D11Device* device)
 	vertexCount = 3;
 	indexCount = 3;
 
-	VertexType* vertices = new VertexType[vertexCount];
-	unsigned long* indices = new unsigned long[indexCount];
-
 	// Load the vertex array with data.
+	auto vertices = new VertexType[vertexCount];
 	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
 	vertices[0].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
 
@@ -19,6 +17,7 @@ Model::Model(ID3D11Device* device)
 	vertices[2].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
 
 	// Load the index array with data.
+	auto indices = new unsigned long[indexCount];
 	indices[0] = 0;  // Bottom left.
 	indices[1] = 1;  // Top middle.
 	indices[2] = 2;  // Bottom right.
@@ -39,7 +38,7 @@ Model::Model(ID3D11Device* device)
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-	HRESULT result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
+	auto result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
 	if (FAILED(result))
 	{
 		throw "Create Buffer Failed";
@@ -81,7 +80,7 @@ Model::~Model()
 void Model::Render(ID3D11DeviceContext* deviceContext)
 {
 	// Set vertex buffer stride and offset.
-	UINT stride = sizeof(VertexType);
+	auto stride = sizeof(VertexType);
 	UINT offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.

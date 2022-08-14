@@ -5,19 +5,16 @@
 class Camera
 {
 public:
-	Camera();
-
-	void SetPosition(float, float, float);
-	void SetRotation(float, float, float);
+	Camera(D3DXVECTOR3 position, D3DXVECTOR3 rotation);
 
 	D3DXVECTOR3 GetPosition();
 	D3DXVECTOR3 GetRotation();
+	D3DXMATRIX GetViewMatrix();
 
 	void Render();
-	void GetViewMatrix(D3DXMATRIX&);
 
 private:
-	float positionX, positionY, positionZ;
-	float rotationX, rotationY, rotationZ;
+	D3DXVECTOR3 position;
+	D3DXVECTOR3 rotation;
 	D3DXMATRIX viewMatrix;
 };

@@ -3,7 +3,7 @@
 Input::Input()
 {
 	// Initialize all the keys to being released and not pressed.
-	for (int i = 0; i < 256; i++)
+	for (auto i = 0; i < 256; i++)
 	{
 		keys[i] = false;
 	}

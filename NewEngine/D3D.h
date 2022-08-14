@@ -17,16 +17,15 @@ public:
 	D3D(int, int, bool, HWND, bool, float, float);
 	~D3D();
 
-	void BeginScene(float, float, float, float);
-	void EndScene();
+	D3DXMATRIX GetProjectionMatrix();
+	D3DXMATRIX GetWorldMatrix();
+	D3DXMATRIX GetOrthoMatrix();
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
 
-	void GetProjectionMatrix(D3DXMATRIX&);
-	void GetWorldMatrix(D3DXMATRIX&);
-	void GetOrthoMatrix(D3DXMATRIX&);
-
+	void BeginScene(D3DXCOLOR);
+	void EndScene();
 	void GetVideoCardInfo(char*, int&);
 
 private:
@@ -41,8 +40,5 @@ private:
 	ID3D11DepthStencilState* depthStencilState;
 	ID3D11DepthStencilView* depthStencilView;
 	ID3D11RasterizerState* rasterState;
-	D3DXMATRIX projectionMatrix;
-	D3DXMATRIX worldMatrix;
-	D3DXMATRIX orthoMatrix;
+	D3DXMATRIX projectionMatrix, worldMatrix, orthoMatrix;
 };
-

@@ -325,28 +325,19 @@ D3D::~D3D()
 	swapChain->Release();
 }
 
-void D3D::BeginScene(float red, float green, float blue, float alpha)
+D3DXMATRIX D3D::GetProjectionMatrix()
 {
-	float color[4];
-
-	// Setup the color to clear the buffer to.
-	color[0] = red;
-	color[1] = green;
-	color[2] = blue;
-	color[3] = alpha;
-
-	// Clear the back buffer.
-	deviceContext->ClearRenderTargetView(renderTargetView, color);
-
-	// Clear the depth buffer.
-	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	return projectionMatrix;
 }
 
-void D3D::EndScene()
+D3DXMATRIX D3D::GetWorldMatrix()
 {
-	// Present the back buffer to the screen since rendering is complete.
-	int syncInterval = vsyncEnabled ? 1 : 0;
-	swapChain->Present(syncInterval, 0);
+	return worldMatrix;
+}
+
+D3DXMATRIX D3D::GetOrthoMatrix()
+{
+	return orthoMatrix;
 }
 
 ID3D11Device* D3D::GetDevice()
@@ -359,21 +350,20 @@ ID3D11DeviceContext* D3D::GetDeviceContext()
 	return deviceContext;
 }
 
-void D3D::GetProjectionMatrix(D3DXMATRIX& projectionMatrix)
+void D3D::BeginScene(D3DXCOLOR clearColor)
 {
-	projectionMatrix = this->projectionMatrix;
+	// Clear the back buffer.
+	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
+
+	// Clear the depth buffer.
+	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-
-void D3D::GetWorldMatrix(D3DXMATRIX& worldMatrix)
+void D3D::EndScene()
 {
-	worldMatrix = this->worldMatrix;
-}
-
-
-void D3D::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
-{
-	orthoMatrix = this->orthoMatrix;
+	// Present the back buffer to the screen since rendering is complete.
+	int syncInterval = vsyncEnabled ? 1 : 0;
+	swapChain->Present(syncInterval, 0);
 }
 
 void D3D::GetVideoCardInfo(char* cardName, int& memory)
