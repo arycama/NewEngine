@@ -25,12 +25,17 @@ PixelInputType ColorVertexShader(VertexInputType input)
 	input.position.w = 1.0f;
 
     // Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	output.position = mul(worldMatrix, input.position);
+	output.position = mul(viewMatrix, output.position);
+	output.position = mul(projectionMatrix, output.position);
     
     // Store the input color for the pixel shader to use.
 	output.color = input.color;
     
 	return output;
+}
+
+float4 ColorPixelShader(PixelInputType input) : SV_TARGET
+{
+	return input.color;
 }

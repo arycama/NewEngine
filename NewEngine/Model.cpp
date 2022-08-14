@@ -1,6 +1,6 @@
 #include "Model.h"
 
-Model::Model(ID3D11Device* device)
+Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 {
 	vertexCount = 3;
 	indexCount = 3;
@@ -8,13 +8,13 @@ Model::Model(ID3D11Device* device)
 	// Load the vertex array with data.
 	auto vertices = new VertexType[vertexCount];
 	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].uv = D3DXVECTOR2(0.0f, 1.0f);
 
 	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[1].uv = D3DXVECTOR2(0.5f, 0.0f);
 
 	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[2].uv = D3DXVECTOR2(1.0f, 1.0f);
 
 	// Load the index array with data.
 	auto indices = new unsigned long[indexCount];
@@ -69,12 +69,27 @@ Model::Model(ID3D11Device* device)
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete[] vertices;
 	delete[] indices;
+
+	// Load the texture for this model
+	texture = new Texture(device, textureFilename);
 }
 
 Model::~Model()
 {
 	vertexBuffer->Release();
 	indexBuffer->Release();
+
+	delete texture;
+}
+
+int Model::GetIndexCount()
+{
+	return indexCount;
+}
+
+ID3D11ShaderResourceView* Model::GetTexture()
+{
+	return texture->GetTexture();
 }
 
 void Model::Render(ID3D11DeviceContext* deviceContext)
@@ -91,9 +106,4 @@ void Model::Render(ID3D11DeviceContext* deviceContext)
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-int Model::GetIndexCount()
-{
-	return indexCount;
 }
