@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/NewEngine/v17
+/Debug
+/NewEngine/Debug
+/NewEngine/x64/Debug
+/x64/Debug
