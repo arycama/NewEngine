@@ -2,91 +2,52 @@
 
 System::System()
 {
-	input = 0;
-	graphics = 0;
-}
-
-System::System(const System& other)
-{
-}
-
-System::~System()
-{
-}
-
-bool System::Initialize()
-{
-	int screenWidth, screenHeight;
-	bool result;
-
 	// Initialize the widht and height of the screen to zero before sending the variables into the function.
-	screenWidth = 0;
-	screenHeight = 0;
+	int screenWidth = 0;
+	int screenHeight = 0;
 
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);
 
-	// Create the input object. This object will be used to handle reading the keyboard input from the user.
 	input = new Input();
-	if (!input)
-	{
-		return false;
-	}
-
-	// Initialize the input object.
-	input->Initialize();
-
-	// Crewate the grpahics object. this object will handle rendering all the graphics for this application
-	graphics = new Graphics();
-	if (!graphics)
-	{
-		return false;
-	}
-
-	// Initialize the graphics object
-	result = graphics->Initialize(screenWidth, screenHeight, hwnd);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
+	graphics = new Graphics(screenWidth, screenHeight, hwnd);
 }
 
-// The shutdown function does the clean up. It shuts down and releases everythign associated with the grahpics and input object. AS well it also shuts down the window and cleans up the handles associated with it.
-void System::Shutdown()
+System::~System()
 {
-	// Release the grahpics object
-	if (graphics)
-	{
-		graphics->Shutdown();
-		delete graphics;
-		graphics = 0;
-	}
-
-	// Release the input object
-	if (input)
-	{
-		delete input;
-		input = 0;
-	}
+	delete graphics;
+	delete input;
 
 	// Shutdown the window
-	ShutdownWindows();
+	// Show the mouse cursor.
+	ShowCursor(true);
 
-	return;
+	// Fix the display settings if leaving full screen mode.
+	if (FULL_SCREEN)
+	{
+		ChangeDisplaySettings(NULL, 0);
+	}
+
+	// Remove the window.
+	DestroyWindow(hwnd);
+	hwnd = NULL;
+
+	// Remove the application instance.
+	UnregisterClass(applicationName, hinstance);
+	hinstance = NULL;
+
+	// Release the pointer to this class.
+	applicationHandle = NULL;
 }
 
 void System::Run()
 {
-	MSG msg;
-	bool done, result;
-
 	// Initialize the message structure
+	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
 	// Loop until there is a quit mesage from the window or the user
-	done = false;
+	bool done = false;
 	while (!done)
 	{
 		// Handle the windows messages.
@@ -104,22 +65,17 @@ void System::Run()
 		else
 		{
 			// Otherwise do the frame processing
-			result = Frame();
+			bool result = Frame();
 			if (!result)
 			{
 				done = true;
 			}
 		}
 	}
-
-	return;
 }
 
 bool System::Frame()
 {
-	bool result;
-
-
 	// Check if the user pressed escape and wants to exit the application.
 	if (input->IsKeyDown(VK_ESCAPE))
 	{
@@ -127,13 +83,8 @@ bool System::Frame()
 	}
 
 	// Do the frame processing for the graphics object.
-	result = graphics->Frame();
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
+	bool result = graphics->Frame();
+	return result;
 }
 
 LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
@@ -166,11 +117,6 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 
 void System::InitializeWindows(int& screenWidth, int& screenHeight)
 {
-	WNDCLASSEX wc;
-	DEVMODE dmScreenSettings;
-	int posX, posY;
-
-
 	// Get an external pointer to this object.
 	applicationHandle = this;
 
@@ -181,6 +127,7 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	applicationName = L"Engine";
 
 	// Setup the windows class with default settings.
+	WNDCLASSEX wc;
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
@@ -201,10 +148,13 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
+	int posX, posY;
+
 	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
 	if (FULL_SCREEN)
 	{
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
+		DEVMODE dmScreenSettings;
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
 		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
@@ -241,33 +191,6 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 
 	// Hide the mouse cursor.
 	ShowCursor(false);
-
-	return;
-}
-
-void System::ShutdownWindows()
-{
-	// Show the mouse cursor.
-	ShowCursor(true);
-
-	// Fix the display settings if leaving full screen mode.
-	if (FULL_SCREEN)
-	{
-		ChangeDisplaySettings(NULL, 0);
-	}
-
-	// Remove the window.
-	DestroyWindow(hwnd);
-	hwnd = NULL;
-
-	// Remove the application instance.
-	UnregisterClass(applicationName, hinstance);
-	hinstance = NULL;
-
-	// Release the pointer to this class.
-	applicationHandle = NULL;
-
-	return;
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

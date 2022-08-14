@@ -11,11 +11,8 @@ class System
 {
 public:
 	System();
-	System(const System&);
 	~System();
 
-	bool Initialize();
-	void Shutdown();
 	void Run();
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
@@ -23,7 +20,6 @@ public:
 private:
 	bool Frame();
 	void InitializeWindows(int&, int&);
-	void ShutdownWindows();
 
 	LPCWSTR applicationName;
 	HINSTANCE hinstance;

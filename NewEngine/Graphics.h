@@ -2,7 +2,9 @@
 
 #include <windows.h>
 
-const bool FULL_SCREEN = false;
+#include "D3D.h"
+
+const bool FULL_SCREEN = true;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
@@ -10,14 +12,13 @@ const float SCREEN_NEAR = 0.1f;
 class Graphics
 {
 public:
-	Graphics();
-	Graphics(const Graphics&);
+	Graphics(int, int, HWND);
 	~Graphics();
 
-	bool Initialize(int, int, HWND);
-	void Shutdown();
 	bool Frame();
 
 private:
 	bool Render();
+
+	D3D* d3d;
 };
