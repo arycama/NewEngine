@@ -1,7 +1,6 @@
 #include "D3D.h"
 
-D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen,
-	float screenDepth, float screenNear)
+D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
 	// Store the vsync setting.
 	vsyncEnabled = vsync;
@@ -314,64 +313,21 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 D3D::~D3D()
 {
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
-	if (swapChain)
-	{
-		swapChain->SetFullscreenState(false, NULL);
-	}
+	swapChain->SetFullscreenState(false, NULL);
 
-	if (rasterState)
-	{
-		rasterState->Release();
-		rasterState = 0;
-	}
-
-	if (depthStencilView)
-	{
-		depthStencilView->Release();
-		depthStencilView = 0;
-	}
-
-	if (depthStencilState)
-	{
-		depthStencilState->Release();
-		depthStencilState = 0;
-	}
-
-	if (depthStencilBuffer)
-	{
-		depthStencilBuffer->Release();
-		depthStencilBuffer = 0;
-	}
-
-	if (renderTargetView)
-	{
-		renderTargetView->Release();
-		renderTargetView = 0;
-	}
-
-	if (deviceContext)
-	{
-		deviceContext->Release();
-		deviceContext = 0;
-	}
-
-	if (device)
-	{
-		device->Release();
-		device = 0;
-	}
-
-	if (swapChain)
-	{
-		swapChain->Release();
-		swapChain = 0;
-	}
+	rasterState->Release();
+	depthStencilView->Release();
+	depthStencilState->Release();
+	depthStencilBuffer->Release();
+	renderTargetView->Release();
+	deviceContext->Release();
+	device->Release();
+	swapChain->Release();
 }
 
 void D3D::BeginScene(float red, float green, float blue, float alpha)
 {
 	float color[4];
-
 
 	// Setup the color to clear the buffer to.
 	color[0] = red;
@@ -384,32 +340,19 @@ void D3D::BeginScene(float red, float green, float blue, float alpha)
 
 	// Clear the depth buffer.
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-	return;
 }
 
 void D3D::EndScene()
 {
 	// Present the back buffer to the screen since rendering is complete.
-	if (vsyncEnabled)
-	{
-		// Lock to screen refresh rate.
-		swapChain->Present(1, 0);
-	}
-	else
-	{
-		// Present as fast as possible.
-		swapChain->Present(0, 0);
-	}
-
-	return;
+	int syncInterval = vsyncEnabled ? 1 : 0;
+	swapChain->Present(syncInterval, 0);
 }
 
 ID3D11Device* D3D::GetDevice()
 {
 	return device;
 }
-
 
 ID3D11DeviceContext* D3D::GetDeviceContext()
 {
@@ -418,27 +361,23 @@ ID3D11DeviceContext* D3D::GetDeviceContext()
 
 void D3D::GetProjectionMatrix(D3DXMATRIX& projectionMatrix)
 {
-	projectionMatrix = projectionMatrix;
-	return;
+	projectionMatrix = this->projectionMatrix;
 }
 
 
 void D3D::GetWorldMatrix(D3DXMATRIX& worldMatrix)
 {
-	worldMatrix = worldMatrix;
-	return;
+	worldMatrix = this->worldMatrix;
 }
 
 
 void D3D::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
 {
-	orthoMatrix = orthoMatrix;
-	return;
+	orthoMatrix = this->orthoMatrix;
 }
 
 void D3D::GetVideoCardInfo(char* cardName, int& memory)
 {
 	strcpy_s(cardName, 128, videoCardDescription);
 	memory = videoCardMemory;
-	return;
 }

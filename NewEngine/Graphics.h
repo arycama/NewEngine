@@ -3,8 +3,11 @@
 #include <windows.h>
 
 #include "D3D.h"
+#include "Camera.h"
+#include "Model.h"
+#include "ColorShader.h"
 
-const bool FULL_SCREEN = true;
+const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
@@ -15,10 +18,11 @@ public:
 	Graphics(int, int, HWND);
 	~Graphics();
 
-	bool Frame();
+	void Frame();
 
 private:
-	bool Render();
-
 	D3D* d3d;
+	Camera* camera;
+	Model* model;
+	ColorShader* colorShader;
 };

@@ -83,8 +83,9 @@ bool System::Frame()
 	}
 
 	// Do the frame processing for the graphics object.
-	bool result = graphics->Frame();
-	return result;
+	graphics->Frame();
+
+	return true;
 }
 
 LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)

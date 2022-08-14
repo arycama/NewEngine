@@ -11,8 +11,6 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 
-#include <exception>
-
 class D3D
 {
 public:
