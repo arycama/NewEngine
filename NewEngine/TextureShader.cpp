@@ -1,4 +1,5 @@
 #include "TextureShader.h"
+
 using namespace DirectX;
 
 TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)

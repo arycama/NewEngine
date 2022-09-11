@@ -1,5 +1,9 @@
+#include <stdexcept>
+
 #include "Model.h"
+
 using namespace DirectX;
+using namespace std;
 
 Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 {
@@ -10,12 +14,15 @@ Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 	auto vertices = new VertexType[vertexCount];
 	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
 	vertices[0].uv = XMFLOAT2(0.0f, 1.0f);
+	vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
 	vertices[1].uv = XMFLOAT2(0.5f, 0.0f);
+	vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
 	vertices[2].uv = XMFLOAT2(1.0f, 1.0f);
+	vertices[2].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	// Load the index array with data.
 	auto indices = new unsigned long[indexCount];
@@ -41,9 +48,7 @@ Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 	// Now create the vertex buffer.
 	auto result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
 	if (FAILED(result))
-	{
-		throw "Create Buffer Failed";
-	}
+		throw runtime_error("Create Buffer Failed");
 
 	// Set up the description of the static index buffer.
 	D3D11_BUFFER_DESC indexBufferDesc;
@@ -63,9 +68,7 @@ Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 	// Create the index buffer.
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
 	if (FAILED(result))
-	{
-		throw "Create Buffer Failed";
-	}
+		throw runtime_error("Create Buffer Failed");
 
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete[] vertices;

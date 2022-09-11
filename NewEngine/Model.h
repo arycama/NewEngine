@@ -22,6 +22,7 @@ private:
 	{
 		DirectX::XMFLOAT3 position;
 		DirectX::XMFLOAT2 uv;
+		DirectX::XMFLOAT3 normal;
 	};
 
 	ID3D11Buffer *vertexBuffer, *indexBuffer;

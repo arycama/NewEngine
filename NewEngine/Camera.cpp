@@ -1,11 +1,13 @@
 #include "Camera.h"
+
 using namespace DirectX;
 
-Camera::Camera(XMFLOAT3 position, XMFLOAT3 rotation)
+Camera::Camera(XMFLOAT3 position, XMFLOAT3 rotation, Input* input)
 {
 	this->position = position;
 	this->rotation = rotation;
 	this->viewMatrix = XMMatrixIdentity();
+	this->input = input;
 }
 
 XMFLOAT3 Camera::GetPosition()
@@ -25,6 +27,22 @@ XMMATRIX Camera::GetViewMatrix()
 
 void Camera::Render()
 {
+	// W
+	if (input->IsKeyDown(0x57))
+		position.z += 0.1;
+
+	// S
+	if (input->IsKeyDown(0x53))
+		position.z -= 0.1;
+
+	// A
+	if (input->IsKeyDown(0x41))
+		position.x -= 0.1;
+
+	// D
+	if (input->IsKeyDown(0x44))
+		position.x += 0.1;
+
 	// Load it into a XMVECTOR structure.
 	auto up = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	auto upVector = XMLoadFloat3(&up);

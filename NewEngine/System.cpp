@@ -9,7 +9,7 @@ System::System()
 	InitializeWindows(screenWidth, screenHeight);
 
 	input = new Input();
-	graphics = new Graphics(screenWidth, screenHeight, hwnd);
+	graphics = new Graphics(screenWidth, screenHeight, hwnd, input);
 }
 
 System::~System()
