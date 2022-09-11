@@ -1,10 +1,12 @@
 #include "Graphics.h"
+using namespace DirectX;
+using namespace PackedVector;
 
 Graphics::Graphics(int screenWidth, int screenHeight, HWND hwnd)
 {
 	d3d = new D3D(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 
-	camera = new Camera(D3DXVECTOR3(0.0f, 0.0f, -10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	camera = new Camera(XMFLOAT3(0.0f, 0.0f, -10.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 	model = new Model(d3d->GetDevice(), L"../NewEngine/Data/seafloor.dds");
 	textureShader = new TextureShader(d3d->GetDevice(), hwnd);
 }
@@ -20,7 +22,7 @@ Graphics::~Graphics()
 void Graphics::Frame()
 {
 	// Clear the buffers to begin the scene.
-	d3d->BeginScene(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+	d3d->BeginScene(XMCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
 	// Generate the view matrix based on the camera's position.
 	camera->Render();

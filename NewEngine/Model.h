@@ -1,7 +1,7 @@
 #pragma once
 
 #include <d3d11.h>
-#include <d3dx10math.h>
+#include <directxmath.h>
 
 #include "Texture.h"
 
@@ -20,8 +20,8 @@ public:
 private:
 	struct VertexType
 	{
-		D3DXVECTOR3 position;
-		D3DXVECTOR2 uv;
+		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT2 uv;
 	};
 
 	ID3D11Buffer *vertexBuffer, *indexBuffer;

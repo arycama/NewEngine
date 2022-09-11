@@ -1,20 +1,21 @@
 #pragma once
 
-#include <d3dx10math.h>
+#include <d3d11.h>
+#include <directxmath.h>
 
 class Camera
 {
 public:
-	Camera(D3DXVECTOR3 position, D3DXVECTOR3 rotation);
+	Camera(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 rotation);
 
-	D3DXVECTOR3 GetPosition();
-	D3DXVECTOR3 GetRotation();
-	D3DXMATRIX GetViewMatrix();
+	DirectX::XMFLOAT3 GetPosition();
+	DirectX::XMFLOAT3 GetRotation();
+	DirectX::XMMATRIX GetViewMatrix();
 
 	void Render();
 
 private:
-	D3DXVECTOR3 position;
-	D3DXVECTOR3 rotation;
-	D3DXMATRIX viewMatrix;
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 rotation;
+	DirectX::XMMATRIX viewMatrix;
 };

@@ -6,10 +6,11 @@
 #pragma comment(lib, "d3dx11.lib")
 #pragma comment(lib, "d3dx10.lib")
 
-#include <dxgi.h>
-#include <d3dcommon.h>
-#include <d3d11.h>
-#include <d3dx10math.h>
+#include <DXGI.h>
+#include <D3DCommon.h>
+#include <D3D11.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
 
 class D3D
 {
@@ -17,14 +18,14 @@ public:
 	D3D(int, int, bool, HWND, bool, float, float);
 	~D3D();
 
-	D3DXMATRIX GetProjectionMatrix();
-	D3DXMATRIX GetWorldMatrix();
-	D3DXMATRIX GetOrthoMatrix();
+	DirectX::XMMATRIX GetProjectionMatrix();
+	DirectX::XMMATRIX GetWorldMatrix();
+	DirectX::XMMATRIX GetOrthoMatrix();
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
 
-	void BeginScene(D3DXCOLOR);
+	void BeginScene(DirectX::PackedVector::XMCOLOR);
 	void EndScene();
 	void GetVideoCardInfo(char*, int&);
 
@@ -40,5 +41,5 @@ private:
 	ID3D11DepthStencilState* depthStencilState;
 	ID3D11DepthStencilView* depthStencilView;
 	ID3D11RasterizerState* rasterState;
-	D3DXMATRIX projectionMatrix, worldMatrix, orthoMatrix;
+	DirectX::XMMATRIX projectionMatrix, worldMatrix, orthoMatrix;
 };

@@ -1,4 +1,6 @@
 #include "ColorShader.h"
+using namespace DirectX;
+using namespace std;
 
 ColorShader::ColorShader(ID3D11Device* device, HWND hwnd)
 {
@@ -117,7 +119,7 @@ ColorShader::~ColorShader()
 	pixelShader->Release();
 }
 
-void ColorShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix)
+void ColorShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	// Set the shader parameters that it will use for rendering.
 	SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
@@ -163,7 +165,7 @@ void ColorShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
 }
 
-void ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix)
+void ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	// Lock the constant buffer so it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedResource;

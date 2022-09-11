@@ -1,4 +1,6 @@
 #include "D3D.h"
+using namespace DirectX;
+using namespace PackedVector;
 
 D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
@@ -297,17 +299,17 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	deviceContext->RSSetViewports(1, &viewport);
 
 	// Setup the projection matrix.
-	float fieldOfView = (float)D3DX_PI / 4.0f;
+	float fieldOfView = XM_PIDIV4;
 	float screenAspect = (float)screenWidth / (float)screenHeight;
 
 	// Create the projection matrix for 3D rendering.
-	D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
+	projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
 
 	// Initialize the world matrix to the identity matrix.
-	D3DXMatrixIdentity(&worldMatrix);
+	worldMatrix = XMMatrixIdentity();
 
 	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&orthoMatrix, (float)screenWidth, (float)screenHeight, screenNear, screenDepth);
+	orthoMatrix = XMMatrixOrthographicLH(screenWidth, screenHeight, screenNear, screenDepth);
 }
 
 D3D::~D3D()
@@ -325,17 +327,17 @@ D3D::~D3D()
 	swapChain->Release();
 }
 
-D3DXMATRIX D3D::GetProjectionMatrix()
+XMMATRIX D3D::GetProjectionMatrix()
 {
 	return projectionMatrix;
 }
 
-D3DXMATRIX D3D::GetWorldMatrix()
+XMMATRIX D3D::GetWorldMatrix()
 {
 	return worldMatrix;
 }
 
-D3DXMATRIX D3D::GetOrthoMatrix()
+XMMATRIX D3D::GetOrthoMatrix()
 {
 	return orthoMatrix;
 }
@@ -350,10 +352,11 @@ ID3D11DeviceContext* D3D::GetDeviceContext()
 	return deviceContext;
 }
 
-void D3D::BeginScene(D3DXCOLOR clearColor)
+void D3D::BeginScene(XMCOLOR clearColor)
 {
 	// Clear the back buffer.
-	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
+	float clearValue[4] = { clearColor.r, clearColor.g, clearColor.b, clearColor.a };
+	deviceContext->ClearRenderTargetView(renderTargetView, clearValue);
 
 	// Clear the depth buffer.
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);

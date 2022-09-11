@@ -1,4 +1,5 @@
 #include "Model.h"
+using namespace DirectX;
 
 Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 {
@@ -7,14 +8,14 @@ Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 
 	// Load the vertex array with data.
 	auto vertices = new VertexType[vertexCount];
-	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].uv = D3DXVECTOR2(0.0f, 1.0f);
+	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
+	vertices[0].uv = XMFLOAT2(0.0f, 1.0f);
 
-	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].uv = D3DXVECTOR2(0.5f, 0.0f);
+	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
+	vertices[1].uv = XMFLOAT2(0.5f, 0.0f);
 
-	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].uv = D3DXVECTOR2(1.0f, 1.0f);
+	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
+	vertices[2].uv = XMFLOAT2(1.0f, 1.0f);
 
 	// Load the index array with data.
 	auto indices = new unsigned long[indexCount];
