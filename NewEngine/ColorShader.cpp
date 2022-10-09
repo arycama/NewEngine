@@ -1,13 +1,17 @@
+#include <fstream>
+#include <stdexcept>
+#include <d3dcompiler.h>
 #include "ColorShader.h"
-using namespace DirectX;
+
 using namespace std;
+using namespace DirectX;
 
 ColorShader::ColorShader(ID3D11Device* device, HWND hwnd)
 {
 	// Compile the vertex shader code.
 	WCHAR* shaderFilename = L"../NewEngine/Color.hlsl";
 	ID3D10Blob *vertexShaderBuffer, *errorMessage;
-	auto result = D3DX11CompileFromFile(shaderFilename, NULL, NULL, "ColorVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &vertexShaderBuffer, &errorMessage, NULL);
+	auto result = D3DCompileFromFile(shaderFilename, NULL, NULL, "ColorVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.
@@ -26,7 +30,7 @@ ColorShader::ColorShader(ID3D11Device* device, HWND hwnd)
 
 	// Compile the pixel shader code.
 	ID3D10Blob* pixelShaderBuffer;
-	result = D3DX11CompileFromFile(shaderFilename, NULL, NULL, "ColorPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &pixelShaderBuffer, &errorMessage, NULL);
+	result = D3DCompileFromFile(shaderFilename, NULL, NULL, "ColorPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.
