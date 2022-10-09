@@ -1,9 +1,10 @@
 #include "System.h"
 
+using namespace std;
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	auto system = new System();
+	unique_ptr<System> system(new System());
 	system->Run();
-	delete system;
 	return 0;
 }

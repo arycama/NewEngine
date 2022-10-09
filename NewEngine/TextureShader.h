@@ -5,8 +5,6 @@
 #include <d3dx11async.h>
 #include <fstream>
 
-using namespace std;
-
 class TextureShader
 {
 public:

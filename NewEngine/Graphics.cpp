@@ -40,7 +40,7 @@ void Graphics::Frame()
 	d3d->BeginScene(XMCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
 	// Generate the view matrix based on the camera's position.
-	camera->Render();
+	camera->Update();
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	model->Render(d3d->GetDeviceContext());

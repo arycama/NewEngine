@@ -2,6 +2,7 @@
 
 #include <d3d11.h>
 #include <directxmath.h>
+#include <memory>
 
 #include "Texture.h"
 
@@ -27,5 +28,5 @@ private:
 
 	ID3D11Buffer *vertexBuffer, *indexBuffer;
 	int vertexCount, indexCount;
-	Texture* texture;
+	std::unique_ptr<Texture> texture;
 };

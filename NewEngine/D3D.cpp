@@ -1,6 +1,12 @@
+#include <stdexcept>
+
 #include "D3D.h"
+#include "Utility.h"
+#include <memory>
+
 using namespace DirectX;
 using namespace PackedVector;
+using namespace std;
 
 D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
@@ -9,54 +15,39 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 
 	// Create a DirectX graphics interface factory.
 	IDXGIFactory* factory;
-	HRESULT result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
-	if (FAILED(result))
-	{
-		throw "Create DXGI Factory Failed";
-	}
+	auto result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+	Utility::ThrowIfFailed(result, "CreateDXGIFactory Failed");
 
 	// Use the factory to create an adapter for the primary graphics interface (video card).
 	IDXGIAdapter* adapter;
 	result = factory->EnumAdapters(0, &adapter);
-	if (FAILED(result))
-	{
-		throw "Enum Adapters Failed";
-	}
+	Utility::ThrowIfFailed(result, "EnumAdapters Failed");
 
 	// Enumerate the primary adapter output (monitor).
 	IDXGIOutput* adapterOutput;
 	result = adapter->EnumOutputs(0, &adapterOutput);
-	if (FAILED(result))
-	{
-		throw "Enum Outputs Failed";
-	}
+	Utility::ThrowIfFailed(result, "Enum Outputs Failed");
 
 	// Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
-	unsigned int numModes;
+	UINT numModes;
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
-	if (FAILED(result))
-	{
-		throw "Get Display Mode List Failed";
-	}
+	Utility::ThrowIfFailed(result, "GetDisplayModeList Failed");
 
 	// Create a list to hold all the possible display modes for this monitor/video card combination.
-	DXGI_MODE_DESC* displayModeList = new DXGI_MODE_DESC[numModes];
+	unique_ptr<DXGI_MODE_DESC[]> displayModeList(new DXGI_MODE_DESC[numModes]);
 
 	// Now fill the display mode list structures.
-	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
-	if (FAILED(result))
-	{
-		throw "Get Display Mode List Failed";
-	}
+	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList.get());
+	Utility::ThrowIfFailed(result, "Get Display Mode List Failed");
 
 	// Now go through all the display modes and find the one that matches the screen width and height.
 	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
 	unsigned int numerator, denominator;
-	for (unsigned int i = 0; i < numModes; i++)
+	for (auto i = 0; i < numModes; i++)
 	{
-		if (displayModeList[i].Width == (unsigned int)screenWidth)
+		if (displayModeList[i].Width == screenWidth)
 		{
-			if (displayModeList[i].Height == (unsigned int)screenHeight)
+			if (displayModeList[i].Height == screenHeight)
 			{
 				numerator = displayModeList[i].RefreshRate.Numerator;
 				denominator = displayModeList[i].RefreshRate.Denominator;
@@ -67,25 +58,16 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	// Get the adapter (video card) description.
 	DXGI_ADAPTER_DESC adapterDesc;
 	result = adapter->GetDesc(&adapterDesc);
-	if (FAILED(result))
-	{
-		throw "Get Adapter Description Failed";
-	}
+	Utility::ThrowIfFailed(result, "Get Adapter Description Failed");
 
 	// Store the dedicated video card memory in megabytes.
 	videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
 	// Convert the name of the video card to a character array and store it.
 	unsigned int stringLength;
-	int error = wcstombs_s(&stringLength, videoCardDescription, 128, adapterDesc.Description, 128);
+	auto error = wcstombs_s(&stringLength, videoCardDescription, 128, adapterDesc.Description, 128);
 	if (error != 0)
-	{
-		throw "Video Card Name Error";
-	}
-
-	// Release the display mode list.
-	delete[] displayModeList;
-	displayModeList = 0;
+		throw runtime_error("Video Card Name Error");
 
 	// Release the adapter output.
 	adapterOutput->Release();
@@ -136,14 +118,7 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	swapChainDesc.SampleDesc.Quality = 0;
 
 	// Set to full screen or windowed mode.
-	if (fullscreen)
-	{
-		swapChainDesc.Windowed = false;
-	}
-	else
-	{
-		swapChainDesc.Windowed = true;
-	}
+	swapChainDesc.Windowed = fullscreen ? false : true;
 
 	// Set the scan line ordering and scaling to unspecified.
 	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -162,24 +137,18 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1,
 		D3D11_SDK_VERSION, &swapChainDesc, &swapChain, &device, NULL, &deviceContext);
 	if (FAILED(result))
-	{
-		throw "Create Device and Swap Chain Failed";
-	}
+		throw runtime_error("Create Device and Swap Chain Failed");
 
 	// Get the pointer to the back buffer.
 	ID3D11Texture2D* backBufferPtr;
 	result = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 	if (FAILED(result))
-	{
-		throw "Get Buffer Failed";
-	}
+		throw runtime_error("Get Buffer Failed");
 
 	// Create the render target view with the back buffer pointer.
 	result = device->CreateRenderTargetView(backBufferPtr, NULL, &renderTargetView);
 	if (FAILED(result))
-	{
-		throw "Create RenderTargetView Failed";
-	}
+		throw runtime_error("Create RenderTargetView Failed");
 
 	// Release pointer to the back buffer as we no longer need it.
 	backBufferPtr->Release();
@@ -205,9 +174,7 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	// Create the texture for the depth buffer using the filled out description.
 	result = device->CreateTexture2D(&depthBufferDesc, NULL, &depthStencilBuffer);
 	if (FAILED(result))
-	{
-		throw "Create Texture2D Failed";
-	}
+		throw runtime_error("Create Texture2D Failed");
 
 	// Initialize the description of the stencil state.
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -237,9 +204,7 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	// Create the depth stencil state.
 	result = device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState);
 	if (FAILED(result))
-	{
-		throw "Create Depth Stencil State Failed";
-	}
+		throw runtime_error("Create Depth Stencil State Failed");
 
 	// Set the depth stencil state.
 	deviceContext->OMSetDepthStencilState(depthStencilState, 1);
@@ -256,9 +221,7 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	// Create the depth stencil view.
 	result = device->CreateDepthStencilView(depthStencilBuffer, &depthStencilViewDesc, &depthStencilView);
 	if (FAILED(result))
-	{
-		throw "Create Depth Stencil View Failed";
-	}
+		throw runtime_error("Create Depth Stencil View Failed");
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
@@ -279,9 +242,7 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	// Create the rasterizer state from the description we just filled out.
 	result = device->CreateRasterizerState(&rasterDesc, &rasterState);
 	if (FAILED(result))
-	{
-		throw "CreateRasterizerState Failed";
-	}
+		throw runtime_error("CreateRasterizerState Failed");
 
 	// Now set the rasterizer state.
 	deviceContext->RSSetState(rasterState);

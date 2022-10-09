@@ -15,9 +15,7 @@ LightShader::LightShader(ID3D11Device* device, HWND hwnd)
 	// Compile the vertex shader code.
 	auto result = D3DX11CompileFromFile(filename, NULL, NULL, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &vertexShaderBuffer, &errorMessage, NULL);
 	if (FAILED(result))
-	{
 		throw runtime_error("Vertex Shader Compilation Failed");
-	}
 
 	// Compile the pixel shader code.
 	result = D3DX11CompileFromFile(filename, NULL, NULL, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &pixelShaderBuffer, &errorMessage, NULL);

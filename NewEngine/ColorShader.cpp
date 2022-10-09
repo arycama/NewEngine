@@ -21,7 +21,7 @@ ColorShader::ColorShader(ID3D11Device* device, HWND hwnd)
 			MessageBox(hwnd, shaderFilename, L"Missing Shader File", MB_OK);
 		}
 
-		throw "Missing VertexShader File";
+		throw runtime_error("Missing VertexShader File");
 	}
 
 	// Compile the pixel shader code.
@@ -40,22 +40,18 @@ ColorShader::ColorShader(ID3D11Device* device, HWND hwnd)
 			MessageBox(hwnd, shaderFilename, L"Missing Shader File", MB_OK);
 		}
 
-		throw "Missing PixelShader File";
+		throw runtime_error("Missing PixelShader File");
 	}
 
 	// Create the vertex shader from the buffer.
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
 	if (FAILED(result))
-	{
-		throw "Create VertexShader Failed";
-	}
+		throw runtime_error("Create VertexShader Failed");
 
 	// Create the pixel shader from the buffer.
 	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
 	if (FAILED(result))
-	{
-		throw "Create PixelShader Failed";
-	}
+		throw runtime_error("Create PixelShader Failed");
 
 	// Now setup the layout of the data that goes into the shader.
 	// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
@@ -83,9 +79,7 @@ ColorShader::ColorShader(ID3D11Device* device, HWND hwnd)
 	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(),
 		vertexShaderBuffer->GetBufferSize(), &layout);
 	if (FAILED(result))
-	{
-		throw "Create InputLayout Failed";
-	}
+		throw runtime_error("Create InputLayout Failed");
 
 	// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
 	vertexShaderBuffer->Release();
@@ -106,9 +100,7 @@ ColorShader::ColorShader(ID3D11Device* device, HWND hwnd)
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	result = device->CreateBuffer(&matrixBufferDesc, NULL, &matrixBuffer);
 	if (FAILED(result))
-	{
-		throw "Create Buffer Failed";
-	}
+		throw runtime_error("Create Buffer Failed");
 }
 
 ColorShader::~ColorShader()
@@ -171,9 +163,7 @@ void ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATR
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	auto result = deviceContext->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
-	{
-		throw "Map Failed";
-	}
+		throw runtime_error("Map Failed");
 
 	// Get a pointer to the data in the constant buffer.
 	auto dataPtr = (MatrixBufferType*)mappedResource.pData;

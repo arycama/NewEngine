@@ -1,6 +1,7 @@
 #include "TextureShader.h"
 
 using namespace DirectX;
+using namespace std;
 
 TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 {
@@ -23,7 +24,7 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 			MessageBox(hwnd, shaderFilename, L"Missing Shader File", MB_OK);
 		}
 
-		throw "CompileFromFile Failed";
+		throw runtime_error("CompileFromFile Failed");
 	}
 
 	// Compile the pixel shader code.
@@ -43,18 +44,18 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 			MessageBox(hwnd, shaderFilename, L"Missing Shader File", MB_OK);
 		}
 
-		throw "CompileFromFile Failed";
+		throw runtime_error("CompileFromFile Failed");
 	}
 
 	// Create the vertex shader from the buffer.
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
 	if (FAILED(result))
-		throw "CreateVertexShader Failed";
+		throw runtime_error("CreateVertexShader Failed");
 
 	// Create the pixel shader from the buffer.
 	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
 	if (FAILED(result))
-		throw "CreatePixelShader Failed";
+		throw runtime_error("CreatePixelShader Failed");
 
 	// Create the vertex input layout description.
 	// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
@@ -81,7 +82,7 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 	// Create the vertex input layout.
 	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &layout);
 	if (FAILED(result))
-		throw "CreateInputLayout Failed";
+		throw runtime_error("CreateInputLayout Failed");
 
 	// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
 	vertexShaderBuffer->Release();
@@ -102,7 +103,7 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	result = device->CreateBuffer(&matrixBufferDesc, NULL, &matrixBuffer);
 	if (FAILED(result))
-		throw "CreateBuffer Failed";
+		throw runtime_error("CreateBuffer Failed");
 
 	// Create a texture sampler state description.
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -123,7 +124,7 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 	// Create the texture sampler state.
 	result = device->CreateSamplerState(&samplerDesc, &sampleState);
 	if (FAILED(result))
-		throw "CreateSamplerState Failed";
+		throw runtime_error("CreateSamplerState Failed");
 }
 
 TextureShader::~TextureShader()

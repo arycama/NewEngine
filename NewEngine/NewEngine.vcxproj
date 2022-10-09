@@ -143,6 +143,7 @@
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureShader.cpp" />
+    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="System.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Color.hlsl">

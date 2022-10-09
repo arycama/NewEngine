@@ -14,12 +14,11 @@ public:
 	DirectX::XMFLOAT3 GetRotation();
 	DirectX::XMMATRIX GetViewMatrix();
 
-	void Render();
+	void Update();
 
 private:
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
-	DirectX::XMMATRIX viewMatrix;
 
 	Input* input;
 };
