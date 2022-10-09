@@ -1,10 +1,12 @@
-#include "Utility.h"
 #include <stdexcept>
+#include <comdef.h>
+
+#include "Utility.h"
 
 using namespace std;
 
-void Utility::ThrowIfFailed(HRESULT hresult, const std::string& message)
+inline void Utility::ThrowIfFailed(HRESULT hr)
 {
-	if (FAILED(hresult))
-		throw runtime_error(message);
+	if (FAILED(hr))
+		throw _com_error(hr);
 }

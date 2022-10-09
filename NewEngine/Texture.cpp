@@ -1,14 +1,16 @@
+#include <comdef.h>
 #include <stdexcept>
+
+#include <DDSTextureLoader.h>
+
 #include "Texture.h"
 
 using namespace std;
+using namespace DirectX;
 
 Texture::Texture(ID3D11Device* device, WCHAR* filename)
 {
-	auto result = D3DX11CreateShaderResourceViewFromFile(device, filename, NULL, NULL, &texture, NULL);
-
-	if (FAILED(result))
-		throw runtime_error("SRV Creation Failed");
+	_com_util::CheckError(CreateDDSTextureFromFile(device, filename, NULL, &texture));
 }
 
 Texture::~Texture()

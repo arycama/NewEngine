@@ -2,8 +2,6 @@
 
 #include <d3d11.h>
 #include <directxmath.h>
-#include <d3dx11async.h>
-#include <fstream>
 
 class TextureShader
 {

@@ -2,8 +2,6 @@
 
 #include <D3D11.h>
 #include <DirectXMath.h>
-#include <D3DX11async.h>
-#include <fstream>
 
 class LightShader
 {

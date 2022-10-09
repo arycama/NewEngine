@@ -1,5 +1,11 @@
+#include <fstream>
 #include <stdexcept>
+
+#include <d3dcompiler.h>
+#include <comdef.h>
+
 #include "LightShader.h"
+#include "Utility.h"
 
 using namespace DirectX;
 using namespace std;
@@ -13,24 +19,16 @@ LightShader::LightShader(ID3D11Device* device, HWND hwnd)
 	ID3D10Blob* errorMessage, * vertexShaderBuffer, * pixelShaderBuffer;
 
 	// Compile the vertex shader code.
-	auto result = D3DX11CompileFromFile(filename, NULL, NULL, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &vertexShaderBuffer, &errorMessage, NULL);
-	if (FAILED(result))
-		throw runtime_error("Vertex Shader Compilation Failed");
+	_com_util::CheckError(D3DCompileFromFile(filename, NULL, NULL, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage));
 
 	// Compile the pixel shader code.
-	result = D3DX11CompileFromFile(filename, NULL, NULL, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &pixelShaderBuffer, &errorMessage, NULL);
-	if (FAILED(result))
-		throw runtime_error("Pixel Shader Compilation Failed");
+	_com_util::CheckError(D3DCompileFromFile(filename, NULL, NULL, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage));
 
 	// Create the vertex shader from the buffer.
-	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
-	if (FAILED(result))
-		throw runtime_error("Vertex Shader Creation Failed");
+	_com_util::CheckError(device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader));
 
 	// Create the pixel shader from the buffer.
-	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
-	if (FAILED(result))
-		throw runtime_error("Pixel Shader Creation Failed");
+	_com_util::CheckError(device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader));
 
 	// Create the vertex input layout description.
 	// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
@@ -63,9 +61,7 @@ LightShader::LightShader(ID3D11Device* device, HWND hwnd)
 	auto numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	// Create the vertex input layout.
-	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &layout);
-	if (FAILED(result))
-		throw runtime_error("Input Layout Creation Failed");
+	_com_util::CheckError(device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &layout));
 
 	// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
 	vertexShaderBuffer->Release();
@@ -91,9 +87,7 @@ LightShader::LightShader(ID3D11Device* device, HWND hwnd)
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// Create the texture sampler state.
-	result = device->CreateSamplerState(&samplerDesc, &samplerState);
-	if (FAILED(result))
-		throw runtime_error("CreateSamplerState Failed");
+	_com_util::CheckError(device->CreateSamplerState(&samplerDesc, &samplerState));
 
 	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
 	D3D11_BUFFER_DESC matrixBufferDesc;
@@ -105,9 +99,7 @@ LightShader::LightShader(ID3D11Device* device, HWND hwnd)
 	matrixBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&matrixBufferDesc, NULL, &matrixBuffer);
-	if (FAILED(result))
-		throw runtime_error("CreateBuffer Failed");
+	_com_util::CheckError(device->CreateBuffer(&matrixBufferDesc, NULL, &matrixBuffer));
 
 	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
 	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
@@ -120,9 +112,7 @@ LightShader::LightShader(ID3D11Device* device, HWND hwnd)
 	lightBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&lightBufferDesc, NULL, &lightBuffer);
-	if (FAILED(result))
-		throw runtime_error("CreateBuffer Failed");
+	_com_util::CheckError(device->CreateBuffer(&lightBufferDesc, NULL, &lightBuffer));
 }
 
 LightShader::~LightShader()
@@ -138,7 +128,7 @@ LightShader::~LightShader()
 bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT3 diffuseColor)
 {
 	// Set the shader parameters that it will use for rendering.
-	bool result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
+	auto result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
 	if (!result)
 	{
 		return false;
@@ -154,11 +144,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATR
 {
 	// Lock the constant buffer so it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	auto result = deviceContext->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-	{
-		return false;
-	}
+	_com_util::CheckError(deviceContext->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
 	// Get a pointer to the data in the constant buffer.
 	auto dataPtr = (MatrixBuffer*)mappedResource.pData;
@@ -179,11 +165,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATR
 	deviceContext->PSSetShaderResources(0, 1, &texture);
 
 	// Lock the light constant buffer so it can be written to.
-	result = deviceContext->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-	{
-		return false;
-	}
+	_com_util::CheckError(deviceContext->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
 	// Get a pointer to the data in the constant buffer.
 	auto dataPtr2 = (LightBuffer*)mappedResource.pData;

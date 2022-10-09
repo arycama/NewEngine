@@ -1,3 +1,5 @@
+#include <fstream>
+#include <d3dcompiler.h>
 #include "TextureShader.h"
 
 using namespace DirectX;
@@ -9,8 +11,8 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 
 	// Compile the vertex shader code.
 	ID3D10Blob *errorMessage, *vertexShaderBuffer;
-	auto result = D3DX11CompileFromFile(shaderFilename, NULL, NULL, "TextureVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL,
-		&vertexShaderBuffer, &errorMessage, NULL);
+	auto result = D3DCompileFromFile(shaderFilename, NULL, NULL, "TextureVertexShader", "vs_5_0", 0, 0,
+		&vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.
@@ -29,8 +31,8 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 
 	// Compile the pixel shader code.
 	ID3D10Blob* pixelShaderBuffer;
-	result = D3DX11CompileFromFile(shaderFilename, NULL, NULL, "TexturePixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL,
-		&pixelShaderBuffer, &errorMessage, NULL);
+	result = D3DCompileFromFile(shaderFilename, NULL, NULL, "TexturePixelShader", "ps_5_0", 0, 0,
+		&pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.

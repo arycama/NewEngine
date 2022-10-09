@@ -6,6 +6,6 @@
 class Utility
 {
 public:
-	static void ThrowIfFailed(HRESULT hresult, const std::string& message);
+	inline static void ThrowIfFailed(HRESULT hresult);
 };
 

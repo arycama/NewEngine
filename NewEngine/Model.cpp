@@ -1,5 +1,6 @@
-#include <stdexcept>
 #include <memory>
+#include <stdexcept>
+#include <comdef.h>
 
 #include "Model.h"
 #include "Utility.h"
@@ -41,8 +42,7 @@ Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-	auto result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
-	Utility::ThrowIfFailed(result, "Create Buffer Failed");
+	_com_util::CheckError(device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer));
 
 	indexCount = 3;
 
@@ -68,8 +68,7 @@ Model::Model(ID3D11Device* device, WCHAR* textureFilename)
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
-	Utility::ThrowIfFailed(result, "Create Buffer Failed");
+	_com_util::CheckError(device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer));
 
 	// Load the texture for this model
 	texture = unique_ptr<Texture>(new Texture(device, textureFilename));
