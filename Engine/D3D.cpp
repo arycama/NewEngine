@@ -3,8 +3,9 @@
 
 #include "D3D.h"
 
-using namespace DirectX;
 using namespace std;
+using namespace DirectX;
+using namespace Microsoft::WRL;
 
 D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen,	float screenDepth, float screenNear)
 {
@@ -142,7 +143,6 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	_com_util::CheckError(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr));
 
 	// Create the render target view with the back buffer pointer.
-	renderTargetView = 0;
 	_com_util::CheckError(device->CreateRenderTargetView(backBufferPtr, NULL, &renderTargetView));
 
 	// Release pointer to the back buffer as we no longer need it.
@@ -167,9 +167,7 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	depthBufferDesc.MiscFlags = 0;
 
 	// Create the texture for the depth buffer using the filled out description.
-	ID3D11Texture2D* depthStencilBuffer;
 	_com_util::CheckError(device->CreateTexture2D(&depthBufferDesc, NULL, &depthStencilBuffer));
-	this->depthStencilBuffer = unique_ptr<ID3D11Texture2D>(depthStencilBuffer);
 
 	// Initialize the description of the stencil state.
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -197,12 +195,10 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create the depth stencil state.
-	ID3D11DepthStencilState* depthStencilState;
 	_com_util::CheckError(device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
-	this->depthStencilState = unique_ptr<ID3D11DepthStencilState>(depthStencilState);
 
 	// Set the depth stencil state.
-	deviceContext->OMSetDepthStencilState(this->depthStencilState.get(), 1);
+	deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
 
 	// Initialize the depth stencil view.
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -214,32 +210,22 @@ D3D::D3D(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscre
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
-	ID3D11DepthStencilView* depthStencilView;
-	_com_util::CheckError(device->CreateDepthStencilView(this->depthStencilBuffer.get(), &depthStencilViewDesc, &depthStencilView));
-	this->depthStencilView = unique_ptr<ID3D11DepthStencilView>(depthStencilView);
+	_com_util::CheckError(device->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, &depthStencilView));
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	deviceContext->OMSetRenderTargets(1, &renderTargetView, this->depthStencilView.get());
+	deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView.Get());
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
 	auto rasterDesc = D3D11_RASTERIZER_DESC	{ D3D11_FILL_SOLID, D3D11_CULL_BACK, false, 0, 0.0f, 0.0f, true, false, false, false };
 
 	// Create the rasterizer state from the description we just filled out.
-	ID3D11RasterizerState* rasterState;
 	_com_util::CheckError(device->CreateRasterizerState(&rasterDesc, &rasterState));
-	this->rasterState = unique_ptr<ID3D11RasterizerState>(rasterState);
 
 	// Now set the rasterizer state.
-	deviceContext->RSSetState(this->rasterState.get());
+	deviceContext->RSSetState(rasterState.Get());
 
 	// Setup the viewport for rendering.
-	D3D11_VIEWPORT viewport;
-	viewport.Width = (float)screenWidth;
-	viewport.Height = (float)screenHeight;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0.0f;
-	viewport.TopLeftY = 0.0f;
+	auto viewport = D3D11_VIEWPORT { 0.0f, 0.0f, (FLOAT)screenWidth, (FLOAT)screenHeight, 0.0f, 1.0f };
 
 	// Create the viewport.
 	deviceContext->RSSetViewports(1, &viewport);
@@ -305,7 +291,7 @@ void D3D::BeginScene(float red, float green, float blue, float alpha)
 	deviceContext->ClearRenderTargetView(renderTargetView, color);
     
 	// Clear the depth buffer.
-	deviceContext->ClearDepthStencilView(depthStencilView.get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	return;
 }

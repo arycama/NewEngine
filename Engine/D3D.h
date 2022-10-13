@@ -7,6 +7,7 @@
 #include <memory>
 #include <d3d11.h>
 #include <directxmath.h>
+#include <wrl/client.h>
 
 class D3D
 {
@@ -35,10 +36,11 @@ private:
 	ID3D11Device* device;
 	ID3D11DeviceContext* deviceContext;
 	ID3D11RenderTargetView* renderTargetView;
-	std::unique_ptr<ID3D11Texture2D> depthStencilBuffer;
-	std::unique_ptr<ID3D11DepthStencilState> depthStencilState;
-	std::unique_ptr<ID3D11DepthStencilView> depthStencilView;
-	std::unique_ptr<ID3D11RasterizerState> rasterState;
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
 
 	DirectX::XMMATRIX projectionMatrix;
 	DirectX::XMMATRIX worldMatrix;
