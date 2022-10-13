@@ -2,9 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs
-/Debug
-/NewEngine/Debug
-/NewEngine/x64/Debug
+/.vs/Engine/v17/ipch/AutoPCH
+/.vs/Engine/v17
+/Engine/x64/Debug
 /x64/Debug
-/packages
+/.vs/Engine/FileContentIndex
+/.vs
