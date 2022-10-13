@@ -9,7 +9,7 @@ System::System()
 	ApplicationHandle = this;
 
 	// Get the instance of this application.
-	hinstance = GetModuleHandle(NULL);
+	hinstance = GetModuleHandle(nullptr);
 
 	// Give the application a name.
 	applicationName = L"Engine";
@@ -21,11 +21,11 @@ System::System()
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = hinstance;
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+	wc.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
 	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName = NULL;
+	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = applicationName;
 	wc.cbSize = sizeof(WNDCLASSEX);
 
@@ -45,8 +45,8 @@ System::System()
 		DEVMODE dmScreenSettings;
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
-		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
+		dmScreenSettings.dmPelsWidth = static_cast<unsigned long>(screenWidth);
+		dmScreenSettings.dmPelsHeight = static_cast<unsigned long>(screenHeight);
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -68,9 +68,7 @@ System::System()
 	}
 
 	// Create the window with the screen settings and get the handle to it.
-	hwnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-		posX, posY, screenWidth, screenHeight, NULL, NULL, hinstance, NULL);
+	hwnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, posX, posY, screenWidth, screenHeight, nullptr, nullptr, hinstance, nullptr);
 
 	// Bring the window up on the screen and set it as main focus.
 	ShowWindow(hwnd, SW_SHOW);
@@ -81,10 +79,10 @@ System::System()
 	ShowCursor(false);
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
-	input = unique_ptr<Input>(new Input);
+	input = make_unique<Input>();
 
 	// Create and initialize the graphics object.  This object will handle rendering all the graphics for this application.
-	graphics = unique_ptr<Graphics>(new Graphics(screenWidth, screenHeight, hwnd));
+	graphics = make_unique<Graphics>(screenWidth, screenHeight, hwnd);
 }
 
 System::~System()
@@ -95,22 +93,22 @@ System::~System()
 	// Fix the display settings if leaving full screen mode.
 	if (FULL_SCREEN)
 	{
-		ChangeDisplaySettings(NULL, 0);
+		ChangeDisplaySettings(nullptr, 0);
 	}
 
 	// Remove the window.
 	DestroyWindow(hwnd);
-	hwnd = NULL;
+	hwnd = nullptr;
 
 	// Remove the application instance.
 	UnregisterClass(applicationName, hinstance);
-	hinstance = NULL;
+	hinstance = nullptr;
 
 	// Release the pointer to this class.
-	ApplicationHandle = NULL;
+	ApplicationHandle = nullptr;
 }
 
-void System::Run()
+void System::Run() const
 {
 	auto quit = false;
 
@@ -119,7 +117,7 @@ void System::Run()
 	{
 		// Handle the windows messages.
 		MSG msg;
-		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		if(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -137,7 +135,7 @@ void System::Run()
 	} while (!quit);
 }
 
-LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK System::MessageHandler(const HWND hwnd, const UINT umsg, const WPARAM wparam, const LPARAM lparam) const
 {
 	switch(umsg)
 	{
@@ -145,7 +143,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 		case WM_KEYDOWN:
 		{
 			// If a key is pressed send it to the input object so it can record that state.
-			input->KeyDown((unsigned int)wparam);
+			input->KeyDown(static_cast<unsigned int>(wparam));
 			return 0;
 		}
 
@@ -153,7 +151,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 		case WM_KEYUP:
 		{
 			// If a key is released then send it to the input object so it can unset the state for that key.
-			input->KeyUp((unsigned int)wparam);
+			input->KeyUp(static_cast<unsigned int>(wparam));
 			return 0;
 		}
 

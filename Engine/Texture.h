@@ -1,12 +1,21 @@
 #pragma once
 
 #include <d3d11.h>
-#include <stdio.h>
-#include <string>
+#include <wrl/client.h>
 
 class Texture
 {
+public:
+	Texture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename);
+
+	ID3D11ShaderResourceView* GetTexture() const;
+
 private:
+	void LoadTarga(const char*, int&, int&);
+	unsigned char* targaData;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureView;
+
 	struct TargaHeader
 	{
 		unsigned char data1[12];
@@ -15,21 +24,4 @@ private:
 		unsigned char bpp;
 		unsigned char data2;
 	};
-
-public:
-	Texture();
-	~Texture();
-
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const char*);
-	void Shutdown();
-
-	ID3D11ShaderResourceView* GetTexture();
-
-private:
-	bool LoadTarga(const char*, int&, int&);
-
-private:
-	unsigned char* m_targaData;
-	ID3D11Texture2D* m_texture;
-	ID3D11ShaderResourceView* m_textureView;
 };

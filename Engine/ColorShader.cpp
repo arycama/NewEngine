@@ -7,10 +7,10 @@ using namespace DirectX;
 
 ColorShader::ColorShader()
 {
-	m_vertexShader = 0;
-	m_pixelShader = 0;
-	m_layout = 0;
-	m_matrixBuffer = 0;
+	m_vertexShader = nullptr;
+	m_pixelShader = nullptr;
+	m_layout = nullptr;
+	m_matrixBuffer = nullptr;
 }
 
 ColorShader::ColorShader(const ColorShader& other)
@@ -95,12 +95,12 @@ bool ColorShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 
 	// Initialize the pointers this function will use to null.
-	errorMessage = 0;
-	vertexShaderBuffer = 0;
-	pixelShaderBuffer = 0;
+	errorMessage = nullptr;
+	vertexShaderBuffer = nullptr;
+	pixelShaderBuffer = nullptr;
 
     // Compile the vertex shader code.
-	result = D3DCompileFromFile(vsFilename, NULL, NULL, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(vsFilename, nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 								&vertexShaderBuffer, &errorMessage);
 	if(FAILED(result))
 	{
@@ -119,7 +119,7 @@ bool ColorShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	}
 
     // Compile the pixel shader code.
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(psFilename, nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 								&pixelShaderBuffer, &errorMessage);
 	if(FAILED(result))
 	{
@@ -138,14 +138,14 @@ bool ColorShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	}
 
     // Create the vertex shader from the buffer.
-    result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
+    result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &m_vertexShader);
 	if(FAILED(result))
 	{
 		return false;
 	}
 
     // Create the pixel shader from the buffer.
-    result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
+    result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, &m_pixelShader);
 	if(FAILED(result))
 	{
 		return false;
@@ -182,10 +182,10 @@ bool ColorShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 	// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
 	vertexShaderBuffer->Release();
-	vertexShaderBuffer = 0;
+	vertexShaderBuffer = nullptr;
 
 	pixelShaderBuffer->Release();
-	pixelShaderBuffer = 0;
+	pixelShaderBuffer = nullptr;
 
     // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
     matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -196,7 +196,7 @@ bool ColorShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	matrixBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+	result = device->CreateBuffer(&matrixBufferDesc, nullptr, &m_matrixBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -212,28 +212,28 @@ void ColorShader::ShutdownShader()
 	if(m_matrixBuffer)
 	{
 		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
+		m_matrixBuffer = nullptr;
 	}
 
 	// Release the layout.
 	if(m_layout)
 	{
 		m_layout->Release();
-		m_layout = 0;
+		m_layout = nullptr;
 	}
 
 	// Release the pixel shader.
 	if(m_pixelShader)
 	{
 		m_pixelShader->Release();
-		m_pixelShader = 0;
+		m_pixelShader = nullptr;
 	}
 
 	// Release the vertex shader.
 	if(m_vertexShader)
 	{
 		m_vertexShader->Release();
-		m_vertexShader = 0;
+		m_vertexShader = nullptr;
 	}
 
 	return;
@@ -248,7 +248,7 @@ void ColorShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 
 
 	// Get a pointer to the error message text buffer.
-	compileErrors = (char*)(errorMessage->GetBufferPointer());
+	compileErrors = static_cast<char*>(errorMessage->GetBufferPointer());
 
 	// Get the length of the message.
 	bufferSize = errorMessage->GetBufferSize();
@@ -267,7 +267,7 @@ void ColorShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 
 	// Release the error message.
 	errorMessage->Release();
-	errorMessage = 0;
+	errorMessage = nullptr;
 
 	// Pop a message up on the screen to notify the user to check the text file for compile errors.
 	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
@@ -277,7 +277,7 @@ void ColorShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 
 
 bool ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-										   XMMATRIX projectionMatrix)
+										   XMMATRIX projectionMatrix) const
 {
 	HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -298,7 +298,7 @@ bool ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATR
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	dataPtr = (MatrixBufferType*)mappedResource.pData;
+	dataPtr = static_cast<MatrixBufferType*>(mappedResource.pData);
 
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = worldMatrix;
@@ -318,14 +318,14 @@ bool ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATR
 }
 
 
-void ColorShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void ColorShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount) const
 {
 	// Set the vertex input layout.
 	deviceContext->IASetInputLayout(m_layout);
 
     // Set the vertex and pixel shaders that will be used to render this triangle.
-    deviceContext->VSSetShader(m_vertexShader, NULL, 0);
-    deviceContext->PSSetShader(m_pixelShader, NULL, 0);
+    deviceContext->VSSetShader(m_vertexShader, nullptr, 0);
+    deviceContext->PSSetShader(m_pixelShader, nullptr, 0);
 
 	// Render the triangle.
 	deviceContext->DrawIndexed(indexCount, 0, 0);

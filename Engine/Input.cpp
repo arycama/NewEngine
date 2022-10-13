@@ -7,7 +7,7 @@ Input::Input()
 		keys[i] = false;
 }
 
-void Input::KeyDown(unsigned int input)
+void Input::KeyDown(const unsigned int input)
 {
 	// If a key is pressed then save that state in the key array.
 	keys[input] = true;
@@ -19,7 +19,7 @@ void Input::KeyUp(unsigned int input)
 	keys[input] = false;
 }
 
-bool Input::IsKeyDown(unsigned int key)
+bool Input::IsKeyDown(const unsigned int key) const
 {
 	// Return what state the key is in (pressed/not pressed).
 	return keys[key];

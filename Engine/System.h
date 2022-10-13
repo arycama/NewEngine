@@ -2,11 +2,11 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <windows.h>
 #include <memory>
+#include <windows.h>
 
-#include "Input.h"
 #include "Graphics.h"
+#include "Input.h"
 
 class System
 {
@@ -14,9 +14,9 @@ public:
 	System();
 	~System();
 
-	void Run();
+	void Run() const;
 
-	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
+	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM) const;
 
 private:
 	LPCWSTR applicationName;
@@ -29,4 +29,4 @@ private:
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-static System* ApplicationHandle = 0;
+static System* ApplicationHandle = nullptr;

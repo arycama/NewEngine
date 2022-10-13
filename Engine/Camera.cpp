@@ -2,36 +2,36 @@
 
 using namespace DirectX;
 
-Camera::Camera(XMFLOAT3 position, XMFLOAT3 rotation)
+Camera::Camera(const XMFLOAT3 position, const XMFLOAT3 rotation)
 {
 	this->position = position;
 	this->rotation = rotation;
 }
 
-XMMATRIX& Camera::GetViewMatrix()
+XMMATRIX& Camera::GetViewMatrix() const
 {
 	// Setup the vector that points upwards.
-	auto up = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	constexpr auto up = XMFLOAT3(0.0f, 1.0f, 0.0f);
 
 	// Load it into a XMVECTOR structure.
 	auto upVector = XMLoadFloat3(&up);
 
 	// Setup the position of the camera in the world and load it into a XMVECTOR structure.
-	auto positionVector = XMLoadFloat3(&position);
+	const auto positionVector = XMLoadFloat3(&position);
 
 	// Setup where the camera is looking by default.
-	auto lookAt = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	constexpr auto lookAt = XMFLOAT3(0.0f, 0.0f, 1.0f);
 
 	// Load it into a XMVECTOR structure.
 	auto lookAtVector = XMLoadFloat3(&lookAt);
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
-	auto pitch = XMConvertToRadians(rotation.x);
-	auto yaw = XMConvertToRadians(rotation.y);
-	auto roll = XMConvertToRadians(rotation.z);
+	const auto pitch = XMConvertToRadians(rotation.x);
+	const auto yaw = XMConvertToRadians(rotation.y);
+	const auto roll = XMConvertToRadians(rotation.z);
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
-	auto rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	const auto rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
 	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "D3D.h"
 #include "Camera.h"
+#include "D3D.h"
 #include "Model.h"
 #include "TextureShader.h"
 
@@ -14,7 +14,7 @@ class Graphics
 {
 public:
 	Graphics(int, int, HWND);
-	void Update();
+	void Update() const;
 
 private:
 	std::unique_ptr<D3D> d3d;
