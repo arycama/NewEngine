@@ -9,8 +9,9 @@ using namespace std;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-#if 0
-	auto system = unique_ptr<System>(new System());
+#if 1
+	auto system = make_unique<System>();
+	system->Update();
 #else
 	// Not using unique ptr so we can check memory leaks
 	auto system = new System();

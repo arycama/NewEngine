@@ -8,7 +8,10 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-D3D::D3D(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+const float screenDepth = 1000.0f;
+const float screenNear = 0.1f;
+
+D3D::D3D(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen)
 {
 	// Create a DirectX graphics interface factory.
 	ComPtr<IDXGIFactory> factory;

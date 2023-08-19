@@ -11,13 +11,16 @@ class System;
 class Engine
 {
 public:
-	Engine(int screenWidth, int screenHeight, HWND hwnd, System& system);
+	Engine(System& system);
+	~Engine();
+
 	void Update() const;
 
 	void KeyDown(const unsigned int key);
 	void KeyUp(unsigned int key);
 
 private:
+	HWND hwnd;
 	System& system;
 
 	std::unique_ptr<Input> input;

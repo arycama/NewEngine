@@ -1,3 +1,7 @@
+#define WIN32_LEAN_AND_MEAN
+
+#include <windows.h>
+
 #include "Engine.h"
 #include "System.h"
 
@@ -10,7 +14,7 @@ LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 }
 
 System::System()
-{
+{	
 	// Initialize the windows api.
 	// Get the instance of this application.
 	hinstance = GetModuleHandle(nullptr);
@@ -36,21 +40,37 @@ System::System()
 	// Register the window class.
 	RegisterClassEx(&wc);
 
+	// Create and initialize the graphics object.  This object will handle rendering all the graphics for this application.
+	engine = make_unique<Engine>(*this);
+}
+
+System::~System()
+{
+	// Show the mouse cursor.
+	ShowCursor(true);
+
+	// Remove the application instance.
+	UnregisterClass(applicationName, hinstance);
+	hinstance = nullptr;
+}
+
+HWND System::InitializeWindow(bool fullScreen, int& width, int& height)
+{
 	// Determine the resolution of the clients desktop screen.
-	auto screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	auto screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	width = GetSystemMetrics(SM_CXSCREEN);
+	height = GetSystemMetrics(SM_CYSCREEN);
 
 	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
 	int posX, posY;
 
-	if (FULL_SCREEN)
+	if (fullScreen)
 	{
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
 		DEVMODE dmScreenSettings;
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = static_cast<unsigned long>(screenWidth);
-		dmScreenSettings.dmPelsHeight = static_cast<unsigned long>(screenHeight);
+		dmScreenSettings.dmPelsWidth = static_cast<unsigned long>(width);
+		dmScreenSettings.dmPelsHeight = static_cast<unsigned long>(height);
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -63,16 +83,16 @@ System::System()
 	else
 	{
 		// If windowed then set it to 800x600 resolution.
-		screenWidth = 800;
-		screenHeight = 600;
+		width = 800;
+		height = 600;
 
 		// Place the window in the middle of the screen.
-		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+		posX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+		posY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 	}
 
 	// Create the window with the screen settings and get the handle to it.
-	hwnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, posX, posY, screenWidth, screenHeight, nullptr, nullptr, hinstance, nullptr);
+	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, posX, posY, width, height, nullptr, nullptr, hinstance, nullptr);
 
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
@@ -82,20 +102,13 @@ System::System()
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
 
-	// Hide the mouse cursor.
-	ShowCursor(false);
-
-	// Create and initialize the graphics object.  This object will handle rendering all the graphics for this application.
-	engine = make_unique<Engine>(screenWidth, screenHeight, hwnd, *this);
+	return hwnd;
 }
 
-System::~System()
+void System::ReleaseWindow(HWND hwnd, bool fullScreen)
 {
-	// Show the mouse cursor.
-	ShowCursor(true);
-
 	// Fix the display settings if leaving full screen mode.
-	if (FULL_SCREEN)
+	if (fullScreen)
 	{
 		ChangeDisplaySettings(nullptr, 0);
 	}
@@ -105,16 +118,6 @@ System::~System()
 
 	// Remove the window.
 	DestroyWindow(hwnd);
-	hwnd = nullptr;
-
-	// Remove the application instance.
-	UnregisterClass(applicationName, hinstance);
-	hinstance = nullptr;
-}
-
-void System::Quit()
-{
-	quit = true;
 }
 
 void System::Update()
@@ -138,7 +141,12 @@ void System::Update()
 	} while (!quit);
 }
 
-LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+void System::Quit()
+{
+	quit = true;
+}
+
+LRESULT System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	switch (umsg)
 	{

@@ -11,7 +11,7 @@
 class D3D
 {
 public:
-	D3D(UINT, UINT, bool, HWND, bool, float, float);
+	D3D(UINT, UINT, bool, HWND, bool);
 	~D3D();
 
 	void BeginScene(FLOAT, FLOAT, FLOAT, FLOAT) const;

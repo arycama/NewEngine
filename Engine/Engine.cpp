@@ -4,10 +4,16 @@
 using namespace std;
 using namespace DirectX;
 
-Engine::Engine(int screenWidth, int screenHeight, HWND hwnd, System& system) : system(system)
+const bool fullScreen = false;
+const bool VSYNC_ENABLED = true;
+
+Engine::Engine(System& system) : system(system)
 {
+	int width, height;
+	hwnd = system.InitializeWindow(fullScreen, width, height);
+
 	// Create and initialize the Direct3D object.
-	d3d = make_unique<D3D>(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	d3d = make_unique<D3D>(width, height, VSYNC_ENABLED, hwnd, fullScreen);
 
 	// Create the camera object and set the initial position of the camera.
 	camera = make_unique<Camera>(XMFLOAT3(0.0f, 0.0f, -5.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -20,6 +26,14 @@ Engine::Engine(int screenWidth, int screenHeight, HWND hwnd, System& system) : s
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
 	input = make_unique<Input>();
+
+	// Hide the mouse cursor.
+	ShowCursor(false);
+}
+
+Engine::~Engine()
+{
+	system.ReleaseWindow(hwnd, fullScreen);
 }
 
 void Engine::Update() const
