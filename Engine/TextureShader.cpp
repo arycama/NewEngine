@@ -3,7 +3,7 @@
 using namespace std;
 using namespace DirectX;
 
-TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
+TextureShader::TextureShader(ID3D11Device* device)
 {
 	m_vertexShader = nullptr;
 	m_pixelShader = nullptr;
@@ -29,7 +29,7 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd)
 	}
 
 	// Initialize the vertex and pixel shaders.
-	InitializeShader(device, hwnd, vsFilename, psFilename);
+	InitializeShader(device, vsFilename, psFilename);
 }
 
 TextureShader::~TextureShader()
@@ -54,7 +54,7 @@ bool TextureShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, c
 	return true;
 }
 
-bool TextureShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool TextureShader::InitializeShader(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -75,17 +75,6 @@ bool TextureShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 				    &vertexShaderBuffer, &errorMessage);
 	if(FAILED(result))
 	{
-		// If the shader failed to compile it should have writen something to the error message.
-		if(errorMessage)
-		{
-			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
-		}
-		// If there was nothing in the error message then it simply could not find the shader file itself.
-		else
-		{
-			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
-		}
-
 		return false;
 	}
 
@@ -94,17 +83,6 @@ bool TextureShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 				    &pixelShaderBuffer, &errorMessage);
 	if(FAILED(result))
 	{
-		// If the shader failed to compile it should have writen something to the error message.
-		if(errorMessage)
-		{
-			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
-		}
-		// If there was nothing in the error message then it simply could not find the file itself.
-		else
-		{
-			MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
-		}
-
 		return false;
 	}
 
@@ -234,43 +212,6 @@ void TextureShader::ShutdownShader()
 		m_vertexShader->Release();
 		m_vertexShader = nullptr;
 	}
-
-	return;
-}
-
-void TextureShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
-{
-	char* compileErrors;
-	unsigned long long bufferSize, i;
-	ofstream fout;
-
-
-	// Get a pointer to the error message text buffer.
-	compileErrors = static_cast<char*>(errorMessage->GetBufferPointer());
-
-	// Get the length of the message.
-	bufferSize = errorMessage->GetBufferSize();
-
-	// Open a file to write the error message to.
-	fout.open("shader-error.txt");
-
-	// Write out the error message.
-	for(i=0; i<bufferSize; i++)
-	{
-		fout << compileErrors[i];
-	}
-
-	// Close the file.
-	fout.close();
-
-	// Release the error message.
-	errorMessage->Release();
-	errorMessage = nullptr;
-
-	// Pop a message up on the screen to notify the user to check the text file for compile errors.
-	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
-
-	return;
 }
 
 bool TextureShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView* texture) const

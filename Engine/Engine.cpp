@@ -22,7 +22,7 @@ Engine::Engine(System& system) : system(system)
 	model = make_unique<Model>(d3d->GetDevice(), d3d->GetDeviceContext(), "../Engine/data/stone01.tga");
 
 	// Create and initialize the texture shader object.
-	textureShader = make_unique<TextureShader>(d3d->GetDevice(), hwnd);
+	textureShader = make_unique<TextureShader>(d3d->GetDevice());
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
 	input = make_unique<Input>();
