@@ -1,9 +1,10 @@
-#include "Graphics.h"
+#include "Engine.h"
+#include "System.h"
 
 using namespace std;
 using namespace DirectX;
 
-Graphics::Graphics(int screenWidth, int screenHeight, HWND hwnd)
+Engine::Engine(int screenWidth, int screenHeight, HWND hwnd, System& system) : system(system)
 {
 	// Create and initialize the Direct3D object.
 	d3d = make_unique<D3D>(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
@@ -16,9 +17,12 @@ Graphics::Graphics(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create and initialize the texture shader object.
 	textureShader = make_unique<TextureShader>(d3d->GetDevice(), hwnd);
+
+	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
+	input = make_unique<Input>();
 }
 
-void Graphics::Update() const
+void Engine::Update() const
 {
 	// Clear the buffers to begin the scene.
 	d3d->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
@@ -34,4 +38,20 @@ void Graphics::Update() const
 
 	// Present the rendered scene to the screen.
 	d3d->EndScene();
+}
+
+void Engine::KeyDown(const unsigned int key)
+{
+	if (key == VK_ESCAPE)
+	{
+		system.Quit();
+		return;
+	}
+
+	input->KeyDown(key);
+}
+
+void Engine::KeyUp(unsigned int key)
+{
+	input->KeyUp(key);
 }

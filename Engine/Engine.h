@@ -2,21 +2,25 @@
 
 #include "Camera.h"
 #include "D3D.h"
+#include "Input.h"
 #include "Model.h"
 #include "TextureShader.h"
 
-const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
-const float SCREEN_NEAR = 0.1f;
+class System;
 
-class Graphics
+class Engine
 {
 public:
-	Graphics(int, int, HWND);
+	Engine(int screenWidth, int screenHeight, HWND hwnd, System& system);
 	void Update() const;
 
+	void KeyDown(const unsigned int key);
+	void KeyUp(unsigned int key);
+
 private:
+	System& system;
+
+	std::unique_ptr<Input> input;
 	std::unique_ptr<D3D> d3d;
 	std::unique_ptr<Camera> camera;
 	std::unique_ptr<Model> model;

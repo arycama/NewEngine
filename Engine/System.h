@@ -5,8 +5,12 @@
 #include <memory>
 #include <windows.h>
 
-#include "Graphics.h"
-#include "Input.h"
+class Engine;
+
+const bool FULL_SCREEN = false;
+const bool VSYNC_ENABLED = true;
+const float SCREEN_DEPTH = 1000.0f;
+const float SCREEN_NEAR = 0.1f;
 
 class System
 {
@@ -14,19 +18,18 @@ public:
 	System();
 	~System();
 
-	void Run() const;
+	void Update();
+	void Quit();
 
-	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM) const;
+	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
 private:
 	LPCWSTR applicationName;
 	HINSTANCE hinstance;
 	HWND hwnd;
+	bool quit;
 
-	std::unique_ptr<Input> input;
-	std::unique_ptr<Graphics> graphics;
+	std::unique_ptr<Engine> engine;
+
+	static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 };
-
-static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
-static System* ApplicationHandle = nullptr;

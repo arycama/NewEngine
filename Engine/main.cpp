@@ -14,7 +14,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 #else
 	// Not using unique ptr so we can check memory leaks
 	auto system = new System();
-	system->Run();
+	system->Update();
 	delete system;
 	_CrtDumpMemoryLeaks();
 #endif
