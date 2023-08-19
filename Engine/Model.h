@@ -10,15 +10,15 @@
 class Model
 {
 public:
-	Model(ID3D11Device*, ID3D11DeviceContext*, const char*);
+	Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const char* textureFilename);
 
-	void Render(ID3D11DeviceContext*) const;
+	void Render(ID3D11DeviceContext& deviceContext) const;
 	int GetIndexCount() const;
 
-	ID3D11ShaderResourceView* GetTexture() const;
+	ID3D11ShaderResourceView& GetTexture() const;
 
 private:
-	void RenderBuffers(ID3D11DeviceContext*) const;
+	void RenderBuffers(ID3D11DeviceContext& deviceContext) const;
 
 	int vertexCount, indexCount;
 

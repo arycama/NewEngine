@@ -8,7 +8,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-Model::Model(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* textureFilename)
+Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const char* textureFilename)
 {
 	// Initialize the vertex and index buffers.
 	// Set the number of vertices in the vertex array.
@@ -45,7 +45,7 @@ Model::Model(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const cha
 	const auto vertexData = D3D11_SUBRESOURCE_DATA{ vertices.get(), 0, 0 };
 
 	// Now create the vertex buffer.
-	CheckError(device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer));
+	CheckError(device.CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer));
 
 	// Set up the description of the static index buffer.
 	const auto indexBufferDesc = CD3D11_BUFFER_DESC(sizeof(unsigned long) * indexCount, D3D11_BIND_INDEX_BUFFER);;
@@ -54,14 +54,14 @@ Model::Model(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const cha
 	const auto indexData = D3D11_SUBRESOURCE_DATA { indices.get(), 0, 0 };
 
 	// Create the index buffer.
-	CheckError(device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer));
+	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer));
 
 	// Load the texture for this model.
 	// Create and initialize the texture object.
 	texture = make_unique<Texture>(device, deviceContext, textureFilename);
 }
 
-void Model::Render(ID3D11DeviceContext* deviceContext) const
+void Model::Render(ID3D11DeviceContext& deviceContext) const
 {
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
@@ -72,23 +72,23 @@ int Model::GetIndexCount() const
 	return indexCount;
 }
 
-void Model::RenderBuffers(ID3D11DeviceContext* deviceContext) const
+void Model::RenderBuffers(ID3D11DeviceContext& deviceContext) const
 {
 	// Set vertex buffer stride and offset.
 	constexpr auto stride = static_cast<UINT>(sizeof(VertexType));
 	constexpr auto offset = 0u;
     
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+	deviceContext.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
 
     // Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	deviceContext.IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-ID3D11ShaderResourceView* Model::GetTexture() const
+ID3D11ShaderResourceView& Model::GetTexture() const
 {
-	return texture->GetTexture();
+	return *texture->GetTexture();
 }

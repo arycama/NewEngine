@@ -4,9 +4,17 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-#include <d3d11.h>
 #include <directxmath.h>
 #include <wrl/client.h>
+
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct IDXGISwapChain;
+struct ID3D11RenderTargetView;
+struct ID3D11Texture2D;
+struct ID3D11DepthStencilState;
+struct ID3D11DepthStencilView;
+struct ID3D11RasterizerState;
 
 class D3D
 {
@@ -17,8 +25,8 @@ public:
 	void BeginScene(FLOAT, FLOAT, FLOAT, FLOAT) const;
 	void EndScene() const;
 
-	ID3D11Device* GetDevice() const;
-	ID3D11DeviceContext* GetDeviceContext() const;
+	ID3D11Device& GetDevice() const;
+	ID3D11DeviceContext& GetDeviceContext() const;
 
 	DirectX::XMMATRIX& GetProjectionMatrix();
 	DirectX::XMMATRIX& GetWorldMatrix();

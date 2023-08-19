@@ -16,17 +16,17 @@ private:
 	};
 
 public:
-	TextureShader(ID3D11Device*);
+	TextureShader(ID3D11Device& device);
 	~TextureShader();
 
-	bool Render(ID3D11DeviceContext*, int, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, const  DirectX::XMMATRIX&, ID3D11ShaderResourceView*);
+	bool Render(ID3D11DeviceContext&, int, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, ID3D11ShaderResourceView&);
 
 private:
-	bool InitializeShader(ID3D11Device*, WCHAR*, WCHAR*);
+	bool InitializeShader(ID3D11Device&, WCHAR*, WCHAR*);
 	void ShutdownShader();
 
-	bool SetShaderParameters(ID3D11DeviceContext*, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, ID3D11ShaderResourceView*) const;
-	void RenderShader(ID3D11DeviceContext*, int) const;
+	bool SetShaderParameters(ID3D11DeviceContext&, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, ID3D11ShaderResourceView&) const;
+	void RenderShader(ID3D11DeviceContext&, int) const;
 
 private:
 	ID3D11VertexShader* m_vertexShader;

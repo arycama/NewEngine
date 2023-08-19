@@ -1,6 +1,7 @@
 #include "D3D.h"
 
 #include <comdef.h>
+#include <d3d11.h>
 #include <memory>
 
 using namespace std;
@@ -154,14 +155,14 @@ void D3D::EndScene() const
 	swapChain->Present(vsyncEnabled ? 1 : 0, 0);
 }
 
-ID3D11Device* D3D::GetDevice() const
+ID3D11Device& D3D::GetDevice() const
 {
-	return device.Get();
+	return *device.Get();
 }
 
-ID3D11DeviceContext* D3D::GetDeviceContext() const
+ID3D11DeviceContext& D3D::GetDeviceContext() const
 {
-	return deviceContext.Get();
+	return *deviceContext.Get();
 }
 
 XMMATRIX& D3D::GetProjectionMatrix()

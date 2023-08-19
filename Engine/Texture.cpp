@@ -6,7 +6,7 @@
 using namespace _com_util;
 using namespace Microsoft::WRL;
 
-Texture::Texture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename)
+Texture::Texture(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const char* filename)
 {
 	int height, width;
 
@@ -17,22 +17,22 @@ Texture::Texture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const
 	const auto textureDesc = CD3D11_TEXTURE2D_DESC(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 0, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET, D3D11_USAGE_DEFAULT, 0, 1, 0, D3D11_RESOURCE_MISC_GENERATE_MIPS);
 
 	// Create the empty texture.
-	CheckError(device->CreateTexture2D(&textureDesc, nullptr, texture.GetAddressOf()));
+	CheckError(device.CreateTexture2D(&textureDesc, nullptr, texture.GetAddressOf()));
 
 	// Set the row pitch of the targa image data.
 	const unsigned int rowPitch = (width * 4) * sizeof(unsigned char);
 
 	// Copy the targa image data into the texture.
-	deviceContext->UpdateSubresource(texture.Get(), 0, nullptr, targaData, rowPitch, 0);
+	deviceContext.UpdateSubresource(texture.Get(), 0, nullptr, targaData, rowPitch, 0);
 
 	// Setup the shader resource view description.
 	const auto srvDesc = CD3D11_SHADER_RESOURCE_VIEW_DESC(D3D11_SRV_DIMENSION_TEXTURE2D, textureDesc.Format, 0, -1);
 
 	// Create the shader resource view for the texture.
-	CheckError(device->CreateShaderResourceView(texture.Get(), &srvDesc, textureView.GetAddressOf()));
+	CheckError(device.CreateShaderResourceView(texture.Get(), &srvDesc, textureView.GetAddressOf()));
 
 	// Generate mipmaps for this texture.
-	deviceContext->GenerateMips(textureView.Get());
+	deviceContext.GenerateMips(textureView.Get());
 
 	// Release the targa image data now that the image data has been loaded into the texture.
 	delete[] targaData;
