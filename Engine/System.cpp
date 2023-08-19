@@ -1,9 +1,8 @@
 #define WIN32_LEAN_AND_MEAN
 
-#include <windows.h>
-
-#include "Engine.h"
 #include "System.h"
+#include "Engine.h"
+#include "WindowHandle.h"
 
 using namespace std;
 
@@ -46,9 +45,6 @@ System::System()
 
 System::~System()
 {
-	// Show the mouse cursor.
-	ShowCursor(true);
-
 	// Remove the application instance.
 	UnregisterClass(applicationName, hinstance);
 	hinstance = nullptr;

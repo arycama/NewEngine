@@ -1,12 +1,14 @@
 #pragma once
 
-#include "Camera.h"
-#include "D3D.h"
-#include "Input.h"
-#include "Model.h"
-#include "TextureShader.h"
+#include <memory>
 
+class Camera;
+class D3D;
+class Input;
+class Model;
 class System;
+class TextureShader;
+class WindowHandle;
 
 class Engine
 {
@@ -20,7 +22,6 @@ public:
 	void KeyUp(unsigned int key);
 
 private:
-	HWND hwnd;
 	System& system;
 
 	std::unique_ptr<Input> input;
@@ -28,4 +29,5 @@ private:
 	std::unique_ptr<Camera> camera;
 	std::unique_ptr<Model> model;
 	std::unique_ptr<TextureShader> textureShader;
+	std::unique_ptr<WindowHandle> windowHandle;
 };

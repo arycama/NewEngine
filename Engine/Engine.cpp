@@ -1,5 +1,12 @@
 #include "Engine.h"
+
+#include "Camera.h"
+#include "D3D.h"
+#include "Input.h"
+#include "Model.h"
 #include "System.h"
+#include "TextureShader.h"
+#include "WindowHandle.h"
 
 using namespace std;
 using namespace DirectX;
@@ -10,7 +17,9 @@ const bool VSYNC_ENABLED = true;
 Engine::Engine(System& system) : system(system)
 {
 	int width, height;
-	hwnd = system.InitializeWindow(fullScreen, width, height);
+	auto hwnd = system.InitializeWindow(fullScreen, width, height);
+
+	windowHandle = make_unique<WindowHandle>(hwnd);
 
 	// Create and initialize the Direct3D object.
 	d3d = make_unique<D3D>(width, height, VSYNC_ENABLED, hwnd, fullScreen);
@@ -33,7 +42,10 @@ Engine::Engine(System& system) : system(system)
 
 Engine::~Engine()
 {
-	system.ReleaseWindow(hwnd, fullScreen);
+	system.ReleaseWindow(windowHandle->GetHandle(), fullScreen);
+
+	// Show the mouse cursor.
+	ShowCursor(true);
 }
 
 void Engine::Update() const
