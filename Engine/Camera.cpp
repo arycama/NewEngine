@@ -13,10 +13,10 @@ Camera::Camera(Transform& transform, const float nearClipPlane, const float farC
 	engine.AddCamera(this);
 }
 
-Camera::~Camera()
-{
-	engine.RemoveCamera(this);
-}
+//Camera::~Camera()
+//{
+//	engine.RemoveCamera(this);
+//}
 
 XMMATRIX Camera::GetWorldMatrix() const
 {

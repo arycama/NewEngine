@@ -1,7 +1,6 @@
-#include "Engine.h"
-
 #include "Behaviour.h"
 #include "Camera.h"
+#include "Engine.h"
 #include "Entity.h"
 #include "Renderer.h"
 #include "Input.h"
@@ -51,15 +50,7 @@ Engine::Engine(System& system) : system(system)
 
 Engine::~Engine()
 {
-	// Delete all entities
-	for (auto entity : entities)
-	{
-		delete entity;
-	}
-
 	system.ReleaseWindow(windowHandle->GetHandle(), fullScreen);
-
-	// Show the mouse cursor.
 	ShowCursor(true);
 }
 
@@ -109,14 +100,14 @@ void Engine::KeyUp(unsigned int key)
 void Engine::AddEntity(Entity* entity)
 {
 	assert(entity);
-	entities.push_back(entity);
+	entities.push_back(unique_ptr<Entity>(entity));
 }
 
-void Engine::RemoveEntity(Entity* entity)
-{
-	assert(entity);
-	entities.erase(remove(entities.begin(), entities.end(), entity), entities.end());
-}
+//void Engine::RemoveEntity(Entity* entity)
+//{
+//	assert(entity);
+//	entities.erase(remove(entities.begin(), entities.end(), entity), entities.end());
+//}
 
 void Engine::AddCamera(Camera* camera)
 {
@@ -124,11 +115,11 @@ void Engine::AddCamera(Camera* camera)
 	cameras.push_back(camera);
 }
 
-void Engine::RemoveCamera(Camera* camera)
-{
-	assert(camera);
-	cameras.erase(remove(cameras.begin(), cameras.end(), camera), cameras.end());
-}
+//void Engine::RemoveCamera(Camera* camera)
+//{
+//	assert(camera);
+//	cameras.erase(remove(cameras.begin(), cameras.end(), camera), cameras.end());
+//}
 
 void Engine::AddBehaviour(Behaviour* behaviour)
 {
@@ -136,8 +127,8 @@ void Engine::AddBehaviour(Behaviour* behaviour)
 	behaviours.push_back(behaviour);
 }
 
-void Engine::RemoveBehaviour(Behaviour* behaviour)
-{
-	assert(behaviour);
-	behaviours.erase(remove(behaviours.begin(), behaviours.end(), behaviour), behaviours.end());
-}
+//void Engine::RemoveBehaviour(Behaviour* behaviour)
+//{
+//	assert(behaviour);
+//	behaviours.erase(remove(behaviours.begin(), behaviours.end(), behaviour), behaviours.end());
+//}
