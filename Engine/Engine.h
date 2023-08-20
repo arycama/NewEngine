@@ -14,14 +14,7 @@ public:
 	void KeyDown(const unsigned int key);
 	void KeyUp(const unsigned int key);
 
-	void AddEntity(class Entity* entity);
-	//void RemoveEntity(class Entity* entity);
-
-	void AddCamera(class Camera* camera);
-	//void RemoveCamera(class Camera* camera);
-
-	void AddBehaviour(class Behaviour* behaviour);
-	//void RemoveBehaviour(class Behaviour* behaviour);
+	class Scene& CreateScene();
 
 private:
 	System& system;
@@ -32,7 +25,11 @@ private:
 	std::unique_ptr<class TextureShader> textureShader;
 	std::unique_ptr<class WindowHandle> windowHandle;
 
-	std::vector<std::unique_ptr<class Entity>> entities;
+	std::vector<std::unique_ptr<class Scene>> scenes;
 	std::vector<class Camera*> cameras;
 	std::vector<class Behaviour*> behaviours;
+
+	void AddComponent(class Entity* entity, class Behaviour* behaviour);
+	void AddComponent(class Entity* entity, class Camera* camera);
+	void AddComponent(class Entity* entity, class Component* component);
 };

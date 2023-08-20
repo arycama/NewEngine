@@ -2,9 +2,7 @@
 #include "Input.h"
 #include "Transform.h"
 
-Movement::Movement(Engine& engine, Input& input, Transform& transform) : Behaviour(engine), input(input), transform(transform)
-{ 
-}
+Movement::Movement(Input& input, Transform& transform) : input(input), transform(transform) { }
 
 void Movement::Update()
 {

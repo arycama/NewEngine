@@ -1,25 +1,14 @@
-#include "Entity.h"
 #include "Component.h"
-#include "Engine.h"
+#include "Entity.h"
+#include "Scene.h"
 
 #include <assert.h>
 #include <stdexcept>
 
-Entity::Entity(Engine& engine) : engine(engine)
-{
-	engine.AddEntity(this);
-}
-
-Entity::~Entity()
-{
-	for (auto component : components)
-	{
-		delete component;
-	}
-}
+using namespace std;
 
 void Entity::AddComponent(Component* component)
 {
 	assert(component);
-	components.push_back(component);
+	components.push_back(unique_ptr<Component>(component));
 }

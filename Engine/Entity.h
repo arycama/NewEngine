@@ -1,16 +1,14 @@
 #pragma once
 
+#include <memory>
 #include <vector>
+#include "Component.h"
 
 class Entity
 {
 public:
-	Entity(class Engine& engine);
-	~Entity();
-
 	void AddComponent(class Component* component);
 
 private:
-	class Engine& engine;
-	std::vector<class Component*> components;
+	std::vector<std::unique_ptr<class Component>> components;
 };
