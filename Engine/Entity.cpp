@@ -1,11 +1,13 @@
 #include "Entity.h"
 #include "Component.h"
+#include "Engine.h"
 
 #include <assert.h>
 #include <stdexcept>
 
 Entity::Entity(Engine& engine) : engine(engine)
 {
+	engine.AddEntity(this);
 }
 
 Entity::~Entity()

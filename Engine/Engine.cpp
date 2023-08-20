@@ -37,9 +37,7 @@ Engine::Engine(System& system) : system(system)
 	auto cameraTransform = new Transform(cameraPosition, cameraRotation);
 	cameraEntity->AddComponent(cameraTransform);
 	cameraEntity->AddComponent(new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *renderer, *this));
-
-	auto movement = new Movement(*this, *input.get(), *cameraTransform);
-	cameraEntity->AddComponent(movement);
+	cameraEntity->AddComponent(new Movement(*this, *input.get(), *cameraTransform));
 
 	// Create and initialize the model object.
 	model = make_unique<Model>(renderer->GetDevice(), renderer->GetDeviceContext(), "../Engine/data/stone01.tga");

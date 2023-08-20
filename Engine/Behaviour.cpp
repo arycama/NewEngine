@@ -5,8 +5,3 @@ Behaviour::Behaviour(Engine& engine) : engine(engine)
 {
 	engine.AddBehaviour(this);
 }
-
-Behaviour::~Behaviour()
-{
-	engine.RemoveBehaviour(this);
-}
