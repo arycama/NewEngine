@@ -136,7 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="ColorShader.h" />
     <ClInclude Include="D3D.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Input.h" />
@@ -150,7 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ColorShader.cpp" />
     <ClCompile Include="D3D.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Input.cpp" />

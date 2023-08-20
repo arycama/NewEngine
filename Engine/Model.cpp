@@ -8,7 +8,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const char* textureFilename)
+Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const std::string& textureFilename)
 {
 	// Initialize the vertex and index buffers.
 	// Set the number of vertices in the vertex array.
@@ -90,5 +90,5 @@ void Model::RenderBuffers(ID3D11DeviceContext& deviceContext) const
 
 ID3D11ShaderResourceView& Model::GetTexture() const
 {
-	return *texture->GetTexture();
+	return texture->GetTexture();
 }

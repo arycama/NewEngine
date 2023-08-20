@@ -22,7 +22,7 @@ public:
 	D3D(UINT, UINT, bool, HWND, bool);
 	~D3D();
 
-	void BeginScene(FLOAT, FLOAT, FLOAT, FLOAT) const;
+	void BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const FLOAT alpha) const;
 	void EndScene() const;
 
 	ID3D11Device& GetDevice() const;

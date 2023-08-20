@@ -4,13 +4,14 @@
 #include <directxmath.h>
 #include <memory>
 #include <wrl/client.h>
+#include <string>
 
 #include "Texture.h"
 
 class Model
 {
 public:
-	Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const char* textureFilename);
+	Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const std::string& textureFilename);
 
 	void Render(ID3D11DeviceContext& deviceContext) const;
 	int GetIndexCount() const;

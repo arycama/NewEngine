@@ -14,6 +14,8 @@ const float screenNear = 0.1f;
 
 D3D::D3D(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen)
 {
+	vsyncEnabled = vsync;
+
 	// Create a DirectX graphics interface factory.
 	ComPtr<IDXGIFactory> factory;
 	CheckError(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)factory.GetAddressOf()));

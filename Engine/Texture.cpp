@@ -6,7 +6,7 @@
 using namespace _com_util;
 using namespace Microsoft::WRL;
 
-Texture::Texture(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const char* filename)
+Texture::Texture(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const std::string& filename)
 {
 	int height, width;
 
@@ -39,18 +39,18 @@ Texture::Texture(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const
 	targaData = nullptr;
 }
 
-ID3D11ShaderResourceView* Texture::GetTexture() const
+ID3D11ShaderResourceView& Texture::GetTexture() const
 {
-	return textureView.Get();
+	return *textureView.Get();
 }
 
-void Texture::LoadTarga(const char* filename, int& height, int& width)
+void Texture::LoadTarga(const std::string& filename, int& height, int& width)
 {
 	FILE* filePtr;
 	TargaHeader targaFileHeader;
 
 	// Open the targa file for reading in binary.
-	int error = fopen_s(&filePtr, filename, "rb");
+	int error = fopen_s(&filePtr, filename.c_str(), "rb");
 	if(error != 0)
 	{
 		return;
