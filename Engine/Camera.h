@@ -1,25 +1,26 @@
 #pragma once
 
-#include <directxmath.h>
+#include "Component.h"
 
-class Input;
-class Renderer;
+namespace DirectX
+{
+	struct XMMATRIX;
+}
 
-class Camera
+class Camera : public Component
 {
 public:
-	Camera(const DirectX::XMFLOAT3 position, const DirectX::XMFLOAT3 rotation, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer, Input& input);
+	Camera(class Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, class Renderer& renderer, class Engine& engine);
+	~Camera();
 
 	DirectX::XMMATRIX GetWorldMatrix() const;
 	DirectX::XMMATRIX GetViewMatrix() const;
 	DirectX::XMMATRIX GetProjectionMatrix() const;
 
-	void Update();
-
 private:
 	float nearClipPlane, farClipPlane, fieldOfView;
-	DirectX::XMFLOAT3 position, rotation;
 
-	Input& input;
+	Engine& engine;
 	Renderer& renderer;
+	Transform& transform;
 };

@@ -1,11 +1,21 @@
 #include "Camera.h"
+#include "Engine.h"
 #include "Input.h"
 #include "Renderer.h"
+#include "Transform.h"
+
+#include <directxmath.h>
 
 using namespace DirectX;
 
-Camera::Camera(const XMFLOAT3 position, const XMFLOAT3 rotation, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer, Input& input) : position(position), rotation(rotation), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), renderer(renderer), input(input)
+Camera::Camera(Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer, Engine& engine) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), renderer(renderer), engine(engine)
 {
+	engine.AddCamera(this);
+}
+
+Camera::~Camera()
+{
+	engine.RemoveCamera(this);
 }
 
 XMMATRIX Camera::GetWorldMatrix() const
@@ -22,6 +32,7 @@ XMMATRIX Camera::GetViewMatrix() const
 	auto upVector = XMLoadFloat3(&up);
 
 	// Setup the position of the camera in the world and load it into a XMVECTOR structure.
+	auto position = transform.GetPosition();
 	const auto positionVector = XMLoadFloat3(&position);
 
 	// Setup where the camera is looking by default.
@@ -31,6 +42,7 @@ XMMATRIX Camera::GetViewMatrix() const
 	auto lookAtVector = XMLoadFloat3(&lookAt);
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
+	auto rotation = transform.GetRotation();
 	const auto pitch = XMConvertToRadians(rotation.x);
 	const auto yaw = XMConvertToRadians(rotation.y);
 	const auto roll = XMConvertToRadians(rotation.z);
@@ -56,34 +68,4 @@ XMMATRIX Camera::GetProjectionMatrix() const
 	const auto aspect = renderer.GetAspectRatio();
 	const auto fovRadians = XMConvertToRadians(fieldOfView);
 	return XMMatrixPerspectiveFovLH(fovRadians, aspect, nearClipPlane, farClipPlane);
-}
-
-void Camera::Update()
-{
-	float movementSpeed = 0.1f;
-	float rotateSpeed = 1.0f;
-
-	if (input.IsKeyDown(0x57)) // W
-		position.z += movementSpeed;
-
-	if (input.IsKeyDown(0x53)) // S
-		position.z -= movementSpeed;
-
-	if (input.IsKeyDown(0x41)) // A
-		position.x -= movementSpeed;
-
-	if (input.IsKeyDown(0x44)) // D
-		position.x += movementSpeed;
-
-	if (input.IsKeyDown(VK_LEFT)) // Left
-		rotation.y -= rotateSpeed;
-
-	if (input.IsKeyDown(VK_RIGHT)) // Right
-		rotation.y += rotateSpeed;
-
-	if (input.IsKeyDown(VK_UP)) // Up
-		rotation.x -= rotateSpeed;
-
-	if (input.IsKeyDown(VK_DOWN)) // Down
-		rotation.x += rotateSpeed;
 }

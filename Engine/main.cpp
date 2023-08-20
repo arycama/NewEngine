@@ -1,7 +1,7 @@
 #define _CRTDBG_MAP_ALLOC
 
+#include <stdlib.h>
 #include <crtdbg.h>
-#include <cstdlib>
 
 #include "System.h"
 
@@ -9,7 +9,7 @@ using namespace std;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-#if 1
+#if 0
 	auto system = make_unique<System>();
 	system->Update();
 #else

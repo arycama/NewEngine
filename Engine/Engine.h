@@ -1,33 +1,38 @@
 #pragma once
 
 #include <memory>
-
-class Camera;
-class Renderer;
-class Input;
-class Model;
-class System;
-class TextureShader;
-class WindowHandle;
+#include <vector>
 
 class Engine
 {
 public:
-	Engine(System& system);
+	Engine(class System& system);
 	~Engine();
 
-	void Update() const;
+	void Update();
 
 	void KeyDown(const unsigned int key);
-	void KeyUp(unsigned int key);
+	void KeyUp(const unsigned int key);
+
+	void AddEntity(class Entity* entity);
+	void RemoveEntity(class Entity* entity);
+
+	void AddCamera(class Camera* camera);
+	void RemoveCamera(class Camera* camera);
+
+	void AddBehaviour(class Behaviour* behaviour);
+	void RemoveBehaviour(class Behaviour* behaviour);
 
 private:
 	System& system;
 
-	std::unique_ptr<Input> input;
-	std::unique_ptr<Renderer> renderer;
-	std::unique_ptr<Camera> camera;
-	std::unique_ptr<Model> model;
-	std::unique_ptr<TextureShader> textureShader;
-	std::unique_ptr<WindowHandle> windowHandle;
+	std::unique_ptr<class Input> input;
+	std::unique_ptr<class Renderer> renderer;
+	std::unique_ptr<class Model> model;
+	std::unique_ptr<class TextureShader> textureShader;
+	std::unique_ptr<class WindowHandle> windowHandle;
+
+	std::vector<class Entity*> entities;
+	std::vector<class Camera*> cameras;
+	std::vector<class Behaviour*> behaviours;
 };
