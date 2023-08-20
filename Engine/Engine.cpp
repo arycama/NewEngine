@@ -38,9 +38,9 @@ Engine::Engine(System& system) : system(system)
 	auto cameraPosition = XMFLOAT3(0.0f, 0.0f, -5.0f);
 	auto cameraRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	auto cameraTransform = new Transform(cameraPosition, cameraRotation);
-	AddComponent(&camera, cameraTransform);
-	AddComponent(&camera, new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *renderer));
-	AddComponent(&camera, new Movement(*input.get(), *cameraTransform));
+	AddComponent(camera, *cameraTransform);
+	AddComponent(camera, *new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *renderer));
+	AddComponent(camera, *new Movement(*input.get(), *cameraTransform));
 
 	// Create and initialize the model object.
 	model = make_unique<Model>(renderer->GetDevice(), renderer->GetDeviceContext(), "../Engine/data/stone01.tga");
@@ -101,29 +101,23 @@ void Engine::KeyUp(unsigned int key)
 	input->SetKeyUp(key);
 }
 
-void Engine::AddComponent(Entity* entity, Camera* camera)
+void Engine::AddComponent(Entity& entity, Camera& camera)
 {
-	assert(entity);
-	assert(camera);
-	entity->AddComponent(camera);
-	cameras.push_back(camera);
+	entity.AddComponent(camera);
+	cameras.push_back(&camera);
 }
 
 // TODO: Template
-void Engine::AddComponent(Entity* entity, Behaviour* behaviour)
+void Engine::AddComponent(Entity& entity, Behaviour& behaviour)
 {
-	assert(entity);
-	assert(behaviour);
-	entity->AddComponent(behaviour);
-	behaviours.push_back(behaviour);
+	entity.AddComponent(behaviour);
+	behaviours.push_back(&behaviour);
 }
 
 // TODO: Template
-void Engine::AddComponent(Entity* entity, Component* component)
+void Engine::AddComponent(Entity& entity, Component& component)
 {
-	assert(entity);
-	assert(component);
-	entity->AddComponent(component);
+	entity.AddComponent(component);
 }
 
 Scene& Engine::CreateScene()

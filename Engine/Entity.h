@@ -7,7 +7,7 @@
 class Entity
 {
 public:
-	void AddComponent(class Component* component);
+	void AddComponent(class Component& component);
 
 private:
 	std::vector<std::unique_ptr<class Component>> components;

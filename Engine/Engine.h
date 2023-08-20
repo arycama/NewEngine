@@ -29,7 +29,7 @@ private:
 	std::vector<class Camera*> cameras;
 	std::vector<class Behaviour*> behaviours;
 
-	void AddComponent(class Entity* entity, class Behaviour* behaviour);
-	void AddComponent(class Entity* entity, class Camera* camera);
-	void AddComponent(class Entity* entity, class Component* component);
+	void AddComponent(class Entity& entity, class Behaviour& behaviour);
+	void AddComponent(class Entity& entity, class Camera& camera);
+	void AddComponent(class Entity& entity, class Component& component);
 };

@@ -7,8 +7,7 @@
 
 using namespace std;
 
-void Entity::AddComponent(Component* component)
+void Entity::AddComponent(Component& component)
 {
-	assert(component);
-	components.push_back(unique_ptr<Component>(component));
+	components.push_back(unique_ptr<Component>(&component));
 }
