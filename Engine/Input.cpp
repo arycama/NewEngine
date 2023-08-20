@@ -7,13 +7,13 @@ Input::Input()
 		keys[i] = false;
 }
 
-void Input::KeyDown(const unsigned int input)
+void Input::SetKeyDown(const unsigned int input)
 {
 	// If a key is pressed then save that state in the key array.
 	keys[input] = true;
 }
 
-void Input::KeyUp(unsigned int input)
+void Input::SetKeyUp(unsigned int input)
 {
 	// If a key is released then clear that state in the key array.
 	keys[input] = false;

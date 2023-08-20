@@ -21,22 +21,20 @@ Engine::Engine(System& system) : system(system)
 
 	windowHandle = make_unique<WindowHandle>(hwnd);
 
-	// Create and initialize the Direct3D object.
 	renderer = make_unique<Renderer>(width, height, VSYNC_ENABLED, hwnd, fullScreen);
+
+	input = make_unique<Input>();
 
 	// Create the camera object and set the initial position of the camera.
 	auto cameraPosition = XMFLOAT3(0.0f, 0.0f, -5.0f);
 	auto cameraRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	camera = make_unique<Camera>(cameraPosition, cameraRotation, 0.1f, 1000.0f, 45, *renderer);
+	camera = make_unique<Camera>(cameraPosition, cameraRotation, 0.1f, 1000.0f, 45, *renderer, *input);
 
 	// Create and initialize the model object.
 	model = make_unique<Model>(renderer->GetDevice(), renderer->GetDeviceContext(), "../Engine/data/stone01.tga");
 
 	// Create and initialize the texture shader object.
 	textureShader = make_unique<TextureShader>(renderer->GetDevice());
-
-	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
-	input = make_unique<Input>();
 
 	// Hide the mouse cursor.
 	ShowCursor(false);
@@ -52,6 +50,9 @@ Engine::~Engine()
 
 void Engine::Update() const
 {
+	// Update scene
+	camera->Update();
+
 	// Clear the buffers to begin the scene.
 	renderer->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
 
@@ -76,10 +77,10 @@ void Engine::KeyDown(const unsigned int key)
 		return;
 	}
 
-	input->KeyDown(key);
+	input->SetKeyDown(key);
 }
 
 void Engine::KeyUp(unsigned int key)
 {
-	input->KeyUp(key);
+	input->SetKeyUp(key);
 }

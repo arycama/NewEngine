@@ -1,9 +1,10 @@
 #include "Camera.h"
+#include "Input.h"
 #include "Renderer.h"
 
 using namespace DirectX;
 
-Camera::Camera(const XMFLOAT3 position, const XMFLOAT3 rotation, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer) : position(position), rotation(rotation), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), renderer(renderer)
+Camera::Camera(const XMFLOAT3 position, const XMFLOAT3 rotation, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer, Input& input) : position(position), rotation(rotation), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), renderer(renderer), input(input)
 {
 }
 
@@ -55,4 +56,34 @@ XMMATRIX Camera::GetProjectionMatrix() const
 	const auto aspect = renderer.GetAspectRatio();
 	const auto fovRadians = XMConvertToRadians(fieldOfView);
 	return XMMatrixPerspectiveFovLH(fovRadians, aspect, nearClipPlane, farClipPlane);
+}
+
+void Camera::Update()
+{
+	float movementSpeed = 0.1f;
+	float rotateSpeed = 1.0f;
+
+	if (input.IsKeyDown(0x57)) // W
+		position.z += movementSpeed;
+
+	if (input.IsKeyDown(0x53)) // S
+		position.z -= movementSpeed;
+
+	if (input.IsKeyDown(0x41)) // A
+		position.x -= movementSpeed;
+
+	if (input.IsKeyDown(0x44)) // D
+		position.x += movementSpeed;
+
+	if (input.IsKeyDown(VK_LEFT)) // Left
+		rotation.y -= rotateSpeed;
+
+	if (input.IsKeyDown(VK_RIGHT)) // Right
+		rotation.y += rotateSpeed;
+
+	if (input.IsKeyDown(VK_UP)) // Up
+		rotation.x -= rotateSpeed;
+
+	if (input.IsKeyDown(VK_DOWN)) // Down
+		rotation.x += rotateSpeed;
 }

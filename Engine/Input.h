@@ -5,8 +5,8 @@ class Input
 public:
 	Input();
 
-	void KeyDown(unsigned int);
-	void KeyUp(unsigned int);
+	void SetKeyDown(unsigned int);
+	void SetKeyUp(unsigned int);
 	bool IsKeyDown(unsigned int) const;
 
 private:
