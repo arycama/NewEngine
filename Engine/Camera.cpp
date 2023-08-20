@@ -1,14 +1,18 @@
 #include "Camera.h"
+#include "Renderer.h"
 
 using namespace DirectX;
 
-Camera::Camera(const XMFLOAT3 position, const XMFLOAT3 rotation)
+Camera::Camera(const XMFLOAT3 position, const XMFLOAT3 rotation, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer) : position(position), rotation(rotation), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), renderer(renderer)
 {
-	this->position = position;
-	this->rotation = rotation;
 }
 
-XMMATRIX& Camera::GetViewMatrix() const
+XMMATRIX Camera::GetWorldMatrix() const
+{
+	return XMMatrixIdentity();
+}
+
+XMMATRIX Camera::GetViewMatrix() const
 {
 	// Setup the vector that points upwards.
 	constexpr auto up = XMFLOAT3(0.0f, 1.0f, 0.0f);
@@ -44,4 +48,11 @@ XMMATRIX& Camera::GetViewMatrix() const
 	auto viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
 	return viewMatrix;
+}
+
+XMMATRIX Camera::GetProjectionMatrix() const
+{
+	const auto aspect = renderer.GetAspectRatio();
+	const auto fovRadians = XMConvertToRadians(fieldOfView);
+	return XMMatrixPerspectiveFovLH(fovRadians, aspect, nearClipPlane, farClipPlane);
 }

@@ -3,7 +3,7 @@
 #include <memory>
 
 class Camera;
-class D3D;
+class Renderer;
 class Input;
 class Model;
 class System;
@@ -25,7 +25,7 @@ private:
 	System& system;
 
 	std::unique_ptr<Input> input;
-	std::unique_ptr<D3D> d3d;
+	std::unique_ptr<Renderer> renderer;
 	std::unique_ptr<Camera> camera;
 	std::unique_ptr<Model> model;
 	std::unique_ptr<TextureShader> textureShader;

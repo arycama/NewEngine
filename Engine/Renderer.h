@@ -16,11 +16,11 @@ struct ID3D11DepthStencilState;
 struct ID3D11DepthStencilView;
 struct ID3D11RasterizerState;
 
-class D3D
+class Renderer
 {
 public:
-	D3D(UINT, UINT, bool, HWND, bool);
-	~D3D();
+	Renderer(UINT, UINT, bool, HWND, bool);
+	~Renderer();
 
 	void BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const FLOAT alpha) const;
 	void EndScene() const;
@@ -28,11 +28,10 @@ public:
 	ID3D11Device& GetDevice() const;
 	ID3D11DeviceContext& GetDeviceContext() const;
 
-	DirectX::XMMATRIX& GetProjectionMatrix();
-	DirectX::XMMATRIX& GetWorldMatrix();
-	DirectX::XMMATRIX& GetOrthoMatrix();
+	float GetAspectRatio() const;
 
 private:
+	int width, height;
 	bool vsyncEnabled;
 
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
@@ -44,7 +43,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
 
-	DirectX::XMMATRIX projectionMatrix;
 	DirectX::XMMATRIX worldMatrix;
 	DirectX::XMMATRIX orthoMatrix;
 };

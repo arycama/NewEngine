@@ -136,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="D3D.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
@@ -149,7 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="D3D.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />

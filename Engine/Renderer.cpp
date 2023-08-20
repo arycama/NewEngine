@@ -1,4 +1,4 @@
-#include "D3D.h"
+#include "Renderer.h"
 
 #include <comdef.h>
 #include <d3d11.h>
@@ -9,10 +9,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-const float screenDepth = 1000.0f;
-const float screenNear = 0.1f;
-
-D3D::D3D(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen)
+Renderer::Renderer(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height)
 {
 	vsyncEnabled = vsync;
 
@@ -119,27 +116,15 @@ D3D::D3D(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen)
 
 	// Create the viewport.
 	deviceContext->RSSetViewports(1, &viewport);
-
-	// Setup the projection matrix.
-	auto screenAspect = static_cast<float>(width) / static_cast<float>(height);
-
-	// Create the projection matrix for 3D rendering.
-	projectionMatrix = XMMatrixPerspectiveFovLH(XM_PIDIV4, screenAspect, screenNear, screenDepth);
-
-	// Initialize the world matrix to the identity matrix.
-	worldMatrix = XMMatrixIdentity();
-
-	// Create an orthographic projection matrix for 2D rendering.
-	orthoMatrix = XMMatrixOrthographicLH(static_cast<float>(width), static_cast<float>(height), screenNear, screenDepth);
 }
 
-D3D::~D3D()
+Renderer::~Renderer()
 {
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 	swapChain->SetFullscreenState(false, nullptr);
 }
 
-void D3D::BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const FLOAT alpha) const
+void Renderer::BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const FLOAT alpha) const
 {
 	// Setup the color to clear the buffer to.
 	const FLOAT color[4]{ red, green, blue, alpha };
@@ -151,33 +136,23 @@ void D3D::BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const
 	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void D3D::EndScene() const
+void Renderer::EndScene() const
 {
 	// Lock to screen refresh rate.
 	swapChain->Present(vsyncEnabled ? 1 : 0, 0);
 }
 
-ID3D11Device& D3D::GetDevice() const
+ID3D11Device& Renderer::GetDevice() const
 {
 	return *device.Get();
 }
 
-ID3D11DeviceContext& D3D::GetDeviceContext() const
+ID3D11DeviceContext& Renderer::GetDeviceContext() const
 {
 	return *deviceContext.Get();
 }
 
-XMMATRIX& D3D::GetProjectionMatrix()
+float Renderer::GetAspectRatio() const
 {
-	return projectionMatrix;
-}
-
-XMMATRIX& D3D::GetWorldMatrix()
-{
-	return worldMatrix;
-}
-
-XMMATRIX& D3D::GetOrthoMatrix()
-{
-	return orthoMatrix;
+	return static_cast<float>(width) / static_cast<float>(height);
 }
