@@ -32,6 +32,7 @@ private:
 	std::unique_ptr<class Input> input;
 	std::unique_ptr<class Graphics> graphics;
 	std::unique_ptr<class Shader> shader;
+	std::unique_ptr<class Texture> texture;
 	std::unique_ptr<class WindowHandle> windowHandle;
 
 	std::vector<class Behaviour*> behaviours;

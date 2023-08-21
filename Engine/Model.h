@@ -10,7 +10,7 @@
 class Model : public Component
 {
 public:
-	Model(struct ID3D11Device& device, struct ID3D11DeviceContext& deviceContext, const std::string& textureFilename);
+	Model(struct ID3D11Device& device, struct ID3D11DeviceContext& deviceContext);
 
 	void Render(struct ID3D11DeviceContext& deviceContext) const;
 	int GetIndexCount() const;
@@ -23,7 +23,6 @@ private:
 	int vertexCount, indexCount;
 
 	Microsoft::WRL::ComPtr<struct ID3D11Buffer> vertexBuffer, indexBuffer;
-	std::unique_ptr<class Texture> texture;
 
 	struct VertexType
 	{

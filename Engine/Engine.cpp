@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "System.h"
+#include "Texture.h"
 #include "Transform.h"
 #include "WindowHandle.h"
 
@@ -30,6 +31,10 @@ Engine::Engine(System& system) : system(system)
 	graphics = make_unique<Graphics>(width, height, VSYNC_ENABLED, hwnd, fullScreen);
 	input = make_unique<Input>();
 
+	// Assets
+	shader = make_unique<Shader>(graphics->GetDevice());
+	texture = make_unique<Texture>(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
+
 	// Create the scene
 	auto scene = new Scene(*this);
 	AddScene(*scene);
@@ -44,14 +49,11 @@ Engine::Engine(System& system) : system(system)
 	camera.AddComponent(*new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *graphics, *this));
 	camera.AddComponent(*new Movement(*input.get(), *cameraTransform, *this));
 
-	// Create and initialize the texture shader object.
-	shader = make_unique<Shader>(graphics->GetDevice());
-	
 	auto& object0 = *new Entity(*scene, *this);
-	auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
+	auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
 	object0.AddComponent(*new Transform(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f)));
 	object0.AddComponent(*model);
-	object0.AddComponent(*new Renderer(*model, *shader.get(), *graphics, *this));
+	object0.AddComponent(*new Renderer(*model, *shader.get(), *graphics, *this, *texture.get()));
 	
 	// Hide the mouse cursor.
 	ShowCursor(false);

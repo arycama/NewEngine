@@ -1,5 +1,4 @@
 #include "Model.h"
-#include "Texture.h"
 
 #include <d3d11.h>
 #include <memory>
@@ -10,7 +9,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const std::string& textureFilename)
+Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext)
 {
 	// Initialize the vertex and index buffers.
 	// Set the number of vertices in the vertex array.
@@ -60,7 +59,6 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const std
 
 	// Load the texture for this model.
 	// Create and initialize the texture object.
-	texture = make_unique<Texture>(device, deviceContext, textureFilename);
 }
 
 void Model::Render(ID3D11DeviceContext& deviceContext) const
@@ -88,9 +86,4 @@ void Model::RenderBuffers(ID3D11DeviceContext& deviceContext) const
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-ID3D11ShaderResourceView& Model::GetTexture() const
-{
-	return texture->GetTexture();
 }
