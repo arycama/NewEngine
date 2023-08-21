@@ -1,9 +1,9 @@
-#include "TextureShader.h"
+#include "Shader.h"
 
 using namespace std;
 using namespace DirectX;
 
-TextureShader::TextureShader(ID3D11Device& device)
+Shader::Shader(ID3D11Device& device)
 {
 	m_vertexShader = nullptr;
 	m_pixelShader = nullptr;
@@ -32,12 +32,12 @@ TextureShader::TextureShader(ID3D11Device& device)
 	InitializeShader(device, vsFilename, psFilename);
 }
 
-TextureShader::~TextureShader()
+Shader::~Shader()
 {
 	ShutdownShader();
 }
 
-bool TextureShader::Render(ID3D11DeviceContext& deviceContext, int indexCount, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture)
+bool Shader::Render(ID3D11DeviceContext& deviceContext, int indexCount, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture)
 {
 	bool result;
 
@@ -54,7 +54,7 @@ bool TextureShader::Render(ID3D11DeviceContext& deviceContext, int indexCount, c
 	return true;
 }
 
-bool TextureShader::InitializeShader(ID3D11Device& device, WCHAR* vsFilename, WCHAR* psFilename)
+bool Shader::InitializeShader(ID3D11Device& device, WCHAR* vsFilename, WCHAR* psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -176,7 +176,7 @@ bool TextureShader::InitializeShader(ID3D11Device& device, WCHAR* vsFilename, WC
 	return true;
 }
 
-void TextureShader::ShutdownShader()
+void Shader::ShutdownShader()
 {
 	// Release the sampler state.
 	if (m_sampleState)
@@ -214,7 +214,7 @@ void TextureShader::ShutdownShader()
 	}
 }
 
-bool TextureShader::SetShaderParameters(ID3D11DeviceContext& deviceContext, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const
+bool Shader::SetShaderParameters(ID3D11DeviceContext& deviceContext, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -253,7 +253,7 @@ bool TextureShader::SetShaderParameters(ID3D11DeviceContext& deviceContext, cons
 	return true;
 }
 
-void TextureShader::RenderShader(ID3D11DeviceContext& deviceContext, int indexCount) const
+void Shader::RenderShader(ID3D11DeviceContext& deviceContext, int indexCount) const
 {
 	// Set the vertex input layout.
 	deviceContext.IASetInputLayout(m_layout);

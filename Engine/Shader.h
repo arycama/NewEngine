@@ -5,7 +5,7 @@
 #include <directxmath.h>
 #include <fstream>
 
-class TextureShader
+class Shader
 {
 private:
 	struct MatrixBufferType
@@ -16,8 +16,8 @@ private:
 	};
 
 public:
-	TextureShader(ID3D11Device& device);
-	~TextureShader();
+	Shader(ID3D11Device& device);
+	~Shader();
 
 	bool Render(ID3D11DeviceContext&, int, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, const DirectX::XMMATRIX&, ID3D11ShaderResourceView&);
 

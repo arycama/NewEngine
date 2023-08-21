@@ -7,8 +7,8 @@
 #include "Model.h"
 #include "Movement.h"
 #include "Scene.h"
+#include "Shader.h"
 #include "System.h"
-#include "TextureShader.h"
 #include "Transform.h"
 #include "WindowHandle.h"
 
@@ -47,7 +47,7 @@ Engine::Engine(System& system) : system(system)
 	model = make_unique<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
 
 	// Create and initialize the texture shader object.
-	textureShader = make_unique<TextureShader>(graphics->GetDevice());
+	shader = make_unique<Shader>(graphics->GetDevice());
 
 	// Hide the mouse cursor.
 	ShowCursor(false);
@@ -68,16 +68,16 @@ void Engine::Update()
 	// Clear the buffers to begin the scene.
 	graphics->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
 
-	// Generate the view matrix based on the camera's position.
-	// Get the world, view, and projection matrices from the camera and renderer objects.
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	model->Render(graphics->GetDeviceContext());
 
 	// Render the model using the texture shader.
 	for (auto camera : cameras)
 	{
-		textureShader->Render(graphics->GetDeviceContext(), model->GetIndexCount(), camera->GetWorldMatrix(), camera->GetViewMatrix(), camera->GetProjectionMatrix(), model->GetTexture());
+		// for renderer in renderers
+
+		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+		model->Render(graphics->GetDeviceContext());
+
+		shader->Render(graphics->GetDeviceContext(), model->GetIndexCount(), camera->GetWorldMatrix(), camera->GetViewMatrix(), camera->GetProjectionMatrix(), model->GetTexture());
 	}
 
 	// Present the rendered scene to the screen.
@@ -107,7 +107,7 @@ void Engine::AddBehaviour(Behaviour& behaviour)
 
 void Engine::RemoveBehaviour(Behaviour& behaviour)
 {
-	behaviours.erase(remove(behaviours.begin(), behaviours.end(), &behaviour), behaviours.end());
+	behaviours.erase(find(behaviours.begin(), behaviours.end(), &behaviour));
 }
 
 void Engine::AddCamera(Camera& camera)
@@ -117,7 +117,17 @@ void Engine::AddCamera(Camera& camera)
 
 void Engine::RemoveCamera(Camera& camera)
 {
-	cameras.erase(remove(cameras.begin(), cameras.end(), &camera), cameras.end());
+	cameras.erase(find(cameras.begin(), cameras.end(), &camera));
+}
+
+void Engine::AddRenderer(Renderer& renderer)
+{
+	renderers.push_back(&renderer);
+}
+
+void Engine::RemoveRenderer(Renderer& renderer)
+{
+	renderers.erase(find(renderers.begin(), renderers.end(), &renderer));
 }
 
 void Engine::AddScene(Scene& scene)
@@ -127,6 +137,5 @@ void Engine::AddScene(Scene& scene)
 
 void Engine::RemoveScene(Scene& scene)
 {
-	//if (!isShuttingDown)
-		//scenes.erase(remove(scenes.begin(), scenes.end(), *scene), scenes.end());
+	//scenes.erase(find(scenes.begin(), scenes.end(), &scene));
 }

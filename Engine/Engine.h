@@ -15,11 +15,15 @@ public:
 	void KeyUp(const unsigned int key);
 
 	void AddBehaviour(class Behaviour& behaviour);
-	void AddCamera(class Camera& camera);
-	void AddScene(class Scene& scene);
-
 	void RemoveBehaviour(class Behaviour& behaviour);
+
+	void AddCamera(class Camera& camera);
 	void RemoveCamera(class Camera& camera);
+
+	void AddRenderer(class Renderer& renderer);
+	void RemoveRenderer(class Renderer& renderer);
+
+	void AddScene(class Scene& scene);
 	void RemoveScene(class Scene& scene);
 
 private:
@@ -28,10 +32,11 @@ private:
 	std::unique_ptr<class Input> input;
 	std::unique_ptr<class Graphics> graphics;
 	std::unique_ptr<class Model> model;
-	std::unique_ptr<class TextureShader> textureShader;
+	std::unique_ptr<class Shader> shader;
 	std::unique_ptr<class WindowHandle> windowHandle;
 
 	std::vector<class Behaviour*> behaviours;
 	std::vector<class Camera*> cameras;
+	std::vector<class Renderer*> renderers;
 	std::vector<std::unique_ptr<class Scene>> scenes;
 };
