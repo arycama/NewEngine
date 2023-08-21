@@ -9,7 +9,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext)
+Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
 {
 	// Initialize the vertex and index buffers.
 	// Set the number of vertices in the vertex array.
@@ -61,29 +61,23 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext)
 	// Create and initialize the texture object.
 }
 
-void Model::Render(ID3D11DeviceContext& deviceContext) const
+void Model::Render()
 {
-	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	RenderBuffers(deviceContext);
+	// Set vertex buffer stride and offset.
+	constexpr auto stride = static_cast<UINT>(sizeof(VertexType));
+	constexpr auto offset = 0u;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	deviceContext.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
+	// Set the index buffer to active in the input assembler so it can be rendered.
+	deviceContext.IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 int Model::GetIndexCount() const
 {
 	return indexCount;
-}
-
-void Model::RenderBuffers(ID3D11DeviceContext& deviceContext) const
-{
-	// Set vertex buffer stride and offset.
-	constexpr auto stride = static_cast<UINT>(sizeof(VertexType));
-	constexpr auto offset = 0u;
-    
-	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-
-    // Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext.IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

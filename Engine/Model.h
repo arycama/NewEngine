@@ -12,18 +12,15 @@ class Model : public Component
 public:
 	Model(struct ID3D11Device& device, struct ID3D11DeviceContext& deviceContext);
 
-	void Render(struct ID3D11DeviceContext& deviceContext) const;
+	void Render();
 	int GetIndexCount() const;
 
-	struct ID3D11ShaderResourceView& GetTexture() const;
-
 private:
-	void RenderBuffers(struct ID3D11DeviceContext& deviceContext) const;
-
 	int vertexCount, indexCount;
+	struct ID3D11DeviceContext& deviceContext;
 
 	Microsoft::WRL::ComPtr<struct ID3D11Buffer> vertexBuffer, indexBuffer;
-
+	
 	struct VertexType
 	{
 		DirectX::XMFLOAT3 position;

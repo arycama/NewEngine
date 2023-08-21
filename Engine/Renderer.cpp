@@ -18,6 +18,6 @@ Renderer::~Renderer()
 
 void Renderer::Render(Camera& camera)
 {
-	model.Render(graphics.GetDeviceContext());
+	model.Render();
 	shader.Render(graphics.GetDeviceContext(), model.GetIndexCount(), camera.GetWorldMatrix(), camera.GetViewMatrix(), camera.GetProjectionMatrix(), texture.GetTexture());
 }
