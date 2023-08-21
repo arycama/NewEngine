@@ -31,7 +31,6 @@ private:
 
 	std::unique_ptr<class Input> input;
 	std::unique_ptr<class Graphics> graphics;
-	std::unique_ptr<class Model> model;
 	std::unique_ptr<class Shader> shader;
 	std::unique_ptr<class WindowHandle> windowHandle;
 

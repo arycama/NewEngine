@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "Model.h"
 #include "Movement.h"
+#include "Renderer.h"
 #include "Scene.h"
 #include "Shader.h"
 #include "System.h"
@@ -43,12 +44,15 @@ Engine::Engine(System& system) : system(system)
 	camera.AddComponent(*new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *graphics, *this));
 	camera.AddComponent(*new Movement(*input.get(), *cameraTransform, *this));
 
-	// Create and initialize the model object.
-	model = make_unique<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
-
 	// Create and initialize the texture shader object.
 	shader = make_unique<Shader>(graphics->GetDevice());
-
+	
+	auto& object0 = *new Entity(*scene, *this);
+	auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
+	object0.AddComponent(*new Transform(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f)));
+	object0.AddComponent(*model);
+	object0.AddComponent(*new Renderer(*model, *shader.get(), *graphics, *this));
+	
 	// Hide the mouse cursor.
 	ShowCursor(false);
 }
@@ -68,17 +72,10 @@ void Engine::Update()
 	// Clear the buffers to begin the scene.
 	graphics->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
 
-
 	// Render the model using the texture shader.
 	for (auto camera : cameras)
-	{
-		// for renderer in renderers
-
-		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-		model->Render(graphics->GetDeviceContext());
-
-		shader->Render(graphics->GetDeviceContext(), model->GetIndexCount(), camera->GetWorldMatrix(), camera->GetViewMatrix(), camera->GetProjectionMatrix(), model->GetTexture());
-	}
+		for (auto renderer : renderers)
+			renderer->Render(*camera);
 
 	// Present the rendered scene to the screen.
 	graphics->EndScene();

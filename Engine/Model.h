@@ -1,14 +1,15 @@
 #pragma once
 
+#include "Component.h"
+#include "Texture.h"
+
 #include <d3d11.h>
 #include <directxmath.h>
 #include <memory>
 #include <wrl/client.h>
 #include <string>
 
-#include "Texture.h"
-
-class Model
+class Model : public Component
 {
 public:
 	Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const std::string& textureFilename);
