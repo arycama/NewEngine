@@ -8,7 +8,15 @@
 
 using namespace DirectX;
 
-Camera::Camera(Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), renderer(renderer) { }
+Camera::Camera(Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer, Engine& engine) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), renderer(renderer), engine(engine)
+{ 
+	engine.AddCamera(*this);
+}
+
+Camera::~Camera()
+{
+	engine.RemoveCamera(*this);
+}
 
 XMMATRIX Camera::GetWorldMatrix() const
 {

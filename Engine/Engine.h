@@ -14,9 +14,16 @@ public:
 	void KeyDown(const unsigned int key);
 	void KeyUp(const unsigned int key);
 
-	class Scene& CreateScene();
+	void AddBehaviour(class Behaviour& behaviour);
+	void AddCamera(class Camera& camera);
+	void AddScene(class Scene& scene);
+
+	void RemoveBehaviour(class Behaviour& behaviour);
+	void RemoveCamera(class Camera& camera);
+	void RemoveScene(class Scene& scene);
 
 private:
+	bool isShuttingDown;
 	System& system;
 
 	std::unique_ptr<class Input> input;
@@ -29,7 +36,4 @@ private:
 	std::vector<class Camera*> cameras;
 	std::vector<class Behaviour*> behaviours;
 
-	void AddComponent(class Entity& entity, class Behaviour& behaviour);
-	void AddComponent(class Entity& entity, class Camera& camera);
-	void AddComponent(class Entity& entity, class Component& component);
 };

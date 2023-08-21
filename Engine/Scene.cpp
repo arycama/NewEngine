@@ -1,3 +1,4 @@
+#include "Engine.h"
 #include "Entity.h"
 #include "Scene.h"
 
@@ -5,9 +6,9 @@
 
 using namespace std;
 
-Entity& Scene::CreateEntity()
+Scene::Scene(Engine& engine) : engine(engine) { };
+
+void Scene::AddEntity(Entity& entity)
 {
-	const auto entity = new Entity();
-	entities.push_back(unique_ptr<Entity>(entity));
-	return *entity;
+	entities.push_back(unique_ptr<Entity>(&entity));
 }

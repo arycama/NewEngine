@@ -30,17 +30,18 @@ Engine::Engine(System& system) : system(system)
 	input = make_unique<Input>();
 
 	// Create the scene
-	auto& scene = CreateScene();
+	auto scene = new Scene(*this);
+	AddScene(*scene);
 
 	// Create the camera object and set the initial position of the camera.
-	auto& camera = scene.CreateEntity();
+	auto& camera = *new Entity(*scene, *this);
 
 	auto cameraPosition = XMFLOAT3(0.0f, 0.0f, -5.0f);
 	auto cameraRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	auto cameraTransform = new Transform(cameraPosition, cameraRotation);
-	AddComponent(camera, *cameraTransform);
-	AddComponent(camera, *new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *renderer));
-	AddComponent(camera, *new Movement(*input.get(), *cameraTransform));
+	camera.AddComponent(*cameraTransform);
+	camera.AddComponent(*new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *renderer, *this));
+	camera.AddComponent(*new Movement(*input.get(), *cameraTransform));
 
 	// Create and initialize the model object.
 	model = make_unique<Model>(renderer->GetDevice(), renderer->GetDeviceContext(), "../Engine/data/stone01.tga");
@@ -101,28 +102,32 @@ void Engine::KeyUp(unsigned int key)
 	input->SetKeyUp(key);
 }
 
-void Engine::AddComponent(Entity& entity, Camera& camera)
+void Engine::AddBehaviour(Behaviour& behaviour)
 {
-	entity.AddComponent(camera);
-	cameras.push_back(&camera);
-}
-
-// TODO: Template
-void Engine::AddComponent(Entity& entity, Behaviour& behaviour)
-{
-	entity.AddComponent(behaviour);
 	behaviours.push_back(&behaviour);
 }
 
-// TODO: Template
-void Engine::AddComponent(Entity& entity, Component& component)
+void Engine::RemoveBehaviour(Behaviour& behaviour)
 {
-	entity.AddComponent(component);
+	behaviours.erase(remove(behaviours.begin(), behaviours.end(), &behaviour), behaviours.end());
 }
 
-Scene& Engine::CreateScene()
+void Engine::AddCamera(Camera& camera)
 {
-	const auto scene = new Scene();
-	scenes.push_back(unique_ptr<Scene>(scene));
-	return *scene;
+	cameras.push_back(&camera);
+}
+
+void Engine::RemoveCamera(Camera& camera)
+{
+	cameras.erase(remove(cameras.begin(), cameras.end(), &camera), cameras.end());
+}
+
+void Engine::AddScene(Scene& scene)
+{
+	scenes.push_back(unique_ptr<Scene>(&scene));
+}
+
+void Engine::RemoveScene(Scene& scene)
+{
+	//scenes.erase(remove(scenes.begin(), scenes.end(), *scene), scenes.end());
 }

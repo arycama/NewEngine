@@ -6,8 +6,9 @@
 class Scene
 {
 public:
-	class Entity& CreateEntity();
-
+	Scene(class Engine& engine);
+	void AddEntity(class Entity& entitiy);
 private:
-	std::vector<std::unique_ptr<Entity>> entities;
+	class Engine& engine;
+	std::vector<std::unique_ptr<class Entity>> entities;
 };
