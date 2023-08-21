@@ -1,14 +1,14 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "Input.h"
-#include "Renderer.h"
+#include "Graphics.h"
 #include "Transform.h"
 
 #include <directxmath.h>
 
 using namespace DirectX;
 
-Camera::Camera(Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Renderer& renderer, Engine& engine) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), renderer(renderer), engine(engine)
+Camera::Camera(Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Graphics& graphics, Engine& engine) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine)
 { 
 	engine.AddCamera(*this);
 }
@@ -65,7 +65,7 @@ XMMATRIX Camera::GetViewMatrix() const
 
 XMMATRIX Camera::GetProjectionMatrix() const
 {
-	const auto aspect = renderer.GetAspectRatio();
+	const auto aspect = graphics.GetAspectRatio();
 	const auto fovRadians = XMConvertToRadians(fieldOfView);
 	return XMMatrixPerspectiveFovLH(fovRadians, aspect, nearClipPlane, farClipPlane);
 }

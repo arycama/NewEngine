@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "Graphics.h"
 
 #include <comdef.h>
 #include <d3d11.h>
@@ -9,7 +9,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-Renderer::Renderer(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height)
+Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height)
 {
 	vsyncEnabled = vsync;
 
@@ -118,13 +118,13 @@ Renderer::Renderer(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscre
 	deviceContext->RSSetViewports(1, &viewport);
 }
 
-Renderer::~Renderer()
+Graphics::~Graphics()
 {
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 	swapChain->SetFullscreenState(false, nullptr);
 }
 
-void Renderer::BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const FLOAT alpha) const
+void Graphics::BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const FLOAT alpha) const
 {
 	// Setup the color to clear the buffer to.
 	const FLOAT color[4]{ red, green, blue, alpha };
@@ -136,23 +136,23 @@ void Renderer::BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, 
 	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Renderer::EndScene() const
+void Graphics::EndScene() const
 {
 	// Lock to screen refresh rate.
 	swapChain->Present(vsyncEnabled ? 1 : 0, 0);
 }
 
-ID3D11Device& Renderer::GetDevice() const
+ID3D11Device& Graphics::GetDevice() const
 {
 	return *device.Get();
 }
 
-ID3D11DeviceContext& Renderer::GetDeviceContext() const
+ID3D11DeviceContext& Graphics::GetDeviceContext() const
 {
 	return *deviceContext.Get();
 }
 
-float Renderer::GetAspectRatio() const
+float Graphics::GetAspectRatio() const
 {
 	return static_cast<float>(width) / static_cast<float>(height);
 }

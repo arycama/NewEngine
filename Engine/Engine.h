@@ -26,7 +26,7 @@ private:
 	System& system;
 
 	std::unique_ptr<class Input> input;
-	std::unique_ptr<class Renderer> renderer;
+	std::unique_ptr<class Graphics> graphics;
 	std::unique_ptr<class Model> model;
 	std::unique_ptr<class TextureShader> textureShader;
 	std::unique_ptr<class WindowHandle> windowHandle;

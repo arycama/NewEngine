@@ -2,7 +2,7 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "Entity.h"
-#include "Renderer.h"
+#include "Graphics.h"
 #include "Input.h"
 #include "Model.h"
 #include "Movement.h"
@@ -26,7 +26,7 @@ Engine::Engine(System& system) : system(system)
 	auto hwnd = system.InitializeWindow(fullScreen, width, height);
 
 	windowHandle = make_unique<WindowHandle>(hwnd);
-	renderer = make_unique<Renderer>(width, height, VSYNC_ENABLED, hwnd, fullScreen);
+	graphics = make_unique<Graphics>(width, height, VSYNC_ENABLED, hwnd, fullScreen);
 	input = make_unique<Input>();
 
 	// Create the scene
@@ -40,14 +40,14 @@ Engine::Engine(System& system) : system(system)
 	auto cameraRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	auto cameraTransform = new Transform(cameraPosition, cameraRotation);
 	camera.AddComponent(*cameraTransform);
-	camera.AddComponent(*new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *renderer, *this));
+	camera.AddComponent(*new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *graphics, *this));
 	camera.AddComponent(*new Movement(*input.get(), *cameraTransform, *this));
 
 	// Create and initialize the model object.
-	model = make_unique<Model>(renderer->GetDevice(), renderer->GetDeviceContext(), "../Engine/data/stone01.tga");
+	model = make_unique<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
 
 	// Create and initialize the texture shader object.
-	textureShader = make_unique<TextureShader>(renderer->GetDevice());
+	textureShader = make_unique<TextureShader>(graphics->GetDevice());
 
 	// Hide the mouse cursor.
 	ShowCursor(false);
@@ -66,22 +66,22 @@ void Engine::Update()
 		behaviour->Update();
 
 	// Clear the buffers to begin the scene.
-	renderer->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
+	graphics->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
 	// Get the world, view, and projection matrices from the camera and renderer objects.
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	model->Render(renderer->GetDeviceContext());
+	model->Render(graphics->GetDeviceContext());
 
 	// Render the model using the texture shader.
 	for (auto camera : cameras)
 	{
-		textureShader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), camera->GetWorldMatrix(), camera->GetViewMatrix(), camera->GetProjectionMatrix(), model->GetTexture());
+		textureShader->Render(graphics->GetDeviceContext(), model->GetIndexCount(), camera->GetWorldMatrix(), camera->GetViewMatrix(), camera->GetProjectionMatrix(), model->GetTexture());
 	}
 
 	// Present the rendered scene to the screen.
-	renderer->EndScene();
+	graphics->EndScene();
 }
 
 void Engine::KeyDown(const unsigned int key)
