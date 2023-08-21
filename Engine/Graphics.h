@@ -23,7 +23,7 @@ public:
 
 private:
 	int width, height;
-	bool vsyncEnabled;
+	bool vsync;
 
 	Microsoft::WRL::ComPtr<struct IDXGISwapChain> swapChain;
 	Microsoft::WRL::ComPtr<struct ID3D11Device> device;

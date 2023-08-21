@@ -9,10 +9,8 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height)
+Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height), vsync(vsync)
 {
-	vsyncEnabled = vsync;
-
 	// Create a DirectX graphics interface factory.
 	ComPtr<IDXGIFactory> factory;
 	CheckError(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)factory.GetAddressOf()));
@@ -139,7 +137,7 @@ void Graphics::BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, 
 void Graphics::EndScene() const
 {
 	// Lock to screen refresh rate.
-	swapChain->Present(vsyncEnabled ? 1 : 0, 0);
+	swapChain->Present(vsync ? 1 : 0, 0);
 }
 
 ID3D11Device& Graphics::GetDevice() const

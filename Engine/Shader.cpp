@@ -1,16 +1,15 @@
 #include "Shader.h"
 
+#include <comdef.h>
+#include <memory>
+
+using namespace _com_util;
+
 using namespace std;
 using namespace DirectX;
 
 Shader::Shader(ID3D11Device& device)
 {
-	m_vertexShader = nullptr;
-	m_pixelShader = nullptr;
-	m_layout = nullptr;
-	m_matrixBuffer = nullptr;
-	m_sampleState = nullptr;
-
 	wchar_t vsFilename[128];
 	wchar_t psFilename[128];
 
@@ -28,34 +27,6 @@ Shader::Shader(ID3D11Device& device)
 		//return false;
 	}
 
-	// Initialize the vertex and pixel shaders.
-	InitializeShader(device, vsFilename, psFilename);
-}
-
-Shader::~Shader()
-{
-	ShutdownShader();
-}
-
-bool Shader::Render(ID3D11DeviceContext& deviceContext, int indexCount, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture)
-{
-	bool result;
-
-	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Now render the prepared buffers with the shader.
-	RenderShader(deviceContext, indexCount);
-
-	return true;
-}
-
-bool Shader::InitializeShader(ID3D11Device& device, WCHAR* vsFilename, WCHAR* psFilename)
-{
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
@@ -71,34 +42,20 @@ bool Shader::InitializeShader(ID3D11Device& device, WCHAR* vsFilename, WCHAR* ps
 	pixelShaderBuffer = nullptr;
 
 	// Compile the vertex shader code.
-	result = D3DCompileFromFile(vsFilename, nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-				    &vertexShaderBuffer, &errorMessage);
-	if(FAILED(result))
-	{
-		return false;
-	}
+	result = D3DCompileFromFile(vsFilename, nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
+	CheckError(result);
 
 	// Compile the pixel shader code.
-	result = D3DCompileFromFile(psFilename, nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-				    &pixelShaderBuffer, &errorMessage);
-	if(FAILED(result))
-	{
-		return false;
-	}
+	result = D3DCompileFromFile(psFilename, nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
+	CheckError(result);
 
 	// Create the vertex shader from the buffer.
-	result = device.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &m_vertexShader);
-	if(FAILED(result))
-	{
-		return false;
-	}
+	result = device.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &vertexShader);
+	CheckError(result);
 
 	// Create the pixel shader from the buffer.
-	result = device.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, &m_pixelShader);
-	if(FAILED(result))
-	{
-		return false;
-	}
+	result = device.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, &pixelShader);
+	CheckError(result);
 
 	// Create the vertex input layout description.
 	// This setup needs to match the VertexType stucture in the Model and in the shader.
@@ -122,12 +79,8 @@ bool Shader::InitializeShader(ID3D11Device& device, WCHAR* vsFilename, WCHAR* ps
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	// Create the vertex input layout.
-	result = device.CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), 
-					   vertexShaderBuffer->GetBufferSize(), &m_layout);
-	if(FAILED(result))
-	{
-		return false;
-	}
+	result = device.CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &layout);
+	CheckError(result);
 
 	// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
 	vertexShaderBuffer->Release();
@@ -145,11 +98,8 @@ bool Shader::InitializeShader(ID3D11Device& device, WCHAR* vsFilename, WCHAR* ps
 	matrixBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device.CreateBuffer(&matrixBufferDesc, nullptr, &m_matrixBuffer);
-	if(FAILED(result))
-	{
-		return false;
-	}
+	result = device.CreateBuffer(&matrixBufferDesc, nullptr, &matrixBuffer);
+	CheckError(result);
 
 	// Create a texture sampler state description.
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -167,51 +117,28 @@ bool Shader::InitializeShader(ID3D11Device& device, WCHAR* vsFilename, WCHAR* ps
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// Create the texture sampler state.
-	result = device.CreateSamplerState(&samplerDesc, &m_sampleState);
+	result = device.CreateSamplerState(&samplerDesc, &sampleState);
 	if (FAILED(result))
+	{
+		return;
+	}
+}
+
+bool Shader::Render(ID3D11DeviceContext& deviceContext, int indexCount, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture)
+{
+	bool result;
+
+	// Set the shader parameters that it will use for rendering.
+	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
+	if(!result)
 	{
 		return false;
 	}
 
+	// Now render the prepared buffers with the shader.
+	RenderShader(deviceContext, indexCount);
+
 	return true;
-}
-
-void Shader::ShutdownShader()
-{
-	// Release the sampler state.
-	if (m_sampleState)
-	{
-		m_sampleState->Release();
-		m_sampleState = nullptr;
-	}
-
-	// Release the matrix constant buffer.
-	if(m_matrixBuffer)
-	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = nullptr;
-	}
-
-	// Release the layout.
-	if(m_layout)
-	{
-		m_layout->Release();
-		m_layout = nullptr;
-	}
-
-	// Release the pixel shader.
-	if(m_pixelShader)
-	{
-		m_pixelShader->Release();
-		m_pixelShader = nullptr;
-	}
-
-	// Release the vertex shader.
-	if(m_vertexShader)
-	{
-		m_vertexShader->Release();
-		m_vertexShader = nullptr;
-	}
 }
 
 bool Shader::SetShaderParameters(ID3D11DeviceContext& deviceContext, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const
@@ -222,7 +149,7 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext& deviceContext, const XMMAT
 	unsigned int bufferNumber;
 
 	// Lock the constant buffer so it can be written to.
-	result = deviceContext.Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	result = deviceContext.Map(matrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if(FAILED(result))
 	{
 		return false;
@@ -237,13 +164,13 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext& deviceContext, const XMMAT
 	dataPtr->projection = projectionMatrix;
 
 	// Unlock the constant buffer.
-	deviceContext.Unmap(m_matrixBuffer, 0);
+	deviceContext.Unmap(matrixBuffer.Get(), 0);
 
 	// Set the position of the constant buffer in the vertex shader.
 	bufferNumber = 0;
 
 	// Finanly set the constant buffer in the vertex shader with the updated values.
-	deviceContext.VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+	deviceContext.VSSetConstantBuffers(bufferNumber, 1, matrixBuffer.GetAddressOf());
 
 	ID3D11ShaderResourceView* test = &texture;
 
@@ -256,14 +183,14 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext& deviceContext, const XMMAT
 void Shader::RenderShader(ID3D11DeviceContext& deviceContext, int indexCount) const
 {
 	// Set the vertex input layout.
-	deviceContext.IASetInputLayout(m_layout);
+	deviceContext.IASetInputLayout(layout.Get());
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
-	deviceContext.VSSetShader(m_vertexShader, nullptr, 0);
-	deviceContext.PSSetShader(m_pixelShader, nullptr, 0);
+	deviceContext.VSSetShader(vertexShader.Get(), nullptr, 0);
+	deviceContext.PSSetShader(pixelShader.Get(), nullptr, 0);
 
 	// Set the sampler state in the pixel shader.
-	deviceContext.PSSetSamplers(0, 1, &m_sampleState);
+	deviceContext.PSSetSamplers(0, 1, sampleState.GetAddressOf());
 
 	// Render the triangle.
 	deviceContext.DrawIndexed(indexCount, 0, 0);
