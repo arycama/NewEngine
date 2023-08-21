@@ -23,7 +23,6 @@ public:
 	void RemoveScene(class Scene& scene);
 
 private:
-	bool isShuttingDown;
 	System& system;
 
 	std::unique_ptr<class Input> input;
@@ -32,8 +31,7 @@ private:
 	std::unique_ptr<class TextureShader> textureShader;
 	std::unique_ptr<class WindowHandle> windowHandle;
 
-	std::vector<std::unique_ptr<class Scene>> scenes;
-	std::vector<class Camera*> cameras;
 	std::vector<class Behaviour*> behaviours;
-
+	std::vector<class Camera*> cameras;
+	std::vector<std::unique_ptr<class Scene>> scenes;
 };

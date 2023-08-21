@@ -5,7 +5,7 @@
 class Movement : public Behaviour
 {
 public:
-	Movement(class Input& input, class Transform& transform);
+	Movement(class Input& input, class Transform& transform, class Engine& engine);
 
 	void Update() override;
 

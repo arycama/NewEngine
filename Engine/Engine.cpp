@@ -41,7 +41,7 @@ Engine::Engine(System& system) : system(system)
 	auto cameraTransform = new Transform(cameraPosition, cameraRotation);
 	camera.AddComponent(*cameraTransform);
 	camera.AddComponent(*new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *renderer, *this));
-	camera.AddComponent(*new Movement(*input.get(), *cameraTransform));
+	camera.AddComponent(*new Movement(*input.get(), *cameraTransform, *this));
 
 	// Create and initialize the model object.
 	model = make_unique<Model>(renderer->GetDevice(), renderer->GetDeviceContext(), "../Engine/data/stone01.tga");
@@ -63,9 +63,7 @@ void Engine::Update()
 {
 	// Update scene
 	for (auto behaviour : behaviours)
-	{
 		behaviour->Update();
-	}
 
 	// Clear the buffers to begin the scene.
 	renderer->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
@@ -129,5 +127,6 @@ void Engine::AddScene(Scene& scene)
 
 void Engine::RemoveScene(Scene& scene)
 {
-	//scenes.erase(remove(scenes.begin(), scenes.end(), *scene), scenes.end());
+	//if (!isShuttingDown)
+		//scenes.erase(remove(scenes.begin(), scenes.end(), *scene), scenes.end());
 }
