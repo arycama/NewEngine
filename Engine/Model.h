@@ -1,31 +1,29 @@
 #pragma once
 
 #include "Component.h"
-#include "Texture.h"
 
-#include <d3d11.h>
 #include <directxmath.h>
 #include <memory>
-#include <wrl/client.h>
 #include <string>
+#include <wrl/client.h>
 
 class Model : public Component
 {
 public:
-	Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const std::string& textureFilename);
+	Model(struct ID3D11Device& device, struct ID3D11DeviceContext& deviceContext, const std::string& textureFilename);
 
-	void Render(ID3D11DeviceContext& deviceContext) const;
+	void Render(struct ID3D11DeviceContext& deviceContext) const;
 	int GetIndexCount() const;
 
-	ID3D11ShaderResourceView& GetTexture() const;
+	struct ID3D11ShaderResourceView& GetTexture() const;
 
 private:
-	void RenderBuffers(ID3D11DeviceContext& deviceContext) const;
+	void RenderBuffers(struct ID3D11DeviceContext& deviceContext) const;
 
 	int vertexCount, indexCount;
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer, indexBuffer;
-	std::unique_ptr<Texture> texture;
+	Microsoft::WRL::ComPtr<struct ID3D11Buffer> vertexBuffer, indexBuffer;
+	std::unique_ptr<class Texture> texture;
 
 	struct VertexType
 	{

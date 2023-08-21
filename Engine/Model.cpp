@@ -1,7 +1,9 @@
 #include "Model.h"
+#include "Texture.h"
 
-#include <comdef.h>
+#include <d3d11.h>
 #include <memory>
+#include <comdef.h>
 
 using namespace std;
 using namespace DirectX;
