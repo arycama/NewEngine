@@ -61,7 +61,7 @@ Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscre
 	auto featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// Create the swap chain, Direct3D device, and Direct3D device context.
-	CheckError(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, swapChain.GetAddressOf(), &device, nullptr, &deviceContext));
+	CheckError(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, swapChain.GetAddressOf(), device.GetAddressOf(), nullptr, deviceContext.GetAddressOf()));
 
 	// Get the pointer to the back buffer.
 	ComPtr<ID3D11Texture2D> backBufferPtr;
@@ -80,22 +80,17 @@ Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscre
 	auto depthStencilDesc = CD3D11_DEPTH_STENCIL_DESC(true, D3D11_DEPTH_WRITE_MASK_ALL, D3D11_COMPARISON_ALWAYS, true, 0xFF, 0xFF, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS);
 
 	// Create the depth stencil state.
-	CheckError(device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
+	CheckError(device->CreateDepthStencilState(&depthStencilDesc, depthStencilState.GetAddressOf()));
 
 	// Set the depth stencil state.
 	deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
 
 	// Initialize the depth stencil view.
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-
 	// Set up the depth stencil view description.
-	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depthStencilViewDesc.Texture2D.MipSlice = 0;
+	auto depthStencilViewDesc = CD3D11_DEPTH_STENCIL_VIEW_DESC(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D24_UNORM_S8_UINT);
 
 	// Create the depth stencil view.
-	CheckError(device->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, &depthStencilView));
+	CheckError(device->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, depthStencilView.GetAddressOf()));
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	deviceContext->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), depthStencilView.Get());
@@ -104,7 +99,7 @@ Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscre
 	auto rasterDesc = D3D11_RASTERIZER_DESC{ D3D11_FILL_SOLID, D3D11_CULL_BACK, false, 0, 0.0f, 0.0f, true, false, false, false };
 
 	// Create the rasterizer state from the description we just filled out.
-	CheckError(device->CreateRasterizerState(&rasterDesc, &rasterState));
+	CheckError(device->CreateRasterizerState(&rasterDesc, rasterState.GetAddressOf()));
 
 	// Now set the rasterizer state.
 	deviceContext->RSSetState(rasterState.Get());

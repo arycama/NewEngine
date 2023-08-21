@@ -56,9 +56,6 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceC
 
 	// Create the index buffer.
 	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer));
-
-	// Load the texture for this model.
-	// Create and initialize the texture object.
 }
 
 void Model::Render()

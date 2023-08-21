@@ -2,28 +2,13 @@
 #include "Input.h"
 #include "Transform.h"
 
+using namespace DirectX;
+
 Movement::Movement(Input& input, Transform& transform, Engine& engine) : Behaviour(engine), input(input), transform(transform) { }
 
 void Movement::Update()
 {
-	float movementSpeed = 0.1f;
 	float rotateSpeed = 1.0f;
-
-	auto position = transform.GetPosition();
-
-	if (input.IsKeyDown(0x57)) // W
-		position.z += movementSpeed;
-
-	if (input.IsKeyDown(0x53)) // S
-		position.z -= movementSpeed;
-
-	if (input.IsKeyDown(0x41)) // A
-		position.x -= movementSpeed;
-
-	if (input.IsKeyDown(0x44)) // D
-		position.x += movementSpeed;
-
-	transform.SetPosition(position);
 
 	// Rotation
 	auto rotation = transform.GetRotation();
@@ -40,4 +25,36 @@ void Movement::Update()
 		rotation.x += rotateSpeed;
 
 	transform.SetRotation(rotation);
+
+	float movementSpeed = 0.1f;
+
+	auto movement = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	if (input.IsKeyDown(0x57)) // W
+		movement.z += movementSpeed;
+
+	if (input.IsKeyDown(0x53)) // S
+		movement.z -= movementSpeed;
+
+	if (input.IsKeyDown(0x41)) // A
+		movement.x -= movementSpeed;
+
+	if (input.IsKeyDown(0x44)) // D
+		movement.x += movementSpeed;
+
+	// Rotate the movement into the camera's coordinates
+	auto rotationVector = XMLoadFloat3(&rotation);
+	auto rotationQuaternion = XMQuaternionRotationRollPitchYawFromVector(-rotationVector);
+
+	auto movementVector = XMLoadFloat3(&movement);
+	auto rotatedMovement = XMVector3Rotate(movementVector, rotationQuaternion);
+
+	auto position = transform.GetPosition();
+	auto positionVector = XMLoadFloat3(&position);
+	auto finalPosition = XMVectorAdd(positionVector, rotatedMovement);
+
+	XMFLOAT3 result;
+	XMStoreFloat3(&result, finalPosition);
+
+	transform.SetPosition(result);
 }
