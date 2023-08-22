@@ -7,7 +7,9 @@ namespace DirectX
 	struct XMMATRIX;
 }
 
-class Engine; class Graphics; class Transform;
+class Engine; 
+class Graphics; 
+class Transform;
 
 class Camera : public Component
 {

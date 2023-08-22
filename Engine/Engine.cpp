@@ -14,6 +14,8 @@
 #include "Transform.h"
 #include "WindowHandle.h"
 
+#include <string>
+
 using namespace std;
 using namespace DirectX;
 

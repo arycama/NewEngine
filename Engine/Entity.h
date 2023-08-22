@@ -3,18 +3,20 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "Component.h"
+
+class Component;
+class Scene;
 
 class Entity
 {
 public:
-	Entity(const std::string& name, class Scene& scene);
+	Entity(const std::string& name, Scene& scene);
 	~Entity();
 
-	void AddComponent(class Component& component);
+	void AddComponent(const Component& component);
 
 private:
-	class Scene& scene;
+	Scene& scene;
 	const std::string& name;
-	std::vector<std::unique_ptr<const class Component>> components;
+	std::vector<std::unique_ptr<const Component>> components;
 };

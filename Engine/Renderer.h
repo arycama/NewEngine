@@ -2,11 +2,11 @@
 
 #include "Component.h"
 
-class Model; 
+class Engine;
+class Graphics;
+class Model;
 class Shader;
 class Transform;
-class Graphics;
-class Engine;
 
 class Renderer : public Component
 {

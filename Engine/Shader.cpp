@@ -1,12 +1,23 @@
 #include "Shader.h"
 
 #include <comdef.h>
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
+#include <fstream>
 #include <memory>
 
 using namespace _com_util;
 using namespace std;
 using namespace DirectX;
 using namespace Microsoft::WRL;
+
+struct MatrixBufferType
+{
+	XMMATRIX world;
+	XMMATRIX view;
+	XMMATRIX projection;
+};
 
 Shader::Shader(ID3D11Device& device)
 {

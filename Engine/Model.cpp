@@ -1,8 +1,10 @@
 #include "Model.h"
 
-#include <d3d11.h>
-#include <memory>
 #include <comdef.h>
+#include <d3d11.h>
+#include <directxmath.h>
+#include <memory>
+#include <string>
 
 using namespace std;
 using namespace DirectX;

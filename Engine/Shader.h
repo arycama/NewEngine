@@ -1,10 +1,20 @@
 #pragma once
 
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <directxmath.h>
-#include <fstream>
 #include <wrl/client.h>
+
+struct ID3D11Buffer;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct ID3D11InputLayout;
+struct ID3D11PixelShader;
+struct ID3D11SamplerState;
+struct ID3D11ShaderResourceView;
+struct ID3D11VertexShader;
+
+namespace DirectX
+{
+	struct XMMATRIX;
+}
 
 class Shader
 {
@@ -18,11 +28,4 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> layout;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> matrixBuffer;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
-
-	struct MatrixBufferType
-	{
-		DirectX::XMMATRIX world;
-		DirectX::XMMATRIX view;
-		DirectX::XMMATRIX projection;
-	};
 };

@@ -5,8 +5,9 @@
 
 using namespace _com_util;
 using namespace Microsoft::WRL;
+using namespace std;
 
-Texture::Texture(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const std::string& filename)
+Texture::Texture(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const string& filename)
 {
 	int height, width;
 

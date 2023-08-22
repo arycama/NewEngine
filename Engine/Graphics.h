@@ -1,10 +1,15 @@
 #pragma once
 
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
-
 #include <wrl/client.h>
+
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct ID3D11DepthStencilState;
+struct ID3D11DepthStencilView;
+struct ID3D11RasterizerState;
+struct ID3D11RenderTargetView;
+struct ID3D11Texture2D;
+struct IDXGISwapChain;
 
 class Graphics
 {
@@ -24,12 +29,12 @@ private:
 	const int width, height;
 	const bool vsync;
 
-	Microsoft::WRL::ComPtr<struct IDXGISwapChain> swapChain;
-	Microsoft::WRL::ComPtr<struct ID3D11Device> device;
-	Microsoft::WRL::ComPtr<struct ID3D11DeviceContext> deviceContext;
-	Microsoft::WRL::ComPtr<struct ID3D11RenderTargetView> renderTargetView;
-	Microsoft::WRL::ComPtr<struct ID3D11Texture2D> depthStencilBuffer;
-	Microsoft::WRL::ComPtr<struct ID3D11DepthStencilState> depthStencilState;
-	Microsoft::WRL::ComPtr<struct ID3D11DepthStencilView> depthStencilView;
-	Microsoft::WRL::ComPtr<struct ID3D11RasterizerState> rasterState;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
+	Microsoft::WRL::ComPtr<ID3D11Device> device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
 };
