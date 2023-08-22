@@ -19,6 +19,6 @@ Renderer::~Renderer()
 
 void Renderer::Render(Camera& camera)
 {
+	shader.Render(graphics.GetDeviceContext(), transform.GetWorldMatrix(), camera.GetViewMatrix(), camera.GetProjectionMatrix(), texture.GetTexture());
 	model.Render();
-	shader.Render(graphics.GetDeviceContext(), model.GetIndexCount(), transform.GetWorldMatrix(), camera.GetViewMatrix(), camera.GetProjectionMatrix(), texture.GetTexture());
 }

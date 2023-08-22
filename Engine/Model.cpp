@@ -72,9 +72,6 @@ void Model::Render()
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
 
-int Model::GetIndexCount() const
-{
-	return indexCount;
+	deviceContext.DrawIndexed(indexCount, 0, 0);
 }

@@ -13,7 +13,6 @@ public:
 	Model(struct ID3D11Device& device, struct ID3D11DeviceContext& deviceContext);
 
 	void Render();
-	int GetIndexCount() const;
 
 private:
 	int vertexCount, indexCount;
