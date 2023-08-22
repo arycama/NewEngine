@@ -143,5 +143,6 @@
     <None Include="Color.hlsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
