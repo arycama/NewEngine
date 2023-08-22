@@ -4,7 +4,7 @@ WindowHandle::WindowHandle(HWND hwnd) : hwnd(hwnd)
 {
 }
 
-HWND WindowHandle::GetHandle()
+HWND WindowHandle::GetHandle() const
 {
 	return hwnd;
 }

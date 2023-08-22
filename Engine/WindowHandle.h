@@ -4,8 +4,8 @@ class WindowHandle
 {
 public:
 	WindowHandle(HWND hwnd);
-	HWND GetHandle();
+	HWND GetHandle() const;
 
 private:
-	HWND& hwnd;
+	const HWND& hwnd;
 };

@@ -54,7 +54,7 @@ Shader::Shader(ID3D11Device& device)
 	CheckError(device.CreateSamplerState(&samplerDesc, &samplerState));
 }
 
-void Shader::Render(ID3D11DeviceContext& deviceContext, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture)
+void Shader::Render(ID3D11DeviceContext& deviceContext, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const
 {
 	// Set the shader parameters that it will use for rendering.
 	// Lock the constant buffer so it can be written to.

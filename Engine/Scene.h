@@ -3,14 +3,17 @@
 #include <memory>
 #include <vector>
 
+class Engine;
+class Entity;
+
 class Scene
 {
 public:
-	Scene(class Engine& engine);
-	void AddEntity(class Entity& entitiy);
-	void RemoveEntity(class Entity& entitiy);
+	Scene(Engine& engine);
+	void AddEntity(const Entity& entitiy);
+	void RemoveEntity(const Entity& entitiy);
 
 private:
-	class Engine& engine;
-	std::vector<std::unique_ptr<class Entity>> entities;
+	Engine& engine;
+	std::vector<std::unique_ptr<const Entity>> entities;
 };

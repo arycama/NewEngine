@@ -30,13 +30,13 @@ private:
 	System& system;
 
 	std::unique_ptr<class Input> input;
-	std::unique_ptr<class Graphics> graphics;
-	std::unique_ptr<class Shader> shader;
-	std::unique_ptr<class Texture> texture;
-	std::unique_ptr<class WindowHandle> windowHandle;
+	std::unique_ptr<const class Graphics> graphics;
+	std::unique_ptr<const class Shader> shader;
+	std::unique_ptr<const class Texture> texture;
+	std::unique_ptr<const class WindowHandle> windowHandle;
 
 	std::vector<class Behaviour*> behaviours;
-	std::vector<class Camera*> cameras;
-	std::vector<class Renderer*> renderers;
-	std::vector<std::unique_ptr<class Scene>> scenes;
+	std::vector<const class Camera*> cameras;
+	std::vector<const class Renderer*> renderers;
+	std::vector<std::unique_ptr<const class Scene>> scenes;
 };

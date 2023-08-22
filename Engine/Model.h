@@ -19,10 +19,4 @@ private:
 	struct ID3D11DeviceContext& deviceContext;
 
 	Microsoft::WRL::ComPtr<struct ID3D11Buffer> vertexBuffer, indexBuffer;
-	
-	struct VertexType
-	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 texture;
-	};
 };

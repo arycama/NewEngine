@@ -4,11 +4,11 @@
 
 using namespace DirectX;
 
-Movement::Movement(Input& input, Transform& transform, Engine& engine) : Behaviour(engine), input(input), transform(transform) { }
+Movement::Movement(const Input& input, Transform& transform, Engine& engine) : Behaviour(engine), input(input), transform(transform) { }
 
 void Movement::Update()
 {
-	float rotateSpeed = XMConvertToRadians(1.0f);
+	constexpr float rotateSpeed = XMConvertToRadians(1.0f);
 
 	// Rotation
 	auto rotation = transform.GetRotation();

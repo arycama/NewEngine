@@ -2,18 +2,25 @@
 
 #include "Component.h"
 
+class Model; 
+class Shader;
+class Transform;
+class Graphics;
+class Engine;
+
 class Renderer : public Component
 {
 public:
-	Renderer(class Model& model, class Shader& shader, class Transform& transform, class Graphics& graphics, class Engine& engine, class Texture& texture);
+	Renderer(Model& model, const Shader& shader, Transform& transform, const Graphics& graphics, Engine& engine, const Texture& texture);
 	~Renderer();
-	void Render(class Camera& camera);
+
+	void Render(const Camera& camera) const;
 
 private:
-	class Engine& engine;
-	class Graphics& graphics;
-	class Model& model;
-	class Shader& shader;
-	class Texture& texture;
-	class Transform& transform;
+	Engine& engine;
+	const Graphics& graphics;
+	const Model& model;
+	const Shader& shader;
+	const Texture& texture;
+	const Transform& transform;
 };

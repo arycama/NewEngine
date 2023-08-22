@@ -14,5 +14,5 @@ public:
 
 private:
 	class Scene& scene;
-	std::vector<std::unique_ptr<class Component>> components;
+	std::vector<std::unique_ptr<const class Component>> components;
 };

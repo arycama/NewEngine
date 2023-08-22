@@ -9,6 +9,12 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
+struct VertexType
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT2 texture;
+};
+
 Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
 {
 	// Initialize the vertex and index buffers.

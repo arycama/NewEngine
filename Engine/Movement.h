@@ -5,11 +5,11 @@
 class Movement : public Behaviour
 {
 public:
-	Movement(class Input& input, class Transform& transform, class Engine& engine);
+	Movement(const class Input& input, class Transform& transform, class Engine& engine);
 
 	void Update() override;
 
 private:
-	class Input& input;
+	const class Input& input;
 	class Transform& transform;
 };

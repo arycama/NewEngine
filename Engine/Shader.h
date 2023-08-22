@@ -10,7 +10,7 @@ class Shader
 {
 public:
 	Shader(ID3D11Device& device);
-	void Render(ID3D11DeviceContext& deviceContext, const DirectX::XMMATRIX& worldMatrix, const DirectX::XMMATRIX& viewMatrix, const DirectX::XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture);
+	void Render(ID3D11DeviceContext& deviceContext, const DirectX::XMMATRIX& worldMatrix, const DirectX::XMMATRIX& viewMatrix, const DirectX::XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;

@@ -5,8 +5,6 @@
 #include <memory>
 #include <windows.h>
 
-class Engine;
-
 class System
 {
 public:
@@ -24,7 +22,7 @@ private:
 	HINSTANCE hinstance;
 	bool quit;
 
-	std::unique_ptr<Engine> engine;
+	std::unique_ptr<class Engine> engine;
 	static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 	LRESULT  MessageHandler(HWND, UINT, WPARAM, LPARAM);
 };
