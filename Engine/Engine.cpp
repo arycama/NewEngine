@@ -49,12 +49,33 @@ Engine::Engine(System& system) : system(system)
 	camera.AddComponent(*new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *graphics, *this));
 	camera.AddComponent(*new Movement(*input.get(), *cameraTransform, *this));
 
-	auto& object0 = *new Entity(*scene, *this);
-	auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
-	object0.AddComponent(*new Transform(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f)));
-	object0.AddComponent(*model);
-	object0.AddComponent(*new Renderer(*model, *shader.get(), *graphics, *this, *texture.get()));
-	
+	{
+		auto& object = *new Entity(*scene, *this);
+		auto modelTransform = new Transform(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
+		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
+		object.AddComponent(*modelTransform);
+		object.AddComponent(*model);
+		object.AddComponent(*new Renderer(*model, *shader.get(), *modelTransform, *graphics, *this, *texture.get()));
+	}
+
+	{
+		auto& object = *new Entity(*scene, *this);
+		auto modelTransform = new Transform(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
+		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
+		object.AddComponent(*modelTransform);
+		object.AddComponent(*model);
+		object.AddComponent(*new Renderer(*model, *shader.get(), *modelTransform, *graphics, *this, *texture.get()));
+	}
+
+	{
+		auto& object = *new Entity(*scene, *this);
+		auto modelTransform = new Transform(XMFLOAT3(-2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
+		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
+		object.AddComponent(*modelTransform);
+		object.AddComponent(*model);
+		object.AddComponent(*new Renderer(*model, *shader.get(), *modelTransform, *graphics, *this, *texture.get()));
+	}
+
 	// Hide the mouse cursor.
 	ShowCursor(false);
 }

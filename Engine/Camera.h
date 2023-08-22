@@ -13,7 +13,6 @@ public:
 	Camera(class Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, class Graphics& graphics, class Engine& engine);
 	~Camera();
 
-	DirectX::XMMATRIX GetWorldMatrix() const;
 	DirectX::XMMATRIX GetViewMatrix() const;
 	DirectX::XMMATRIX GetProjectionMatrix() const;
 

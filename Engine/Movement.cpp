@@ -8,7 +8,7 @@ Movement::Movement(Input& input, Transform& transform, Engine& engine) : Behavio
 
 void Movement::Update()
 {
-	float rotateSpeed = 1.0f;
+	float rotateSpeed = XMConvertToRadians(1.0f);
 
 	// Rotation
 	auto rotation = transform.GetRotation();
@@ -44,7 +44,7 @@ void Movement::Update()
 
 	// Rotate the movement into the camera's coordinates
 	auto rotationVector = XMLoadFloat3(&rotation);
-	auto rotationQuaternion = XMQuaternionRotationRollPitchYawFromVector(-rotationVector);
+	auto rotationQuaternion = XMQuaternionRotationRollPitchYawFromVector(rotationVector);
 
 	auto movementVector = XMLoadFloat3(&movement);
 	auto rotatedMovement = XMVector3Rotate(movementVector, rotationQuaternion);

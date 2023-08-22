@@ -18,49 +18,29 @@ Camera::~Camera()
 	engine.RemoveCamera(*this);
 }
 
-XMMATRIX Camera::GetWorldMatrix() const
-{
-	return XMMatrixIdentity();
-}
-
 XMMATRIX Camera::GetViewMatrix() const
 {
-	// Setup the vector that points upwards.
-	constexpr auto up = XMFLOAT3(0.0f, 1.0f, 0.0f);
-
-	// Load it into a XMVECTOR structure.
-	auto upVector = XMLoadFloat3(&up);
-
 	// Setup the position of the camera in the world and load it into a XMVECTOR structure.
 	auto position = transform.GetPosition();
-	const auto positionVector = XMLoadFloat3(&position);
-
-	// Setup where the camera is looking by default.
-	constexpr auto lookAt = XMFLOAT3(0.0f, 0.0f, 1.0f);
-
-	// Load it into a XMVECTOR structure.
-	auto lookAtVector = XMLoadFloat3(&lookAt);
+	auto positionVector = XMLoadFloat3(&position);
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 	auto rotation = transform.GetRotation();
-	const auto pitch = XMConvertToRadians(rotation.x);
-	const auto yaw = XMConvertToRadians(rotation.y);
-	const auto roll = XMConvertToRadians(rotation.z);
+	auto rotationVector = XMLoadFloat3(&rotation);
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
-	const auto rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	auto quaternionVector = XMQuaternionRotationRollPitchYawFromVector(rotationVector);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
-	upVector = XMVector3TransformCoord(upVector, rotationMatrix);
+	auto forward = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	auto lookAtVector = XMLoadFloat3(&forward);
+	lookAtVector = XMVector3Rotate(lookAtVector, quaternionVector);
 
-	// Translate the rotated camera position to the location of the viewer.
-	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
+	auto up = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	auto upVector = XMLoadFloat3(&up);
+	upVector = XMVector3Rotate(upVector, quaternionVector);
 
-	// Finally create the view matrix from the three updated vectors.
-	auto viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
-
-	return viewMatrix;
+	return XMMatrixLookToLH(positionVector, lookAtVector, upVector);
 }
 
 XMMATRIX Camera::GetProjectionMatrix() const
