@@ -10,11 +10,15 @@ struct PixelInputType
 	float2 tex : TEXCOORD0;
 };
 
-cbuffer MatrixBuffer
+cbuffer PerCameraData
 {
-	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
+};
+
+cbuffer PerDrawData
+{
+	matrix worldMatrix;
 };
 
 Texture2D shaderTexture;

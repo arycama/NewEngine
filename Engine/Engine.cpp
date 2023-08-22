@@ -31,7 +31,7 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	input = make_unique<Input>();
 
 	// Assets
-	shader = make_unique<Shader>(graphics->GetDevice());
+	shader = make_unique<Shader>(graphics->GetDevice(), graphics->GetDeviceContext());
 	texture = make_unique<Texture>(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
 
 	// Create the scene
