@@ -18,11 +18,6 @@ struct PerCameraData
 	XMMATRIX projection;
 };
 
-struct PerDrawData
-{
-	XMMATRIX world;
-};
-
 Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
 {
 	// Create the vertex shader
@@ -63,8 +58,6 @@ Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : devic
 	auto perCameraDataDesc = CD3D11_BUFFER_DESC(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 	CheckError(device.CreateBuffer(&perCameraDataDesc, nullptr, &perCameraData));
 
-	auto perDrawDataDesc = CD3D11_BUFFER_DESC(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	CheckError(device.CreateBuffer(&perDrawDataDesc, nullptr, &perDrawData));
 
 	// Create a texture sampler state description.
 	// Create the texture sampler state.
@@ -73,7 +66,7 @@ Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : devic
 	CheckError(device.CreateSamplerState(&samplerDesc, &samplerState));
 }
 
-void Shader::Render(const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const
+void Shader::Render(const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const
 {
 	// Set the shader parameters that it will use for rendering.
 	// Lock the constant buffer so it can be written to.
@@ -92,26 +85,13 @@ void Shader::Render(const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, con
 
 	deviceContext.VSSetConstantBuffers(0, 1, perCameraData.GetAddressOf());
 
-	D3D11_MAPPED_SUBRESOURCE perDrawDataMappedResource;
-	CheckError(deviceContext.Map(perDrawData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perDrawDataMappedResource));
-
-	// Get a pointer to the data in the constant buffer.
-	auto perDrawDataPtr = static_cast<PerDrawData*>(perDrawDataMappedResource.pData);
-
-	// Copy the matrices into the constant buffer.
-	perDrawDataPtr->world = worldMatrix;
-
-	// Unlock the constant buffer.
-	deviceContext.Unmap(perDrawData.Get(), 0);
-
-	deviceContext.VSSetConstantBuffers(1, 1, perDrawData.GetAddressOf());
-
 	// Set the vertex input layout.
 	deviceContext.IASetInputLayout(layout.Get());
 	deviceContext.VSSetShader(vertexShader.Get(), nullptr, 0);
 
 	// Set shader texture resource in the pixel shader.
 	deviceContext.PSSetShader(pixelShader.Get(), nullptr, 0);
+
 	auto shaderResourceViews = &texture;
 	deviceContext.PSSetShaderResources(0, 1, &shaderResourceViews);
 	deviceContext.PSSetSamplers(0, 1, samplerState.GetAddressOf());

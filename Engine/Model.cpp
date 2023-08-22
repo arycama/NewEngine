@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Transform.h"
 
 #include <comdef.h>
 #include <d3d11.h>
@@ -13,11 +14,16 @@ using namespace _com_util;
 
 struct VertexType
 {
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT2 texture;
+	XMFLOAT3 position;
+	XMFLOAT2 texture;
 };
 
-Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
+struct PerDrawData
+{
+	XMMATRIX world;
+};
+
+Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Transform& transform) : deviceContext(deviceContext), transform(transform)
 {
 	// Initialize the vertex and index buffers.
 	// Set the number of vertices in the vertex array.
@@ -64,10 +70,27 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceC
 
 	// Create the index buffer.
 	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer));
+
+	auto perDrawDataDesc = CD3D11_BUFFER_DESC(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+	CheckError(device.CreateBuffer(&perDrawDataDesc, nullptr, &perDrawData));
 }
 
 void Model::Render() const
 {
+	D3D11_MAPPED_SUBRESOURCE perDrawDataMappedResource;
+	CheckError(deviceContext.Map(perDrawData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perDrawDataMappedResource));
+
+	// Get a pointer to the data in the constant buffer.
+	auto perDrawDataPtr = static_cast<PerDrawData*>(perDrawDataMappedResource.pData);
+
+	// Copy the matrices into the constant buffer.
+	perDrawDataPtr->world = transform.GetWorldMatrix();
+
+	// Unlock the constant buffer.
+	deviceContext.Unmap(perDrawData.Get(), 0);
+
+	deviceContext.VSSetConstantBuffers(1, 1, perDrawData.GetAddressOf());
+
 	// Set vertex buffer stride and offset.
 	constexpr auto stride = static_cast<UINT>(sizeof(VertexType));
 	constexpr auto offset = 0u;
