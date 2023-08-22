@@ -18,15 +18,14 @@ using namespace std;
 using namespace DirectX;
 
 const bool fullScreen = false;
-const bool VSYNC_ENABLED = true;
 
-Engine::Engine(System& system) : system(system)
+Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 {
 	int width, height;
 	auto hwnd = system.InitializeWindow(fullScreen, width, height);
 
 	windowHandle = make_unique<WindowHandle>(hwnd);
-	graphics = make_unique<Graphics>(width, height, VSYNC_ENABLED, hwnd, fullScreen);
+	graphics = make_unique<Graphics>(width, height, true, hwnd, fullScreen);
 	input = make_unique<Input>();
 
 	// Assets
@@ -38,7 +37,7 @@ Engine::Engine(System& system) : system(system)
 	AddScene(*scene);
 
 	// Create the camera object and set the initial position of the camera.
-	auto& camera = *new Entity(*scene);
+	auto& camera = *new Entity("Camera", *scene);
 
 	auto cameraPosition = XMFLOAT3(0.0f, 0.0f, -5.0f);
 	auto cameraRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -48,7 +47,7 @@ Engine::Engine(System& system) : system(system)
 	camera.AddComponent(*new Movement(*input.get(), *cameraTransform, *this));
 
 	{
-		auto& object = *new Entity(*scene);
+		auto& object = *new Entity("Model 0", *scene);
 		auto modelTransform = new Transform(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent(*modelTransform);
@@ -57,7 +56,7 @@ Engine::Engine(System& system) : system(system)
 	}
 
 	{
-		auto& object = *new Entity(*scene);
+		auto& object = *new Entity("Model 1", *scene);
 		auto modelTransform = new Transform(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent(*modelTransform);
@@ -66,7 +65,7 @@ Engine::Engine(System& system) : system(system)
 	}
 
 	{
-		auto& object = *new Entity(*scene);
+		auto& object = *new Entity("Model 2", *scene);
 		auto modelTransform = new Transform(XMFLOAT3(-2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent(*modelTransform);
@@ -125,7 +124,8 @@ void Engine::AddBehaviour(Behaviour& behaviour)
 
 void Engine::RemoveBehaviour(Behaviour& behaviour)
 {
-	behaviours.erase(find(behaviours.begin(), behaviours.end(), &behaviour));
+	if(!isBeingUnloaded)
+		behaviours.erase(find(behaviours.begin(), behaviours.end(), &behaviour));
 }
 
 void Engine::AddCamera(Camera& camera)
@@ -135,7 +135,8 @@ void Engine::AddCamera(Camera& camera)
 
 void Engine::RemoveCamera(Camera& camera)
 {
-	cameras.erase(find(cameras.begin(), cameras.end(), &camera));
+	if (!isBeingUnloaded)
+		cameras.erase(find(cameras.begin(), cameras.end(), &camera));
 }
 
 void Engine::AddRenderer(Renderer& renderer)
@@ -145,7 +146,8 @@ void Engine::AddRenderer(Renderer& renderer)
 
 void Engine::RemoveRenderer(Renderer& renderer)
 {
-	renderers.erase(find(renderers.begin(), renderers.end(), &renderer));
+	if(!isBeingUnloaded)
+		renderers.erase(find(renderers.begin(), renderers.end(), &renderer));
 }
 
 void Engine::AddScene(Scene& scene)
@@ -155,5 +157,11 @@ void Engine::AddScene(Scene& scene)
 
 void Engine::RemoveScene(Scene& scene)
 {
-	//scenes.erase(find(scenes.begin(), scenes.end(), &scene));
+	if (isBeingUnloaded)
+		return;
+
+	// If we're not unloading, then this should only be getting called from Scene's destructor, so just release the pointer
+	auto result = find_if(scenes.begin(), scenes.end(), [&](auto& obj) { return obj.get() == &scene; });
+	result->release();
+	scenes.erase(result);
 }

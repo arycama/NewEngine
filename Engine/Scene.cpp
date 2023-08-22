@@ -6,7 +6,13 @@
 
 using namespace std;
 
-Scene::Scene(Engine& engine) : engine(engine) { };
+Scene::Scene(Engine& engine) : engine(engine), isBeingUnloaded(false) { }
+
+Scene::~Scene()
+{
+	engine.RemoveScene(*this);
+	isBeingUnloaded = true;
+}
 
 void Scene::AddEntity(const Entity& entity)
 {
@@ -15,5 +21,10 @@ void Scene::AddEntity(const Entity& entity)
 
 void Scene::RemoveEntity(const Entity& entity)
 {
-	//entities.erase(find_if(entities.begin(), entities.end(), [entity](std::unique_ptr<Entity> const& i) { return i.get() == &entity; }));
+	if (isBeingUnloaded)
+		return;
+
+	auto result = find_if(entities.begin(), entities.end(), [&](auto& obj) { return obj.get() == &entity; });
+	result->release();
+	entities.erase(result);
 }

@@ -27,6 +27,7 @@ public:
 	void RemoveScene(class Scene& scene);
 
 private:
+	bool isBeingUnloaded;
 	System& system;
 
 	std::unique_ptr<class Input> input;

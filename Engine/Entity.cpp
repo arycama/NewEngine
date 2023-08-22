@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Entity::Entity(Scene& scene) : scene(scene)
+Entity::Entity(const string& name, Scene& scene) : name(name), scene(scene)
 {
 	scene.AddEntity(*this);
 }
