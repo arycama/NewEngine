@@ -4,16 +4,15 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-#include <directxmath.h>
 #include <wrl/client.h>
 
 class Graphics
 {
 public:
-	Graphics(UINT, UINT, bool, HWND, bool);
+	Graphics(int width, int height, bool vsync, HWND hwnd, bool fullscreen);
 	~Graphics();
 
-	void BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const FLOAT alpha) const;
+	void BeginScene(float red, float green, float blue, float alpha) const;
 	void EndScene() const;
 
 	struct ID3D11Device& GetDevice() const;
@@ -22,8 +21,8 @@ public:
 	float GetAspectRatio() const;
 
 private:
-	int width, height;
-	bool vsync;
+	const int width, height;
+	const bool vsync;
 
 	Microsoft::WRL::ComPtr<struct IDXGISwapChain> swapChain;
 	Microsoft::WRL::ComPtr<struct ID3D11Device> device;
@@ -33,7 +32,4 @@ private:
 	Microsoft::WRL::ComPtr<struct ID3D11DepthStencilState> depthStencilState;
 	Microsoft::WRL::ComPtr<struct ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<struct ID3D11RasterizerState> rasterState;
-
-	DirectX::XMMATRIX worldMatrix;
-	DirectX::XMMATRIX orthoMatrix;
 };

@@ -14,8 +14,6 @@
 #include "Transform.h"
 #include "WindowHandle.h"
 
-#include <stdexcept>
-
 using namespace std;
 using namespace DirectX;
 
@@ -40,17 +38,17 @@ Engine::Engine(System& system) : system(system)
 	AddScene(*scene);
 
 	// Create the camera object and set the initial position of the camera.
-	auto& camera = *new Entity(*scene, *this);
+	auto& camera = *new Entity(*scene);
 
 	auto cameraPosition = XMFLOAT3(0.0f, 0.0f, -5.0f);
 	auto cameraRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	auto cameraTransform = new Transform(cameraPosition, cameraRotation);
 	camera.AddComponent(*cameraTransform);
-	camera.AddComponent(*new Camera(*cameraTransform, 0.1f, 1000.0f, 45, *graphics, *this));
+	camera.AddComponent(*new Camera(0.1f, 1000.0f, 45, *cameraTransform, *graphics, *this));
 	camera.AddComponent(*new Movement(*input.get(), *cameraTransform, *this));
 
 	{
-		auto& object = *new Entity(*scene, *this);
+		auto& object = *new Entity(*scene);
 		auto modelTransform = new Transform(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent(*modelTransform);
@@ -59,7 +57,7 @@ Engine::Engine(System& system) : system(system)
 	}
 
 	{
-		auto& object = *new Entity(*scene, *this);
+		auto& object = *new Entity(*scene);
 		auto modelTransform = new Transform(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent(*modelTransform);
@@ -68,7 +66,7 @@ Engine::Engine(System& system) : system(system)
 	}
 
 	{
-		auto& object = *new Entity(*scene, *this);
+		auto& object = *new Entity(*scene);
 		auto modelTransform = new Transform(XMFLOAT3(-2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent(*modelTransform);
@@ -104,7 +102,7 @@ void Engine::Update()
 	graphics->EndScene();
 }
 
-void Engine::KeyDown(const unsigned int key)
+void Engine::KeyDown(int key)
 {
 	if (key == VK_ESCAPE)
 	{
@@ -115,7 +113,7 @@ void Engine::KeyDown(const unsigned int key)
 	input->SetKeyDown(key);
 }
 
-void Engine::KeyUp(unsigned int key)
+void Engine::KeyUp(int key)
 {
 	input->SetKeyUp(key);
 }

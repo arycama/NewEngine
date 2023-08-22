@@ -12,7 +12,7 @@ class Model : public Component
 public:
 	Model(struct ID3D11Device& device, struct ID3D11DeviceContext& deviceContext);
 
-	void Render();
+	void Render() const;
 
 private:
 	int vertexCount, indexCount;

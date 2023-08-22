@@ -7,12 +7,12 @@
 class Entity
 {
 public:
-	Entity(class Scene& scene, class Engine& engine);
-	void AddComponent(class Behaviour& behaviour);
-	void AddComponent(class Camera& camera);
+	Entity(class Scene& scene);
+	~Entity();
+
 	void AddComponent(class Component& component);
 
 private:
-	class Engine& engine;
+	class Scene& scene;
 	std::vector<std::unique_ptr<class Component>> components;
 };

@@ -5,11 +5,10 @@
 #include <memory>
 
 using namespace std;
-using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height), vsync(vsync)
+Graphics::Graphics(int width, int height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height), vsync(vsync)
 {
 	// Create a DirectX graphics interface factory.
 	ComPtr<IDXGIFactory> factory;
@@ -35,7 +34,7 @@ Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscre
 
 	// Now go through all the display modes and find the one that matches the screen width and height.
 	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
-	UINT numerator, denominator;
+	int numerator, denominator;
 	for (auto i = 0; i < numModes; i++)
 	{
 		if (displayModeList[i].Width == width)
@@ -52,8 +51,8 @@ Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscre
 	DXGI_ADAPTER_DESC adapterDesc;
 	CheckError(adapter->GetDesc(&adapterDesc));
 
-	auto refreshRate = DXGI_RATIONAL{ vsync ? numerator : 0, vsync ? denominator : 1 };
-	auto bufferDesc = DXGI_MODE_DESC{ width, height, refreshRate, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED, DXGI_MODE_SCALING_UNSPECIFIED };
+	auto refreshRate = DXGI_RATIONAL{ static_cast<UINT>(vsync ? numerator : 0), static_cast<UINT>(vsync ? denominator : 1) };
+	auto bufferDesc = DXGI_MODE_DESC{ static_cast<UINT>(width), static_cast<UINT>(height), refreshRate, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED, DXGI_MODE_SCALING_UNSPECIFIED };
 	auto sampleDesc = DXGI_SAMPLE_DESC{ 1, 0 };
 	auto swapChainDesc = DXGI_SWAP_CHAIN_DESC{ bufferDesc, sampleDesc, DXGI_USAGE_RENDER_TARGET_OUTPUT, 1, hwnd, !fullscreen, DXGI_SWAP_EFFECT_DISCARD, 0 };
 
@@ -77,7 +76,7 @@ Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscre
 	CheckError(device->CreateTexture2D(&depthBufferDesc, nullptr, depthStencilBuffer.GetAddressOf()));
 
 	// Initialize the description of the stencil state.
-	auto depthStencilDesc = CD3D11_DEPTH_STENCIL_DESC(true, D3D11_DEPTH_WRITE_MASK_ALL, D3D11_COMPARISON_ALWAYS, true, 0xFF, 0xFF, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS);
+	auto depthStencilDesc = CD3D11_DEPTH_STENCIL_DESC(true, D3D11_DEPTH_WRITE_MASK_ALL, D3D11_COMPARISON_LESS, false, 0xFF, 0xFF, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS);
 
 	// Create the depth stencil state.
 	CheckError(device->CreateDepthStencilState(&depthStencilDesc, depthStencilState.GetAddressOf()));
@@ -96,7 +95,7 @@ Graphics::Graphics(UINT width, UINT height, bool vsync, HWND hwnd, bool fullscre
 	deviceContext->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), depthStencilView.Get());
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
-	auto rasterDesc = D3D11_RASTERIZER_DESC{ D3D11_FILL_SOLID, D3D11_CULL_BACK, false, 0, 0.0f, 0.0f, true, false, false, false };
+	auto rasterDesc = CD3D11_RASTERIZER_DESC(D3D11_FILL_SOLID, D3D11_CULL_NONE, false, 0, 0.0f, 0.0f, true, false, false, false);
 
 	// Create the rasterizer state from the description we just filled out.
 	CheckError(device->CreateRasterizerState(&rasterDesc, rasterState.GetAddressOf()));
@@ -117,10 +116,10 @@ Graphics::~Graphics()
 	swapChain->SetFullscreenState(false, nullptr);
 }
 
-void Graphics::BeginScene(const FLOAT red, const FLOAT green, const FLOAT blue, const FLOAT alpha) const
+void Graphics::BeginScene(float red, float green, float blue, float alpha) const
 {
 	// Setup the color to clear the buffer to.
-	const FLOAT color[4]{ red, green, blue, alpha };
+	const float color[4]{ red, green, blue, alpha };
 
 	// Clear the back buffer.
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);

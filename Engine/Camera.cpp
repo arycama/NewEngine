@@ -8,7 +8,7 @@
 
 using namespace DirectX;
 
-Camera::Camera(Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, Graphics& graphics, Engine& engine) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine)
+Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine)
 { 
 	engine.AddCamera(*this);
 }

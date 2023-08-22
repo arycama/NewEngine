@@ -58,7 +58,7 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceC
 	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer));
 }
 
-void Model::Render()
+void Model::Render() const
 {
 	// Set vertex buffer stride and offset.
 	constexpr auto stride = static_cast<UINT>(sizeof(VertexType));

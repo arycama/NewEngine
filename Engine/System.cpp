@@ -158,7 +158,7 @@ LRESULT System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 		case WM_KEYDOWN:
 		{
 			// If a key is pressed send it to the input object so it can record that state.
-			engine->KeyDown(static_cast<unsigned int>(wparam));
+			engine->KeyDown(static_cast<int>(wparam));
 			return 0;
 		}
 
@@ -166,7 +166,7 @@ LRESULT System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 		case WM_KEYUP:
 		{
 			// If a key is released then send it to the input object so it can unset the state for that key.
-			engine->KeyUp(static_cast<unsigned int>(wparam));
+			engine->KeyUp(static_cast<int>(wparam));
 			return 0;
 		}
 

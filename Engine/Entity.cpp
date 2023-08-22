@@ -7,19 +7,14 @@
 
 using namespace std;
 
-Entity::Entity(Scene& scene, Engine& engine) : engine(engine)
+Entity::Entity(Scene& scene) : scene(scene)
 {
 	scene.AddEntity(*this);
 }
 
-void Entity::AddComponent(Behaviour& behaviour)
+Entity::~Entity()
 {
-	components.push_back(unique_ptr<Component>(&behaviour));
-}
-
-void Entity::AddComponent(Camera& camera)
-{
-	components.push_back(unique_ptr<Component>(&camera));
+	scene.RemoveEntity(*this);
 }
 
 void Entity::AddComponent(Component& component)

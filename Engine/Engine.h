@@ -11,8 +11,8 @@ public:
 
 	void Update();
 
-	void KeyDown(const unsigned int key);
-	void KeyUp(const unsigned int key);
+	void KeyDown(int key);
+	void KeyUp(int key);
 
 	void AddBehaviour(class Behaviour& behaviour);
 	void RemoveBehaviour(class Behaviour& behaviour);

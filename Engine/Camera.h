@@ -7,10 +7,12 @@ namespace DirectX
 	struct XMMATRIX;
 }
 
+class Engine; class Graphics; class Transform;
+
 class Camera : public Component
 {
 public:
-	Camera(class Transform& transform, const float nearClipPlane, const float farClipPlane, const float fieldOfView, class Graphics& graphics, class Engine& engine);
+	Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine);
 	~Camera();
 
 	DirectX::XMMATRIX GetViewMatrix() const;
@@ -20,6 +22,6 @@ private:
 	float nearClipPlane, farClipPlane, fieldOfView;
 
 	Engine& engine;
-	Graphics& graphics;
-	Transform& transform;
+	const Graphics& graphics;
+	const Transform& transform;
 };
