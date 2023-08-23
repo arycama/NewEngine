@@ -13,7 +13,12 @@ public:
 	Entity(const std::string& name, Scene& scene);
 	~Entity();
 
-	void AddComponent(const Component& component);
+	template <class T, class... K> T& AddComponent(K&&... _Args)
+	{
+		auto component = new T(std::forward<K>(_Args)...);
+		components.push_back(std::unique_ptr<const Component>(component));
+		return *component;
+	}
 
 private:
 	Scene& scene;

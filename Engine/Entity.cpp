@@ -18,8 +18,3 @@ Entity::~Entity()
 {
 	scene.RemoveEntity(*this);
 }
-
-void Entity::AddComponent(const Component& component)
-{
-	components.push_back(unique_ptr<const Component>(&component));
-}

@@ -41,38 +41,29 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	// Create the camera object and set the initial position of the camera.
 	auto& camera = *new Entity("Camera", *scene);
 
-	auto cameraPosition = XMFLOAT3(0.0f, 0.0f, -5.0f);
-	auto cameraRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	auto cameraTransform = new Transform(cameraPosition, cameraRotation);
-	camera.AddComponent(*cameraTransform);
-	camera.AddComponent(*new Camera(0.1f, 1000.0f, 45, *cameraTransform, *graphics, *this));
-	camera.AddComponent(*new Movement(*input.get(), *cameraTransform, *this));
+	auto& cameraTransform = camera.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, -5.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
+	camera.AddComponent<Camera>(0.1f, 1000.0f, 45, cameraTransform, *graphics, *this);
+	camera.AddComponent<Movement>(*input.get(), cameraTransform, *this);
 
 	{
 		auto& object = *new Entity("Model 0", *scene);
-		auto modelTransform = new Transform(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext(), *modelTransform);
-		object.AddComponent(*modelTransform);
-		object.AddComponent(*model);
-		object.AddComponent(*new Renderer(*model, *shader.get(), *graphics, *this, *texture.get()));
+		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
+		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
+		object.AddComponent<Renderer>(model, *shader.get(), *graphics, *this, *texture.get());
 	}
 
 	{
 		auto& object = *new Entity("Model 1", *scene);
-		auto modelTransform = new Transform(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext(), *modelTransform);
-		object.AddComponent(*modelTransform);
-		object.AddComponent(*model);
-		object.AddComponent(*new Renderer(*model, *shader.get(), *graphics, *this, *texture.get()));
+		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
+		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
+		object.AddComponent<Renderer>(model, *shader.get(), *graphics, *this, *texture.get());
 	}
 
 	{
 		auto& object = *new Entity("Model 2", *scene);
-		auto modelTransform = new Transform(XMFLOAT3(-2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto model = new Model(graphics->GetDevice(), graphics->GetDeviceContext(), *modelTransform);
-		object.AddComponent(*modelTransform);
-		object.AddComponent(*model);
-		object.AddComponent(*new Renderer(*model, *shader.get(), *graphics, *this, *texture.get()));
+		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(-2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
+		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
+		object.AddComponent<Renderer>(model, *shader.get(), *graphics, *this, *texture.get());
 	}
 
 	// Hide the mouse cursor.
