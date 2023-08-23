@@ -5,18 +5,22 @@
 class Engine;
 class Graphics;
 class Model;
+class RenderController;
 class Shader;
+class Transform;
 
 class Renderer : public Component
 {
 public:
-	Renderer(Model& model, const Shader& shader, const Graphics& graphics, Engine& engine, const Texture& texture);
+	Renderer(Model& model, const Shader& shader, const Graphics& graphics, Engine& engine, const Texture& texture, Transform& transform, RenderController& renderController);
 	~Renderer();
 
-	void Render(const Camera& camera) const;
+	void Render() const;
 
 private:
 	Engine& engine;
+	Transform& transform;
+	RenderController& renderController;
 	const Graphics& graphics;
 	const Model& model;
 	const Shader& shader;

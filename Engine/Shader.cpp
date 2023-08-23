@@ -18,7 +18,7 @@ struct PerCameraData
 	XMMATRIX projection;
 };
 
-Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
+Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext, ID3D11Buffer& cameraData, ID3D11Buffer& drawData) : deviceContext(deviceContext), cameraData(cameraData), drawData(drawData)
 {
 	// Create the vertex shader
 	ComPtr<ID3D10Blob> vertexShaderBuffer;
@@ -53,12 +53,6 @@ Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : devic
 	// Create the vertex input layout.
 	CheckError(device.CreateInputLayout(polygonLayout, 2, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &layout));
 
-	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	auto perCameraDataDesc = CD3D11_BUFFER_DESC(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	CheckError(device.CreateBuffer(&perCameraDataDesc, nullptr, &perCameraData));
-
-
 	// Create a texture sampler state description.
 	// Create the texture sampler state.
 	FLOAT borderColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -66,24 +60,13 @@ Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : devic
 	CheckError(device.CreateSamplerState(&samplerDesc, &samplerState));
 }
 
-void Shader::Render(const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const
+void Shader::Render(ID3D11ShaderResourceView& texture) const
 {
-	// Set the shader parameters that it will use for rendering.
-	// Lock the constant buffer so it can be written to.
-	D3D11_MAPPED_SUBRESOURCE perCameraDataMappedResource;
-	CheckError(deviceContext.Map(perCameraData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perCameraDataMappedResource));
+	ID3D11Buffer* cameraData = &this->cameraData;
+	deviceContext.VSSetConstantBuffers(0, 1, &cameraData);
 
-	// Get a pointer to the data in the constant buffer.
-	auto perCameraDataPtr = static_cast<PerCameraData*>(perCameraDataMappedResource.pData);
-
-	// Copy the matrices into the constant buffer.
-	perCameraDataPtr->view = viewMatrix;
-	perCameraDataPtr->projection = projectionMatrix;
-
-	// Unlock the constant buffer.
-	deviceContext.Unmap(perCameraData.Get(), 0);
-
-	deviceContext.VSSetConstantBuffers(0, 1, perCameraData.GetAddressOf());
+	ID3D11Buffer* drawData = &this->drawData;
+	deviceContext.VSSetConstantBuffers(1, 1, &drawData);
 
 	// Set the vertex input layout.
 	deviceContext.IASetInputLayout(layout.Get());

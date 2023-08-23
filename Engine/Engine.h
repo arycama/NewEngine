@@ -7,6 +7,7 @@ class Behaviour;
 class Camera;
 class Graphics;
 class Input;
+class RenderController;
 class Renderer;
 class Scene;
 class Shader;
@@ -42,6 +43,7 @@ private:
 	System& system;
 
 	std::unique_ptr<Input> input;
+	std::unique_ptr<RenderController> renderController;
 	std::unique_ptr<const Graphics> graphics;
 	std::unique_ptr<const Shader> shader;
 	std::unique_ptr<const Texture> texture;

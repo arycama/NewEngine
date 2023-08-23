@@ -2,7 +2,6 @@
 
 #include <wrl/client.h>
 
-struct ID3D11Buffer;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11InputLayout;
@@ -19,15 +18,16 @@ namespace DirectX
 class Shader
 {
 public:
-	Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext);
-	void Render(const DirectX::XMMATRIX& viewMatrix, const DirectX::XMMATRIX& projectionMatrix, ID3D11ShaderResourceView& texture) const;
+	Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext, struct ID3D11Buffer& cameraData, ID3D11Buffer& drawData);
+	void Render(ID3D11ShaderResourceView& texture) const;
 
 private:
 	ID3D11DeviceContext& deviceContext;
+	ID3D11Buffer& cameraData;
+	ID3D11Buffer& drawData;
 
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> layout;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> perCameraData;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 };

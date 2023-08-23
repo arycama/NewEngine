@@ -21,5 +21,5 @@ private:
 	const Transform& transform;
 	ID3D11DeviceContext& deviceContext;
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer, indexBuffer, perDrawData;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer, indexBuffer;
 };
