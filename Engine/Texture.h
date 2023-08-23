@@ -17,17 +17,6 @@ public:
 	ID3D11ShaderResourceView& GetTexture() const;
 
 private:
-	void LoadTarga(const std::string&, int&, int&);
-	unsigned char* targaData;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureView;
-
-	struct TargaHeader
-	{
-		unsigned char data1[12];
-		unsigned short width;
-		unsigned short height;
-		unsigned char bpp;
-		unsigned char data2;
-	};
 };
