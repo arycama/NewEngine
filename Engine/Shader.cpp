@@ -18,7 +18,7 @@ struct PerCameraData
 	XMMATRIX projection;
 };
 
-Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext, ID3D11Buffer& cameraData) : deviceContext(deviceContext), cameraData(cameraData)
+Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
 {
 	// Create the vertex shader
 	ComPtr<ID3D10Blob> vertexShaderBuffer;
@@ -72,9 +72,4 @@ void Shader::Render(ID3D11ShaderResourceView& texture) const
 	auto shaderResourceViews = &texture;
 	deviceContext.PSSetShaderResources(0, 1, &shaderResourceViews);
 	deviceContext.PSSetSamplers(0, 1, samplerState.GetAddressOf());
-
-	ID3D11Buffer* cameraData = &this->cameraData;
-	deviceContext.VSSetConstantBuffers(0, 1, &cameraData);
-
-
 }

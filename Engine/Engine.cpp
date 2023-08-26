@@ -7,7 +7,6 @@
 #include "Material.h"
 #include "Model.h"
 #include "Movement.h"
-#include "RenderController.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "Shader.h"
@@ -31,10 +30,9 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	windowHandle = make_unique<WindowHandle>(hwnd);
 	graphics = make_unique<Graphics>(width, height, true, hwnd, fullScreen);
 	input = make_unique<Input>();
-	renderController = make_unique<RenderController>(graphics->GetDevice(), graphics->GetDeviceContext());
 
 	// Assets
-	shader = make_unique<Shader>(graphics->GetDevice(), graphics->GetDeviceContext(), renderController->GetPerCameraData());
+	shader = make_unique<Shader>(graphics->GetDevice(), graphics->GetDeviceContext());
 	texture = make_unique<Texture>(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
 	material = make_unique<Material>(*shader, *texture);
 
@@ -46,7 +44,7 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	auto& camera = *new Entity("Camera", *scene);
 
 	auto& cameraTransform = camera.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, -5.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-	camera.AddComponent<Camera>(0.1f, 1000.0f, 45, cameraTransform, *graphics, *this);
+	camera.AddComponent<Camera>(0.1f, 1000.0f, 45, cameraTransform, *graphics, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	camera.AddComponent<Movement>(*input.get(), cameraTransform, *this);
 
 	{
@@ -92,7 +90,7 @@ void Engine::Update()
 	// Render the model using the texture shader.
 	for (auto camera : cameras)
 	{
-		renderController->UpdateCameraData(*camera);
+		camera->Render();
 
 		for (auto renderer : renderers)
 		{

@@ -4,13 +4,27 @@
 #include "Graphics.h"
 #include "Transform.h"
 
+#include <comdef.h>
+#include <d3d11.h>
 #include <directxmath.h>
 
+using namespace _com_util;
 using namespace DirectX;
 
-Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine)
+struct PerCameraData
+{
+	XMMATRIX view;
+	XMMATRIX projection;
+};
+
+Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine), deviceContext(deviceContext)
 { 
 	engine.AddCamera(*this);
+
+	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	auto cameraDataDesc = CD3D11_BUFFER_DESC(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+	CheckError(device.CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
 }
 
 Camera::~Camera()
@@ -48,4 +62,23 @@ XMMATRIX Camera::GetProjectionMatrix() const
 	const auto aspect = graphics.GetAspectRatio();
 	const auto fovRadians = XMConvertToRadians(fieldOfView);
 	return XMMatrixPerspectiveFovLH(fovRadians, aspect, nearClipPlane, farClipPlane);
+}
+
+void Camera::Render() const
+{
+	// Set the shader parameters that it will use for rendering.
+	D3D11_MAPPED_SUBRESOURCE perCameraDataMappedResource;
+	CheckError(deviceContext.Map(cameraData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perCameraDataMappedResource));
+
+	// Get a pointer to the data in the constant buffer.
+	auto perCameraDataPtr = static_cast<PerCameraData*>(perCameraDataMappedResource.pData);
+
+	// Copy the matrices into the constant buffer.
+	perCameraDataPtr->view = GetViewMatrix();
+	perCameraDataPtr->projection = GetProjectionMatrix();
+
+	// Unlock the constant buffer.
+	deviceContext.Unmap(cameraData.Get(), 0);
+
+	deviceContext.VSSetConstantBuffers(0, 1, cameraData.GetAddressOf());
 }
