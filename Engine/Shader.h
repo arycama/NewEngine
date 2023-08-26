@@ -18,13 +18,12 @@ namespace DirectX
 class Shader
 {
 public:
-	Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext, struct ID3D11Buffer& cameraData, ID3D11Buffer& drawData);
+	Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext, struct ID3D11Buffer& cameraData);
 	void Render(ID3D11ShaderResourceView& texture) const;
 
 private:
 	ID3D11DeviceContext& deviceContext;
 	ID3D11Buffer& cameraData;
-	ID3D11Buffer& drawData;
 
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
