@@ -3,10 +3,18 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include "Graphics.h"
-
-#include <comdef.h>
 #include <d3d11.h>
 #include <memory>
+#include <dxgi.h>
+#include <dxgicommon.h>
+#include <dxgiformat.h>
+#include <dxgitype.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <d3dcommon.h>
+#include <wrl/client.h>
+#include <comdef.h>
+#include <new>
 
 using namespace std;
 using namespace Microsoft::WRL;

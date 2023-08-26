@@ -1,12 +1,16 @@
 #include "Camera.h"
 #include "Engine.h"
-#include "Input.h"
 #include "Graphics.h"
 #include "Transform.h"
 
-#include <comdef.h>
 #include <d3d11.h>
 #include <directxmath.h>
+#include <DirectXMathConvert.inl>
+#include <DirectXMathMatrix.inl>
+#include <DirectXMathMisc.inl>
+#include <DirectXMathVector.inl>
+#include <wrl/client.h>
+#include <comdef.h>
 
 using namespace _com_util;
 using namespace DirectX;

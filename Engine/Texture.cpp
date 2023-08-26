@@ -1,8 +1,15 @@
 #include "Texture.h"
 
-#include <comdef.h>
-#include <cstdio>
+#include <d3d11.h>
 #include <memory>
+#include <dxgiformat.h>
+#include <assert.h>
+#include <stdio.h>
+#include <d3dcommon.h>
+#include <wrl/client.h>
+#include <comdef.h>
+#include <string>
+#include <cstdio>
 
 using namespace _com_util;
 using namespace Microsoft::WRL;

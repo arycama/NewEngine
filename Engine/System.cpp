@@ -2,7 +2,14 @@
 
 #include "System.h"
 #include "Engine.h"
-#include "WindowHandle.h"
+#include <basetsd.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <libloaderapi.h>
+#include <wingdi.h>
+#include <WinUser.h>
+#include <memory>
+#include <string>
 
 using namespace std;
 
@@ -12,42 +19,34 @@ LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	return system->MessageHandler(hwnd, umessage, wparam, lparam);
 }
 
-System::System()
+System::System() : hInstance(GetModuleHandleA(nullptr)), applicationName("Engine")
 {	
-	// Initialize the windows api.
-	// Get the instance of this application.
-	hinstance = GetModuleHandle(nullptr);
-
-	// Give the application a name.
-	applicationName = L"Engine";
-
 	// Setup the windows class with default settings.
-	WNDCLASSEX wc;
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = System::WndProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = hinstance;
-	wc.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
-	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
-	wc.lpszMenuName = nullptr;
-	wc.lpszClassName = applicationName;
-	wc.cbSize = sizeof(WNDCLASSEX);
+	WNDCLASSEXA wc =
+	{
+		sizeof(WNDCLASSEXA),
+		CS_HREDRAW | CS_VREDRAW | CS_OWNDC,
+		System::WndProc,
+		0,
+		0,
+		hInstance,
+		LoadIcon(nullptr, IDI_WINLOGO),
+		LoadCursor(nullptr, IDC_ARROW),
+		static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
+		nullptr,
+		applicationName.c_str(),
+		wc.hIcon
+	};
 
-	// Register the window class.
-	RegisterClassEx(&wc);
+	RegisterClassExA(&wc);
 
-	// Create and initialize the graphics object.  This object will handle rendering all the graphics for this application.
 	engine = make_unique<Engine>(*this);
 }
 
 System::~System()
 {
 	// Remove the application instance.
-	UnregisterClass(applicationName, hinstance);
-	hinstance = nullptr;
+	UnregisterClassA(applicationName.c_str(), hInstance);
 }
 
 HWND System::InitializeWindow(bool fullScreen, int& width, int& height)
@@ -88,7 +87,7 @@ HWND System::InitializeWindow(bool fullScreen, int& width, int& height)
 	}
 
 	// Create the window with the screen settings and get the handle to it.
-	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, applicationName, applicationName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, posX, posY, width, height, nullptr, nullptr, hinstance, nullptr);
+	auto hwnd = CreateWindowExA(WS_EX_APPWINDOW, applicationName.c_str(), applicationName.c_str(), WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, posX, posY, width, height, nullptr, nullptr, hInstance, nullptr);
 
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);

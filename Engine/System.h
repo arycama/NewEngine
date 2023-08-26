@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <memory>
+#include <string>
 #include <windows.h>
 
 class System
@@ -18,8 +19,8 @@ public:
 	void Quit();
 
 private:
-	LPCWSTR applicationName;
-	HINSTANCE hinstance;
+	const std::string applicationName;
+	const HINSTANCE hInstance;
 	bool quit;
 
 	std::unique_ptr<class Engine> engine;

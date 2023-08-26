@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-
 #include <wrl/client.h>
 
 class Transform;

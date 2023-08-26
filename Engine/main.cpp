@@ -1,9 +1,11 @@
 #define _CRTDBG_MAP_ALLOC
 
-#include <stdlib.h>
 #include <crtdbg.h>
 
 #include "System.h"
+#include <minwindef.h>
+#include <winnt.h>
+#include <memory>
 
 using namespace std;
 

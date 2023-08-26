@@ -1,6 +1,12 @@
+#include "Behaviour.h"
 #include "Movement.h"
 #include "Input.h"
 #include "Transform.h"
+
+#include <DirectXMath.h>
+#include <DirectXMathConvert.inl>
+#include <DirectXMathMisc.inl>
+#include <DirectXMathVector.inl>
 
 using namespace DirectX;
 

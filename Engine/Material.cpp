@@ -2,8 +2,10 @@
 #include "Shader.h"
 #include "Texture.h"
 
-#include <comdef.h>
 #include <d3d11.h>
+#include <minwindef.h>
+#include <wrl/client.h>
+#include <comdef.h>
 
 using namespace _com_util;
 

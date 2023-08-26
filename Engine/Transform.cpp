@@ -1,4 +1,8 @@
 #include "Transform.h"
+#include <DirectXMath.h>
+#include <DirectXMathConvert.inl>
+#include <DirectXMathMatrix.inl>
+#include <DirectXMathMisc.inl>
 
 using namespace DirectX;
 

@@ -1,9 +1,13 @@
 #include "Shader.h"
 
-#include <comdef.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
+#include <dxgiformat.h>
+#include <d3d10shader.h>
+#include <d3dcommon.h>
+#include <wrl/client.h>
+#include <comdef.h>
 
 using namespace _com_util;
 using namespace std;

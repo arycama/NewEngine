@@ -1,11 +1,14 @@
 #include "Model.h"
 #include "Transform.h"
 
-#include <comdef.h>
 #include <d3d11.h>
 #include <directxmath.h>
 #include <memory>
-#include <string>
+#include <dxgiformat.h>
+#include <minwindef.h>
+#include <d3dcommon.h>
+#include <wrl/client.h>
+#include <comdef.h>
 
 using namespace std;
 using namespace DirectX;
@@ -44,7 +47,7 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Tra
 	// Set up the description of the static vertex buffer.
 	const auto vertexBufferDesc = CD3D11_BUFFER_DESC(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
 
-	// Give the subresource structure a pointer to the vertex data.
+	// Give the sub resource structure a pointer to the vertex data.
 	const auto vertexData = D3D11_SUBRESOURCE_DATA{ vertices.get(), 0, 0 };
 
 	// Now create the vertex buffer.
@@ -53,7 +56,7 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Tra
 	// Set up the description of the static index buffer.
 	const auto indexBufferDesc = CD3D11_BUFFER_DESC(sizeof(unsigned long) * indexCount, D3D11_BIND_INDEX_BUFFER);;
 
-	// Give the subresource structure a pointer to the index data.
+	// Give the sub resource structure a pointer to the index data.
 	const auto indexData = D3D11_SUBRESOURCE_DATA { indices.get(), 0, 0 };
 
 	// Create the index buffer.
