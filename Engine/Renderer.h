@@ -4,7 +4,6 @@
 #include <wrl/client.h>
 
 class Engine;
-class Graphics;
 class Material;
 class Model;
 class Transform;
@@ -28,6 +27,4 @@ private:
 	ID3D11DeviceContext& deviceContext;
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> drawData;
-
-	void UpdateDrawData() const;
 };

@@ -17,7 +17,7 @@ public:
 	void Render() const;
 
 private:
-	int vertexCount, indexCount;
+	const int vertexCount, indexCount;
 	const Transform& transform;
 	ID3D11DeviceContext& deviceContext;
 

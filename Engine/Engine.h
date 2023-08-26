@@ -27,16 +27,16 @@ public:
 	void KeyUp(int key);
 
 	void AddBehaviour(Behaviour& behaviour);
-	void RemoveBehaviour(Behaviour& behaviour);
+	void RemoveBehaviour(const Behaviour& behaviour);
 
-	void AddCamera(Camera& camera);
-	void RemoveCamera(Camera& camera);
+	void AddCamera(const Camera& camera);
+	void RemoveCamera(const Camera& camera);
 
-	void AddRenderer(Renderer& renderer);
-	void RemoveRenderer(Renderer& renderer);
+	void AddRenderer(const Renderer& renderer);
+	void RemoveRenderer(const Renderer& renderer);
 
-	void AddScene(Scene& scene);
-	void RemoveScene(Scene& scene);
+	void AddScene(const Scene& scene);
+	void RemoveScene(const Scene& scene);
 
 private:
 	bool isBeingUnloaded;

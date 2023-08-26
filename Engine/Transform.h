@@ -12,8 +12,8 @@ public:
 	DirectX::XMFLOAT3 GetRotation() const;
 	DirectX::XMMATRIX GetWorldMatrix() const;
 
-	void SetPosition(const DirectX::XMFLOAT3 position);
-	void SetRotation(const DirectX::XMFLOAT3 rotation);
+	void SetPosition(DirectX::XMFLOAT3 position);
+	void SetRotation(DirectX::XMFLOAT3 rotation);
 
 private:
 	DirectX::XMFLOAT3 position, rotation;

@@ -18,12 +18,8 @@ struct VertexType
 	XMFLOAT2 texture;
 };
 
-Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Transform& transform) : deviceContext(deviceContext), transform(transform)
+Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Transform& transform) : deviceContext(deviceContext), transform(transform), vertexCount(3), indexCount(3)
 {
-	// Initialize the vertex and index buffers.
-	// Set the number of vertices in the vertex array.
-	vertexCount = 3;
-
 	// Create the vertex array.
 	auto vertices = make_unique<VertexType[]>(vertexCount);
 
@@ -36,9 +32,6 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Tra
 
 	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
 	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
-
-	// Set the number of indices in the index array.
-	indexCount = 3;
 
 	// Create the index array.
 	auto indices = make_unique<unsigned long[]>(indexCount);

@@ -35,16 +35,6 @@ Renderer::~Renderer()
 
 void Renderer::Render() const
 {
-	UpdateDrawData();
-	material.Render();
-
-	deviceContext.VSSetConstantBuffers(1, 1, drawData.GetAddressOf());
-
-	model.Render();
-}
-
-void Renderer::UpdateDrawData() const
-{
 	D3D11_MAPPED_SUBRESOURCE perDrawDataMappedResource;
 	CheckError(deviceContext.Map(drawData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perDrawDataMappedResource));
 
@@ -56,4 +46,8 @@ void Renderer::UpdateDrawData() const
 
 	// Unlock the constant buffer.
 	deviceContext.Unmap(drawData.Get(), 0);
+
+	material.Render();
+	deviceContext.VSSetConstantBuffers(1, 1, drawData.GetAddressOf());
+	model.Render();
 }

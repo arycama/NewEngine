@@ -34,7 +34,7 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	// Assets
 	shader = make_unique<Shader>(graphics->GetDevice(), graphics->GetDeviceContext());
 	texture = make_unique<Texture>(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
-	material = make_unique<Material>(*shader, *texture);
+	material = make_unique<Material>(*shader, *texture, graphics->GetDevice(), graphics->GetDeviceContext());
 
 	// Create the scene
 	auto scene = new Scene(*this);
@@ -123,40 +123,40 @@ void Engine::AddBehaviour(Behaviour& behaviour)
 	behaviours.push_back(&behaviour);
 }
 
-void Engine::RemoveBehaviour(Behaviour& behaviour)
+void Engine::RemoveBehaviour(const Behaviour& behaviour)
 {
 	if(!isBeingUnloaded)
 		behaviours.erase(find(behaviours.begin(), behaviours.end(), &behaviour));
 }
 
-void Engine::AddCamera(Camera& camera)
+void Engine::AddCamera(const Camera& camera)
 {
 	cameras.push_back(&camera);
 }
 
-void Engine::RemoveCamera(Camera& camera)
+void Engine::RemoveCamera(const Camera& camera)
 {
 	if (!isBeingUnloaded)
 		cameras.erase(find(cameras.begin(), cameras.end(), &camera));
 }
 
-void Engine::AddRenderer(Renderer& renderer)
+void Engine::AddRenderer(const Renderer& renderer)
 {
 	renderers.push_back(&renderer);
 }
 
-void Engine::RemoveRenderer(Renderer& renderer)
+void Engine::RemoveRenderer(const Renderer& renderer)
 {
 	if(!isBeingUnloaded)
 		renderers.erase(find(renderers.begin(), renderers.end(), &renderer));
 }
 
-void Engine::AddScene(Scene& scene)
+void Engine::AddScene(const Scene& scene)
 {
-	scenes.push_back(unique_ptr<Scene>(&scene));
+	scenes.push_back(unique_ptr<const Scene>(&scene));
 }
 
-void Engine::RemoveScene(Scene& scene)
+void Engine::RemoveScene(const Scene& scene)
 {
 	if (isBeingUnloaded)
 		return;

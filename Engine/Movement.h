@@ -15,5 +15,5 @@ public:
 
 private:
 	const Input& input;
-	class Transform& transform;
+	Transform& transform;
 };

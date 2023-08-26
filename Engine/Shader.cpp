@@ -4,8 +4,6 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
-#include <fstream>
-#include <memory>
 
 using namespace _com_util;
 using namespace std;
@@ -52,15 +50,9 @@ Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : devic
 
 	// Create the vertex input layout.
 	CheckError(device.CreateInputLayout(polygonLayout, 2, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &layout));
-
-	// Create a texture sampler state description.
-	// Create the texture sampler state.
-	FLOAT borderColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	auto samplerDesc = CD3D11_SAMPLER_DESC(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, borderColor, 0, D3D11_FLOAT32_MAX);
-	CheckError(device.CreateSamplerState(&samplerDesc, &samplerState));
 }
 
-void Shader::Render(ID3D11ShaderResourceView& texture) const
+void Shader::Render() const
 {
 	// Set the vertex input layout.
 	deviceContext.IASetInputLayout(layout.Get());
@@ -68,8 +60,4 @@ void Shader::Render(ID3D11ShaderResourceView& texture) const
 
 	// Set shader texture resource in the pixel shader.
 	deviceContext.PSSetShader(pixelShader.Get(), nullptr, 0);
-
-	auto shaderResourceViews = &texture;
-	deviceContext.PSSetShaderResources(0, 1, &shaderResourceViews);
-	deviceContext.PSSetSamplers(0, 1, samplerState.GetAddressOf());
 }

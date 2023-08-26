@@ -23,7 +23,7 @@ public:
 
 	void Render() const;
 private:
-	float nearClipPlane, farClipPlane, fieldOfView;
+	const float nearClipPlane, farClipPlane, fieldOfView;
 
 	const Graphics& graphics;
 	const Transform& transform;
