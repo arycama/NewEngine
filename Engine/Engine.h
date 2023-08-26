@@ -45,6 +45,7 @@ private:
 	std::unique_ptr<Input> input;
 	std::unique_ptr<RenderController> renderController;
 	std::unique_ptr<const Graphics> graphics;
+	std::unique_ptr<const class Material> material;
 	std::unique_ptr<const Shader> shader;
 	std::unique_ptr<const Texture> texture;
 	std::unique_ptr<const WindowHandle> windowHandle;

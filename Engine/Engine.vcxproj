@@ -139,6 +139,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Movement.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Engine.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Movement.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Engine.cpp" />

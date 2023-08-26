@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Graphics.h"
 #include "Input.h"
+#include "Material.h"
 #include "Model.h"
 #include "Movement.h"
 #include "RenderController.h"
@@ -35,6 +36,7 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	// Assets
 	shader = make_unique<Shader>(graphics->GetDevice(), graphics->GetDeviceContext(), renderController->GetPerCameraData(), renderController->GetPerDrawData());
 	texture = make_unique<Texture>(graphics->GetDevice(), graphics->GetDeviceContext(), "../Engine/data/stone01.tga");
+	material = make_unique<Material>(*shader, *texture);
 
 	// Create the scene
 	auto scene = new Scene(*this);
@@ -51,21 +53,21 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 		auto& object = *new Entity("Model 0", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
-		object.AddComponent<Renderer>(model, *shader.get(), *graphics, *this, *texture.get(), modelTransform, *renderController);
+		object.AddComponent<Renderer>(model, *material.get(), *graphics, *this, modelTransform, *renderController);
 	}
 
 	{
 		auto& object = *new Entity("Model 1", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
-		object.AddComponent<Renderer>(model, *shader.get(), *graphics, *this, *texture.get(), modelTransform, *renderController);
+		object.AddComponent<Renderer>(model, *material.get(), *graphics, *this, modelTransform, *renderController);
 	}
 
 	{
 		auto& object = *new Entity("Model 2", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(-2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
-		object.AddComponent<Renderer>(model, *shader.get(), *graphics, *this, *texture.get(), modelTransform, *renderController);
+		object.AddComponent<Renderer>(model, *material.get(), *graphics, *this, modelTransform, *renderController);
 	}
 
 	// Hide the mouse cursor.
