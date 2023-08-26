@@ -24,13 +24,8 @@ Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : devic
 {
 	// Create the vertex shader
 	ComPtr<ID3D10Blob> vertexShaderBuffer;
-	CheckError(D3DCompileFromFile(L"../Engine/Surface.hlsl", nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), nullptr));
+	CheckError(D3DCompileFromFile(L"Surface.hlsl", nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), nullptr));
 	CheckError(device.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
-
-	// Create the pixel shader
-	ComPtr<ID3D10Blob> pixelShaderBuffer;
-	CheckError(D3DCompileFromFile(L"../Engine/Surface.hlsl", nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), nullptr));
-	CheckError(device.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
 
 	// TODO: Move to model?
 	// Create the vertex input layout description.
@@ -54,6 +49,11 @@ Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : devic
 
 	// Create the vertex input layout.
 	CheckError(device.CreateInputLayout(polygonLayout, 2, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &layout));
+
+	// Create the pixel shader
+	ComPtr<ID3D10Blob> pixelShaderBuffer;
+	CheckError(D3DCompileFromFile(L"Surface.hlsl", nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), nullptr));
+	CheckError(device.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
 }
 
 void Shader::Render() const
