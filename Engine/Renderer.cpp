@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Renderer.h"
 #include "Transform.h"
+#include "DirectXHelpers.h"
 
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -25,6 +26,7 @@ Renderer::Renderer(const Model& model, const Material& material, const Transform
 
 	auto drawDataDesc = CD3D11_BUFFER_DESC(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 	CheckError(device.CreateBuffer(&drawDataDesc, nullptr, &drawData));
+	SetDebugObjectName(drawData.Get(), "Draw Data");
 }
 
 Renderer::~Renderer()

@@ -4,7 +4,8 @@
 #include "Transform.h"
 
 #include <d3d11.h>
-#include <directxmath.h>
+#include "DirectXHelpers.h"
+#include <DirectXMath.h>
 #include <DirectXMathConvert.inl>
 #include <DirectXMathMatrix.inl>
 #include <DirectXMathMisc.inl>
@@ -29,6 +30,7 @@ Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	auto cameraDataDesc = CD3D11_BUFFER_DESC(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 	CheckError(device.CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
+	SetDebugObjectName(cameraData.Get(), "Camera Data");
 }
 
 Camera::~Camera()
