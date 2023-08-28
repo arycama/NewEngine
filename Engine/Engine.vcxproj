@@ -54,6 +54,9 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\ImageContentTask.props" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\MeshContentTask.props" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\ShaderGraphContentTask.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -134,23 +137,68 @@
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\seafloor.dds">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\stone01.tga">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <GenerateMips Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateMips>
+      <Compress Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BC1_UNORM_SRGB</Compress>
+      <GeneratePremultipliedAlpha Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</GeneratePremultipliedAlpha>
+    </None>
+    <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_color.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_normal.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_roughness.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2_Textures\STONE#2_color.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2_Textures\STONE#2_normal.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2_Textures\STONE#2_roughness.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3_Textures\STONE#3_color.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3_Textures\STONE#3_normal.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3_Textures\STONE#3_roughness.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4_Textures\STONE#4_color.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4_Textures\STONE#4_normal.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4_Textures\STONE#4_roughness.png">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
     <Image Include="Engine.ico" />
     <Image Include="small.ico" />
-    <Image Include="stone01.tga">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-    </Image>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetCache.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="miniz.h" />
     <ClInclude Include="Movement.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ofbx.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
@@ -167,12 +215,14 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="miniz.c" />
     <ClCompile Include="Movement.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ofbx.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="System.cpp" />
@@ -186,13 +236,69 @@
     <ClCompile Include="WindowHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Stones\STONE#1\STONE#1.blend">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2.blend">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3.blend">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4.blend">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
     <None Include="packages.config" />
-    <None Include="Surface.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Surface.hlsl">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Stones\STONE#1\STONE#1.fbx">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2.fbx">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3.fbx">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4.fbx">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Stones\STONE#1\STONE#1.obj">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2.obj">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3.obj">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Cube.obj">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Cube.txt">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
   </ItemGroup>
@@ -200,6 +306,9 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets" Condition="Exists('..\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets')" />
     <Import Project="..\packages\directxtk_desktop_2019.2023.4.28.1\build\native\directxtk_desktop_2019.targets" Condition="Exists('..\packages\directxtk_desktop_2019.2023.4.28.1\build\native\directxtk_desktop_2019.targets')" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\ImageContentTask.targets" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\MeshContentTask.targets" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\ShaderGraphContentTask.targets" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

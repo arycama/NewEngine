@@ -8,6 +8,7 @@
 #include <d3dcommon.h>
 #include <wrl/client.h>
 #include <comdef.h>
+#include <string>
 
 using namespace _com_util;
 using namespace std;
@@ -20,11 +21,13 @@ struct PerCameraData
 	XMMATRIX projection;
 };
 
-Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
+Shader::Shader(const string& path, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
 {
+	auto fileName = wstring(path.begin(), path.end());
+
 	// Create the vertex shader
 	ComPtr<ID3D10Blob> vertexShaderBuffer;
-	CheckError(D3DCompileFromFile(L"Surface.hlsl", nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), nullptr));
+	CheckError(D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), nullptr));
 	CheckError(device.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
 
 	// TODO: Move to model?
@@ -52,7 +55,7 @@ Shader::Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : devic
 
 	// Create the pixel shader
 	ComPtr<ID3D10Blob> pixelShaderBuffer;
-	CheckError(D3DCompileFromFile(L"Surface.hlsl", nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), nullptr));
+	CheckError(D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), nullptr));
 	CheckError(device.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
 }
 

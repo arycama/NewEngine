@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <wrl/client.h>
 
 struct ID3D11Device;
@@ -11,7 +12,7 @@ struct ID3D11VertexShader;
 class Shader
 {
 public:
-	Shader(ID3D11Device& device, ID3D11DeviceContext& deviceContext);
+	Shader(const std::string& path, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
 	void Render() const;
 
 private:

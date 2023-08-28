@@ -11,7 +11,7 @@ struct ID3D11SamplerState;
 class Material
 {
 public:
-	Material(const Shader& shader, const Texture& texture, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
+	Material(const Texture& texture, const Shader& shader, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
 
 	void Render() const;
 

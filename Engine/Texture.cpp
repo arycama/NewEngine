@@ -25,7 +25,7 @@ struct TargaHeader
 	unsigned char data2;
 };
 
-Texture::Texture(ID3D11Device& device, ID3D11DeviceContext& deviceContext, const string& filename)
+Texture::Texture(const string& filename, ID3D11Device& device, ID3D11DeviceContext& deviceContext)
 {
 	FILE* filePtr;
 	auto error = fopen_s(&filePtr, filename.c_str(), "rb");

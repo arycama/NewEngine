@@ -9,7 +9,7 @@
 
 using namespace _com_util;
 
-Material::Material(const Shader& shader, const Texture& texture, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : shader(shader), texture(texture), deviceContext(deviceContext)
+Material::Material(const Texture& texture, const Shader& shader, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : shader(shader), texture(texture), deviceContext(deviceContext)
 { 
 	// Create a texture sampler state description.
 	// Create the texture sampler state.

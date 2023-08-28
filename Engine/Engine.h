@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AssetCache.h"
 #include <memory>
 #include <vector>
 
@@ -48,6 +49,8 @@ private:
 	std::unique_ptr<const Shader> shader;
 	std::unique_ptr<const Texture> texture;
 	std::unique_ptr<const WindowHandle> windowHandle;
+
+	//AssetCache<Texture> textures;
 
 	std::vector<Behaviour*> behaviours;
 	std::vector<const Camera*> cameras;

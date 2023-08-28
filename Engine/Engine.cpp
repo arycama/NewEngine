@@ -30,9 +30,9 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	input = make_unique<Input>();
 
 	// Assets
-	shader = make_unique<Shader>(graphics->GetDevice(), graphics->GetDeviceContext());
-	texture = make_unique<Texture>(graphics->GetDevice(), graphics->GetDeviceContext(), "stone01.tga");
-	material = make_unique<Material>(*shader, *texture, graphics->GetDevice(), graphics->GetDeviceContext());
+	shader = make_unique<Shader>("Shaders/Surface.hlsl", graphics->GetDevice(), graphics->GetDeviceContext());
+	texture = make_unique<Texture>("Assets/stone01.tga", graphics->GetDevice(), graphics->GetDeviceContext());
+	material = make_unique<Material>(*texture, *shader, graphics->GetDevice(), graphics->GetDeviceContext());
 
 	// Create the scene
 	auto scene = new Scene(*this);
@@ -48,21 +48,22 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	{
 		auto& object = *new Entity("Model 0", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
+		auto& model = object.AddComponent<Model>("Assets/Cube.txt", graphics->GetDevice(), graphics->GetDeviceContext());
+		//auto& model = object.AddComponent<Model>("Assets/Stones/STONE#1/STONE#1.obj", graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent<Renderer>(model, *material.get(), modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	}
 
 	{
 		auto& object = *new Entity("Model 1", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
+		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent<Renderer>(model, *material.get(), modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	}
 
 	{
 		auto& object = *new Entity("Model 2", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(-2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext(), modelTransform);
+		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent<Renderer>(model, *material.get(), modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	}
 
