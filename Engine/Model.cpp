@@ -19,12 +19,6 @@ using namespace _com_util;
 
 struct VertexType
 {
-	XMFLOAT3 position;
-	XMFLOAT2 texture;
-};
-
-struct ModelType
-{
 	XMFLOAT3 position, normal;
 	XMFLOAT2 uv;
 };
@@ -32,13 +26,13 @@ struct ModelType
 Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext), vertexCount(3), indexCount(3), vertexStride(sizeof(VertexType))
 {
 	auto vertices = make_unique<VertexType[]>(vertexCount);
-	vertices[0] = { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f) };
-	vertices[1] = { XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.5f, 0.0f) };
-	vertices[2] = { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f) };
+	vertices[0] = { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) };
+	vertices[1] = { XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f),XMFLOAT2(0.5f, 0.0f) };
+	vertices[2] = { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f),XMFLOAT2(1.0f, 1.0f) };
 
 	const auto vertexBufferDesc = CD3D11_BUFFER_DESC(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
 	const auto vertexData = D3D11_SUBRESOURCE_DATA{ vertices.get(), 0, 0 };
-	CheckError(device.CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer));
+	CheckError(device.CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
 
 	auto indices = make_unique<int[]>(indexCount);
 	indices[0] = 0;
@@ -47,10 +41,10 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceC
 
 	const auto indexBufferDesc = CD3D11_BUFFER_DESC(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
 	const auto indexData = D3D11_SUBRESOURCE_DATA { indices.get(), 0, 0 };
-	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer));
+	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
 }
 
-Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext), vertexStride(sizeof(ModelType))
+Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext), vertexStride(sizeof(VertexType))
 {
 	// Open the model file.
 	ifstream fin;
@@ -82,7 +76,7 @@ Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& devi
 	fin.get(input);
 
 	// Read in the vertex data.
-	auto vertices = make_unique<ModelType[]>(vertexCount);
+	auto vertices = make_unique<VertexType[]>(vertexCount);
 	auto indices = make_unique<int[]>(indexCount);
 	for (auto i = 0; i < vertexCount; i++)
 	{
@@ -95,17 +89,13 @@ Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& devi
 
 	fin.close();
 
-	const auto vertexBufferDesc = CD3D11_BUFFER_DESC(sizeof(ModelType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
+	const auto vertexBufferDesc = CD3D11_BUFFER_DESC(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
 	const auto vertexData = D3D11_SUBRESOURCE_DATA{ vertices.get(), 0, 0 };
-	CheckError(device.CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer));
-
-	indices[0] = 0;
-	indices[1] = 1;
-	indices[2] = 2;
+	CheckError(device.CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
 
 	const auto indexBufferDesc = CD3D11_BUFFER_DESC(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
 	const auto indexData = D3D11_SUBRESOURCE_DATA{ indices.get(), 0, 0 };
-	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer));
+	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
 }
 
 void Model::Render() const

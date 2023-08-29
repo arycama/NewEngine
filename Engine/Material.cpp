@@ -15,7 +15,7 @@ Material::Material(const Texture& texture, const Shader& shader, ID3D11Device& d
 	// Create the texture sampler state.
 	FLOAT borderColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	auto samplerDesc = CD3D11_SAMPLER_DESC(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, 0.0f, 1, D3D11_COMPARISON_ALWAYS, borderColor, 0, D3D11_FLOAT32_MAX);
-	CheckError(device.CreateSamplerState(&samplerDesc, &samplerState));
+	CheckError(device.CreateSamplerState(&samplerDesc, samplerState.GetAddressOf()));
 }
 
 void Material::Render() const

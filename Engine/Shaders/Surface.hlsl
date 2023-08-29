@@ -1,13 +1,15 @@
-struct VertexInputType
+struct VertexInput
 {
-	float4 position : POSITION;
-	float2 tex : TEXCOORD0;
+	float3 position : POSITION;
+	float3 normal : NORMAL;
+	float2 uv : TEXCOORD;
 };
 
-struct PixelInputType
+struct PixelInput
 {
 	float4 position : SV_POSITION;
-	float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
+	float2 uv : TEXCOORD;
 };
 
 cbuffer PerCameraData
@@ -24,26 +26,25 @@ cbuffer PerDrawData
 Texture2D shaderTexture;
 SamplerState SampleType;
 
-PixelInputType Vertex(VertexInputType input)
+PixelInput Vertex(VertexInput input)
 {
-    PixelInputType output;
-
-    // Change the position vector to be 4 units for proper matrix calculations.
-    input.position.w = 1.0f;
-
-    // Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(worldMatrix, input.position);
-	output.position = mul(viewMatrix, output.position);
-	output.position = mul(projectionMatrix, output.position);
-
-    // Store the texture coordinates for the pixel shader.
-    output.tex = input.tex;
-
+	float3 worldPosition = mul(worldMatrix, float4(input.position, 1.0)).xyz;
+	float3 viewPosition = mul(viewMatrix, float4(worldPosition, 1.0)).xyz;
+	
+    PixelInput output;
+	output.position = mul(projectionMatrix, float4(viewPosition, 1.0));
+    output.uv = input.uv;
+	output.normal = input.normal;
     return output;
 }
 
-float4 Pixel(PixelInputType input) : SV_TARGET
+float3 Pixel(PixelInput input) : SV_TARGET
 {
-    // Sample the pixel color from the texture using the sampler at this texture coordinate location.
-	return shaderTexture.Sample(SampleType, input.tex);
+	float3 color = shaderTexture.Sample(SampleType, input.uv);
+	float3 L = normalize(float3(0.75, 0.75, -0.75));
+	float3 N = normalize(input.normal);
+	float3 C = 1.0;
+	float3 A = 0.25;
+	color *= saturate(dot(N, L)) * C + A;
+	return color;
 }
