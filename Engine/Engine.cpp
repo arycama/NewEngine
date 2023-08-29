@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Graphics.h"
 #include "Input.h"
+#include "Int2.h"
 #include "Material.h"
 #include "Model.h"
 #include "Movement.h"
@@ -26,7 +27,7 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	auto hwnd = system.InitializeWindow(fullScreen, width, height);
 
 	windowHandle = make_unique<WindowHandle>(hwnd);
-	graphics = make_unique<Graphics>(width, height, true, hwnd, fullScreen);
+	graphics = make_unique<Graphics>(width, height, false, hwnd, fullScreen);
 	input = make_unique<Input>();
 
 	// Assets
@@ -83,6 +84,8 @@ void Engine::Update()
 	for (auto behaviour : behaviours)
 		behaviour->Update();
 
+	input->Reset();
+
 	// Clear the buffers to begin the scene.
 	graphics->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
 
@@ -115,6 +118,16 @@ void Engine::KeyDown(int key)
 void Engine::KeyUp(int key)
 {
 	input->SetKeyUp(key);
+}
+
+void Engine::SetMousePosition(int xPos, int yPos)
+{
+	input->SetMousePosition(Int2(xPos, yPos));
+}
+
+void Engine::SetMouseDelta(int xDelta, int yDelta)
+{
+	input->SetMouseDelta(Int2(xDelta, yDelta));
 }
 
 void Engine::AddBehaviour(Behaviour& behaviour)

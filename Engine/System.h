@@ -24,6 +24,6 @@ private:
 	bool quit;
 
 	std::unique_ptr<class Engine> engine;
-	static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
-	LRESULT  MessageHandler(HWND, UINT, WPARAM, LPARAM);
+	static LRESULT CALLBACK WndProc(HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
+	LRESULT MessageHandler(HWND, UINT, WPARAM, LPARAM);
 };

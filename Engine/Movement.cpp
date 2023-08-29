@@ -1,6 +1,7 @@
 #include "Behaviour.h"
 #include "Movement.h"
 #include "Input.h"
+#include "Int2.h"
 #include "Transform.h"
 
 #include <DirectXMath.h>
@@ -14,21 +15,14 @@ Movement::Movement(const Input& input, Transform& transform, Engine& engine) : B
 
 void Movement::Update()
 {
-	constexpr float rotateSpeed = XMConvertToRadians(1.0f);
+	constexpr float rotateSpeed = XMConvertToRadians(0.010f);
+
+	auto mouseDelta = input.GetMouseDelta();
 
 	// Rotation
 	auto rotation = transform.GetRotation();
-	if (input.IsKeyDown(0x25)) // Left
-		rotation.y -= rotateSpeed;
-
-	if (input.IsKeyDown(0x27)) // Right
-		rotation.y += rotateSpeed;
-
-	if (input.IsKeyDown(0x26)) // Up
-		rotation.x -= rotateSpeed;
-
-	if (input.IsKeyDown(0x28)) // Down
-		rotation.x += rotateSpeed;
+	rotation.y += mouseDelta.x * rotateSpeed;
+	rotation.x += mouseDelta.y * rotateSpeed;
 
 	transform.SetRotation(rotation);
 

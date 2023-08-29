@@ -1,6 +1,5 @@
 #pragma once
 
-#include "AssetCache.h"
 #include <memory>
 #include <vector>
 
@@ -26,6 +25,8 @@ public:
 
 	void KeyDown(int key);
 	void KeyUp(int key);
+	void SetMousePosition(int xPos, int yPos);
+	void SetMouseDelta(int xDelta, int yDelta);
 
 	void AddBehaviour(Behaviour& behaviour);
 	void RemoveBehaviour(const Behaviour& behaviour);

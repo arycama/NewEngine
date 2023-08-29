@@ -2,21 +2,17 @@
 
 #include "System.h"
 #include "Engine.h"
-#include <basetsd.h>
-#include <minwindef.h>
-#include <windef.h>
-#include <libloaderapi.h>
-#include <wingdi.h>
-#include <WinUser.h>
+#include <hidusage.h>
 #include <memory>
 #include <string>
+#include <windowsx.h>
 
 using namespace std;
 
-LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lParam)
 {
 	const auto system = reinterpret_cast<System*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-	return system->MessageHandler(hwnd, umessage, wparam, lparam);
+	return system->MessageHandler(hwnd, umessage, wparam, lParam);
 }
 
 System::System() : hInstance(GetModuleHandleA(nullptr)), applicationName("Engine")
@@ -97,6 +93,13 @@ HWND System::InitializeWindow(bool fullScreen, int& width, int& height)
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
 
+	RAWINPUTDEVICE Rid[1];
+	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
+	Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
+	Rid[0].dwFlags = RIDEV_INPUTSINK;
+	Rid[0].hwndTarget = hwnd;
+	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
+
 	return hwnd;
 }
 
@@ -104,9 +107,7 @@ void System::ReleaseWindow(HWND hwnd, bool fullScreen)
 {
 	// Fix the display settings if leaving full screen mode.
 	if (fullScreen)
-	{
 		ChangeDisplaySettings(nullptr, 0);
-	}
 
 	// Release the pointer to this class.
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)nullptr);
@@ -141,9 +142,9 @@ void System::Quit()
 	quit = true;
 }
 
-LRESULT System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT System::MessageHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (umsg)
+	switch (uMsg)
 	{
 		// Check if the window is being destroyed or closed
 		case WM_DESTROY:
@@ -157,7 +158,7 @@ LRESULT System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 		case WM_KEYDOWN:
 		{
 			// If a key is pressed send it to the input object so it can record that state.
-			engine->KeyDown(static_cast<int>(wparam));
+			engine->KeyDown(static_cast<int>(wParam));
 			return 0;
 		}
 
@@ -165,8 +166,31 @@ LRESULT System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 		case WM_KEYUP:
 		{
 			// If a key is released then send it to the input object so it can unset the state for that key.
-			engine->KeyUp(static_cast<int>(wparam));
+			engine->KeyUp(static_cast<int>(wParam));
 			return 0;
+		}
+
+		case WM_MOUSEMOVE:
+		{
+			int xPos = GET_X_LPARAM(lParam);
+			int yPos = GET_Y_LPARAM(lParam);
+			engine->SetMousePosition(xPos, yPos);
+			return 0;
+		}
+
+		case WM_INPUT:
+		{
+			UINT dwSize = sizeof(RAWINPUT);
+			static BYTE lpb[sizeof(RAWINPUT)];
+
+			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
+
+			RAWINPUT* raw = (RAWINPUT*)lpb;
+
+			if (raw->header.dwType == RIM_TYPEMOUSE)
+				engine->SetMouseDelta(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
+
+			break;
 		}
 
 		case WM_QUIT:
@@ -178,7 +202,7 @@ LRESULT System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 		// Any other messages send to the default message handler as our application won't make use of them.
 		default:
 		{
-			return DefWindowProc(hwnd, umsg, wparam, lparam);
+			return DefWindowProc(hwnd, uMsg, wParam, lParam);
 		}
 	}
 }

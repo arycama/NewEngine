@@ -94,6 +94,9 @@
     <ClInclude Include="ofbx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Int2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -154,6 +157,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ofbx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Int2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

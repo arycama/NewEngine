@@ -214,6 +214,8 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Int2.cpp" />
+    <ClInclude Include="Int2.h" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="miniz.c" />
     <ClCompile Include="Movement.cpp" />
