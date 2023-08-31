@@ -191,6 +191,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="lodepng.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="miniz.h" />
     <ClInclude Include="Movement.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Int2.cpp" />
     <ClInclude Include="Int2.h" />
+    <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="miniz.c" />
     <ClCompile Include="Movement.cpp" />

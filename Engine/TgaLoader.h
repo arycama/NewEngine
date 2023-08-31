@@ -5,5 +5,5 @@
 class TgaLoader
 {
 public:
-	static char* LoadFile(const std::string& path, int& width, int& height);
+	static unsigned char* LoadFile(const std::string& path, unsigned int& width, unsigned int& height);
 };
