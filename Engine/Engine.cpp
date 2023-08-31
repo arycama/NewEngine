@@ -27,7 +27,7 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	auto hwnd = system.InitializeWindow(fullScreen, width, height);
 
 	windowHandle = make_unique<WindowHandle>(hwnd);
-	graphics = make_unique<Graphics>(width, height, false, hwnd, fullScreen);
+	graphics = make_unique<Graphics>(width, height, true, hwnd, fullScreen);
 	input = make_unique<Input>();
 
 	// Assets
@@ -49,15 +49,14 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	{
 		auto& object = *new Entity("Model 0", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto& model = object.AddComponent<Model>("Assets/Cube.txt", graphics->GetDevice(), graphics->GetDeviceContext());
-		//auto& model = object.AddComponent<Model>("Assets/Stones/STONE#1/STONE#1.obj", graphics->GetDevice(), graphics->GetDeviceContext());
+		auto& model = object.AddComponent<Model>("Assets/Stones/STONE#1/STONE#1.obj", graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent<Renderer>(model, *material.get(), modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	}
 
 	{
 		auto& object = *new Entity("Model 1", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext());
+		auto& model = object.AddComponent<Model>("Assets/Cube.obj", graphics->GetDevice(), graphics->GetDeviceContext());
 		object.AddComponent<Renderer>(model, *material.get(), modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	}
 
