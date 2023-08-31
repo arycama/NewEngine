@@ -97,6 +97,9 @@
     <ClInclude Include="Int2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TgaLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -162,13 +165,13 @@
     <ClCompile Include="Int2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TgaLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\seafloor.dds" />
     <None Include="Assets\stone01.tga" />
-    <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_color.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_normal.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -218,5 +221,10 @@
     <None Include="Assets\Stones\STONE#4\STONE#4.obj" />
     <None Include="Assets\Cube.obj" />
     <None Include="Assets\Cube.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_color.png">
+      <Filter>Resource Files</Filter>
+    </ImageContentTask>
   </ItemGroup>
 </Project>

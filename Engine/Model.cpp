@@ -73,28 +73,25 @@ Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& devi
 
 			if (input == ' ')
 			{
-				XMFLOAT3 position;
-				fin >> position.x >> position.y >> position.z;
-				//position.z = -position.z;
-				positions->push_back(position);
+				float x, y, z;
+				fin >> x >> y >> z;
+				positions->push_back(XMFLOAT3(x, y, z));
 			}
 
 			// Read in the texture uv coordinates.
 			if (input == 't')
 			{
-				XMFLOAT2 uv;
-				fin >> uv.x >> uv.y;
-				//uv.y = 1.0f - uv.y;
-				uvs->push_back(uv);
+				float x, y;
+				fin >> x >> y;
+				uvs->push_back(XMFLOAT2(x, y));
 			}
 
 			// Read in the normals.
 			if (input == 'n')
 			{
-				XMFLOAT3 normal;
-				fin >> normal.x >> normal.y >> normal.z;
-				//normal.z = -normal.z;
-				normals->push_back(normal);
+				float x, y, z;
+				fin >> x >> y >> z;
+				normals->push_back(XMFLOAT3(x, y, z));
 			}
 		}
 
@@ -104,38 +101,19 @@ Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& devi
 			fin.get(input);
 			if (input == ' ')
 			{
-				// Read the face data in backwards to convert it to a left hand system from right hand system.
-				unsigned int vIndex1, vIndex2, vIndex3, tIndex1, tIndex2, tIndex3, nIndex1, nIndex2, nIndex3;
-				char input2;
+				for (auto i = 0; i < 3; i++)
+				{
+					char input2;
+					unsigned int vIndex, tIndex, nIndex;
+					fin >> vIndex >> input2 >> tIndex >> input2 >> nIndex;
 
-				/*fin >> vIndex3 >> input2 >> tIndex3 >> input2 >> nIndex3
-					>> vIndex2 >> input2 >> tIndex2 >> input2 >> nIndex2
-					>> vIndex1 >> input2 >> tIndex1 >> input2 >> nIndex1;*/
-
-				fin >> vIndex1 >> input2 >> tIndex1 >> input2 >> nIndex1
-					>> vIndex2 >> input2 >> tIndex2 >> input2 >> nIndex2
-					>> vIndex3 >> input2 >> tIndex3 >> input2 >> nIndex3;
-
-				VertexType vertex0;
-				vertex0.position = positions->at(vIndex1 - 1);
-				vertex0.uv = uvs->at(tIndex1 - 1);
-				vertex0.normal = normals->at(nIndex1 - 1);
-				vertices->push_back(vertex0);
-				indices->push_back(indices->size());
-
-				VertexType vertex1;
-				vertex1.position = positions->at(vIndex2 - 1);
-				vertex1.uv = uvs->at(tIndex2 - 1);
-				vertex1.normal = normals->at(nIndex2 - 1);
-				vertices->push_back(vertex1);
-				indices->push_back(indices->size());
-
-				VertexType vertex2;
-				vertex2.position = positions->at(vIndex3 - 1);
-				vertex2.uv = uvs->at(tIndex3 - 1);
-				vertex2.normal = normals->at(nIndex3 - 1);
-				vertices->push_back(vertex2);
-				indices->push_back(indices->size());
+					VertexType vertex;
+					vertex.position = positions->at(vIndex - 1);
+					vertex.uv = uvs->at(tIndex - 1);
+					vertex.normal = normals->at(nIndex - 1);
+					vertices->push_back(vertex);
+					indices->push_back(indices->size());
+				}
 			}
 		}
 

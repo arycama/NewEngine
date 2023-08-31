@@ -146,9 +146,9 @@
       <Compress Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BC1_UNORM_SRGB</Compress>
       <GeneratePremultipliedAlpha Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</GeneratePremultipliedAlpha>
     </None>
-    <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_color.png">
+    <ImageContentTask Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_color.png">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-    </None>
+    </ImageContentTask>
     <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_normal.png">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
@@ -206,6 +206,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="TgaLoader.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="WindowHandle.h" />
   </ItemGroup>
@@ -230,6 +231,7 @@
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="TgaLoader.cpp" />
     <ClCompile Include="Transform.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</MultiProcessorCompilation>
       <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Fast</FloatingPointModel>
