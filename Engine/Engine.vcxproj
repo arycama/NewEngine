@@ -186,64 +186,64 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AssetCache.h" />
-    <ClInclude Include="Behaviour.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="stb_image.h" />
-    <ClInclude Include="TextureFormat.h" />
-    <ClInclude Include="TextureLoader.h" />
-    <ClInclude Include="lodepng.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="miniz.h" />
-    <ClInclude Include="Movement.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="ofbx.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Source\AssetCache.h" />
+    <ClInclude Include="Source\Behaviour.h" />
+    <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\Entity.h" />
+    <ClInclude Include="Source\stb_image.h" />
+    <ClInclude Include="Source\TextureFormat.h" />
+    <ClInclude Include="Source\TextureLoader.h" />
+    <ClInclude Include="Source\lodepng.h" />
+    <ClInclude Include="Source\Material.h" />
+    <ClInclude Include="Source\miniz.h" />
+    <ClInclude Include="Source\Movement.h" />
+    <ClInclude Include="Source\Graphics.h" />
+    <ClInclude Include="Source\Engine.h" />
+    <ClInclude Include="Source\Input.h" />
+    <ClInclude Include="Source\Model.h" />
+    <ClInclude Include="Source\ofbx.h" />
+    <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="System.h" />
+    <ClInclude Include="Source\Scene.h" />
+    <ClInclude Include="Source\System.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="TgaLoader.h" />
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="WindowHandle.h" />
+    <ClInclude Include="Source\Texture.h" />
+    <ClInclude Include="Source\Shader.h" />
+    <ClInclude Include="Source\TgaLoader.h" />
+    <ClInclude Include="Source\Transform.h" />
+    <ClInclude Include="Source\WindowHandle.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Behaviour.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="TextureLoader.cpp" />
-    <ClCompile Include="Int2.cpp" />
-    <ClInclude Include="Int2.h" />
-    <ClCompile Include="lodepng.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="miniz.c" />
-    <ClCompile Include="Movement.cpp" />
-    <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="ofbx.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="System.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="TgaLoader.cpp" />
-    <ClCompile Include="Transform.cpp">
+    <ClCompile Include="Source\Behaviour.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\Entity.cpp" />
+    <ClCompile Include="Source\TextureLoader.cpp" />
+    <ClCompile Include="Source\Int2.cpp" />
+    <ClInclude Include="Source\Int2.h" />
+    <ClCompile Include="Source\lodepng.cpp" />
+    <ClCompile Include="Source\Material.cpp" />
+    <ClCompile Include="Source\miniz.c" />
+    <ClCompile Include="Source\Movement.cpp" />
+    <ClCompile Include="Source\Graphics.cpp" />
+    <ClCompile Include="Source\Engine.cpp" />
+    <ClCompile Include="Source\Input.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Model.cpp" />
+    <ClCompile Include="Source\ofbx.cpp" />
+    <ClCompile Include="Source\Renderer.cpp" />
+    <ClCompile Include="Source\Scene.cpp" />
+    <ClCompile Include="Source\System.cpp" />
+    <ClCompile Include="Source\Texture.cpp" />
+    <ClCompile Include="Source\Shader.cpp" />
+    <ClCompile Include="Source\TgaLoader.cpp" />
+    <ClCompile Include="Source\Transform.cpp">
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</MultiProcessorCompilation>
       <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Fast</FloatingPointModel>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WindowHandle.cpp" />
+    <ClCompile Include="Source\WindowHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Stones\STONE#1\STONE#1.blend">
