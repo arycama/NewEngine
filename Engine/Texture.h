@@ -7,7 +7,7 @@
 class Texture
 {
 public:
-	Texture(const std::string& filename, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
+	Texture(unsigned char* data, int width, int height, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
 
 	ID3D11ShaderResourceView& GetTexture() const;
 

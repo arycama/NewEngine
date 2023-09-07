@@ -50,8 +50,7 @@ private:
 	std::unique_ptr<const Shader> shader;
 	std::unique_ptr<const Texture> texture;
 	std::unique_ptr<const WindowHandle> windowHandle;
-
-	//AssetCache<Texture> textures;
+	std::unique_ptr<const class TextureLoader> textureLoader;
 
 	std::vector<Behaviour*> behaviours;
 	std::vector<const Camera*> cameras;

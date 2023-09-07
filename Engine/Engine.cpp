@@ -13,6 +13,7 @@
 #include "Shader.h"
 #include "System.h"
 #include "Texture.h"
+#include "TextureLoader.h"
 #include "Transform.h"
 #include "WindowHandle.h"
 
@@ -23,17 +24,23 @@ const bool fullScreen = false;
 
 Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 {
-	int width, height;
-	auto hwnd = system.InitializeWindow(fullScreen, width, height);
+	int windowWidth, windowHeight;
+	auto hwnd = system.InitializeWindow(fullScreen, windowWidth, windowHeight);
 
 	windowHandle = make_unique<WindowHandle>(hwnd);
-	graphics = make_unique<Graphics>(width, height, true, hwnd, fullScreen);
+	graphics = make_unique<Graphics>(windowWidth, windowHeight, true, hwnd, fullScreen);
 	input = make_unique<Input>();
 
 	// Assets
 	shader = make_unique<Shader>("Shaders/Surface.hlsl", graphics->GetDevice(), graphics->GetDeviceContext());
+
+	textureLoader = make_unique<TextureLoader>();
+
+	int width = 0, height = 0;
+	const auto textureData = textureLoader->LoadTexture("Assets/Stones/STONE#1/STONE#1_Textures/STONE#1_color.png", width, height);
+
 	//texture = make_unique<Texture>("Assets/stone01.tga", graphics->GetDevice(), graphics->GetDeviceContext());
-	texture = make_unique<Texture>("Assets/Stones/STONE#1/STONE#1_Textures/STONE#1_color.png", graphics->GetDevice(), graphics->GetDeviceContext());
+	texture = make_unique<Texture>(textureData.get(), width, height, graphics->GetDevice(), graphics->GetDeviceContext());
 	material = make_unique<Material>(*texture, *shader, graphics->GetDevice(), graphics->GetDeviceContext());
 
 	// Create the scene

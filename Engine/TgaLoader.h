@@ -1,9 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 class TgaLoader
 {
 public:
-	static unsigned char* LoadFile(const std::string& path, unsigned int& width, unsigned int& height);
+	static std::unique_ptr<unsigned char[]> LoadFile(const std::string& path, unsigned int& width, unsigned int& height);
 };

@@ -191,6 +191,9 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="TextureFormat.h" />
+    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="miniz.h" />
@@ -216,6 +219,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Int2.cpp" />
     <ClInclude Include="Int2.h" />
     <ClCompile Include="lodepng.cpp" />

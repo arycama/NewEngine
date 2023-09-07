@@ -14,7 +14,7 @@ struct TargaHeader
 	unsigned char data2;
 };
 
-unsigned char* TgaLoader::LoadFile(const string& path, unsigned int& width, unsigned int& height)
+unique_ptr<unsigned char[]> TgaLoader::LoadFile(const string& path, unsigned int& width, unsigned int& height)
 {
 	FILE* filePtr;
 	auto error = fopen_s(&filePtr, path.c_str(), "rb");
@@ -27,9 +27,9 @@ unsigned char* TgaLoader::LoadFile(const string& path, unsigned int& width, unsi
 	height = tgaHeader.height;
 
 	auto imageSize = tgaHeader.width * tgaHeader.height * 4;
-	auto imageData = new unsigned char[imageSize];
+	auto imageData = make_unique<unsigned char[]>(imageSize);
 
-	auto pixelCount = fread(imageData, 1, imageSize, filePtr);
+	auto pixelCount = fread(imageData.get(), 1, imageSize, filePtr);
 	assert(pixelCount == imageSize);
 
 	auto closeError = fclose(filePtr);
