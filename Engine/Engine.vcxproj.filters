@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{37a0efee-e462-4b32-9693-5f4e0206efec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -88,9 +91,6 @@
     <ClInclude Include="Source\AssetCache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\miniz.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ofbx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -100,9 +100,6 @@
     <ClInclude Include="Source\TgaLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\lodepng.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\TextureLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -110,6 +107,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EntityFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\miniz.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -168,9 +171,6 @@
     <ClCompile Include="Source\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\miniz.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ofbx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -180,69 +180,114 @@
     <ClCompile Include="Source\TgaLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\lodepng.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\TextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\EntityFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\miniz.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\seafloor.dds" />
-    <None Include="Assets\stone01.tga" />
-    <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_normal.png">
+    <None Include="packages.config">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Cube.obj">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Cube.txt">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Rock.prefab">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\seafloor.dds">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#1\STONE#1.blend">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#1\STONE#1.fbx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#1\STONE#1.obj">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_normal.png">
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_roughness.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2.blend">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2.fbx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#2\STONE#2.obj">
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#2\STONE#2_Textures\STONE#2_color.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#2\STONE#2_Textures\STONE#2_normal.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#2\STONE#2_Textures\STONE#2_roughness.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3.blend">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3.fbx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#3\STONE#3.obj">
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#3\STONE#3_Textures\STONE#3_color.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#3\STONE#3_Textures\STONE#3_normal.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#3\STONE#3_Textures\STONE#3_roughness.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4.blend">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4.fbx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Stones\STONE#4\STONE#4.obj">
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#4\STONE#4_Textures\STONE#4_color.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#4\STONE#4_Textures\STONE#4_normal.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
     </None>
     <None Include="Assets\Stones\STONE#4\STONE#4_Textures\STONE#4_roughness.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
     </None>
-    <None Include="Assets\Stones\STONE#1\STONE#1.blend" />
-    <None Include="Assets\Stones\STONE#2\STONE#2.blend" />
-    <None Include="Assets\Stones\STONE#3\STONE#3.blend" />
-    <None Include="Assets\Stones\STONE#4\STONE#4.blend" />
-    <None Include="packages.config" />
-    <None Include="Shaders\Surface.hlsl" />
-    <None Include="Assets\Stones\STONE#1\STONE#1.fbx" />
-    <None Include="Assets\Stones\STONE#2\STONE#2.fbx" />
-    <None Include="Assets\Stones\STONE#3\STONE#3.fbx" />
-    <None Include="Assets\Stones\STONE#4\STONE#4.fbx" />
-    <None Include="Assets\Stones\STONE#1\STONE#1.obj" />
-    <None Include="Assets\Stones\STONE#2\STONE#2.obj" />
-    <None Include="Assets\Stones\STONE#3\STONE#3.obj" />
-    <None Include="Assets\Stones\STONE#4\STONE#4.obj" />
-    <None Include="Assets\Cube.obj" />
-    <None Include="Assets\Cube.txt" />
+    <None Include="Assets\stone01.tga">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Shaders\Surface.hlsl">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Rock.material">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_color.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Assets</Filter>
     </ImageContentTask>
   </ItemGroup>
 </Project>

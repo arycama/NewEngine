@@ -137,6 +137,8 @@
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Rock.material" />
+    <None Include="Assets\Rock.prefab" />
     <None Include="Assets\seafloor.dds">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
@@ -186,17 +188,17 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\EntityFactory.h" />
     <ClInclude Include="Source\AssetCache.h" />
     <ClInclude Include="Source\Behaviour.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Component.h" />
     <ClInclude Include="Source\Entity.h" />
+    <ClInclude Include="Source\miniz.h" />
     <ClInclude Include="Source\stb_image.h" />
     <ClInclude Include="Source\TextureFormat.h" />
     <ClInclude Include="Source\TextureLoader.h" />
-    <ClInclude Include="Source\lodepng.h" />
     <ClInclude Include="Source\Material.h" />
-    <ClInclude Include="Source\miniz.h" />
     <ClInclude Include="Source\Movement.h" />
     <ClInclude Include="Source\Graphics.h" />
     <ClInclude Include="Source\Engine.h" />
@@ -215,16 +217,16 @@
     <ClInclude Include="Source\WindowHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\EntityFactory.cpp" />
     <ClCompile Include="Source\Behaviour.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Component.cpp" />
     <ClCompile Include="Source\Entity.cpp" />
+    <ClCompile Include="Source\miniz.c" />
     <ClCompile Include="Source\TextureLoader.cpp" />
     <ClCompile Include="Source\Int2.cpp" />
     <ClInclude Include="Source\Int2.h" />
-    <ClCompile Include="Source\lodepng.cpp" />
     <ClCompile Include="Source\Material.cpp" />
-    <ClCompile Include="Source\miniz.c" />
     <ClCompile Include="Source\Movement.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
