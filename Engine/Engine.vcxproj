@@ -191,7 +191,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\EntityFactory.h" />
-    <ClInclude Include="Source\AssetCache.h" />
     <ClInclude Include="Source\Behaviour.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Component.h" />

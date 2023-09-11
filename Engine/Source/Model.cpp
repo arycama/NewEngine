@@ -31,8 +31,8 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceC
 	vertices[1] = { XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f),XMFLOAT2(0.5f, 0.0f) };
 	vertices[2] = { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f),XMFLOAT2(1.0f, 1.0f) };
 
-	const auto vertexBufferDesc = CD3D11_BUFFER_DESC(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
-	const auto vertexData = D3D11_SUBRESOURCE_DATA{ vertices.get(), 0, 0 };
+	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
+	D3D11_SUBRESOURCE_DATA vertexData{ vertices.get(), 0, 0 };
 	CheckError(device.CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
 
 	auto indices = make_unique<int[]>(indexCount);
@@ -40,8 +40,8 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceC
 	indices[1] = 1;
 	indices[2] = 2;
 
-	const auto indexBufferDesc = CD3D11_BUFFER_DESC(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
-	const auto indexData = D3D11_SUBRESOURCE_DATA { indices.get(), 0, 0 };
+	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
+	D3D11_SUBRESOURCE_DATA indexData{ indices.get(), 0, 0 };
 	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
 }
 
@@ -135,12 +135,12 @@ Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& devi
 	vertexCount = vertices->size();
 	indexCount = indices->size();
 
-	const auto vertexBufferDesc = CD3D11_BUFFER_DESC(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
-	const auto vertexData = D3D11_SUBRESOURCE_DATA{ vertices->data(), 0, 0};
+	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
+	D3D11_SUBRESOURCE_DATA vertexData{ vertices->data(), 0, 0 };
 	CheckError(device.CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
 
-	const auto indexBufferDesc = CD3D11_BUFFER_DESC(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
-	const auto indexData = D3D11_SUBRESOURCE_DATA{ indices->data(), 0, 0 };
+	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
+	D3D11_SUBRESOURCE_DATA indexData{ indices->data(), 0, 0 };
 	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
 
 #else

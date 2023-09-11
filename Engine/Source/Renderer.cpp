@@ -24,7 +24,7 @@ Renderer::Renderer(const Model& model, std::shared_ptr<const Material> material,
 {
 	engine.AddRenderer(*this);
 
-	auto drawDataDesc = CD3D11_BUFFER_DESC(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+	CD3D11_BUFFER_DESC drawDataDesc(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 	CheckError(device.CreateBuffer(&drawDataDesc, nullptr, &drawData));
 	SetDebugObjectName(drawData.Get(), "Draw Data");
 }

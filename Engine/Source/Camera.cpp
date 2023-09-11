@@ -25,10 +25,7 @@ struct PerCameraData
 Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine), deviceContext(deviceContext)
 { 
 	engine.AddCamera(*this);
-
-	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	auto cameraDataDesc = CD3D11_BUFFER_DESC(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 	CheckError(device.CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
 	SetDebugObjectName(cameraData.Get(), "Camera Data");
 }
@@ -52,11 +49,11 @@ XMMATRIX Camera::GetViewMatrix() const
 	auto quaternionVector = XMQuaternionRotationRollPitchYawFromVector(rotationVector);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-	auto forward = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	XMFLOAT3 forward(0.0f, 0.0f, 1.0f);
 	auto lookAtVector = XMLoadFloat3(&forward);
 	lookAtVector = XMVector3Rotate(lookAtVector, quaternionVector);
 
-	auto up = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	XMFLOAT3 up(0.0f, 1.0f, 0.0f);
 	auto upVector = XMLoadFloat3(&up);
 	upVector = XMVector3Rotate(upVector, quaternionVector);
 
