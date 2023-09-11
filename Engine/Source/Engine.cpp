@@ -9,6 +9,7 @@
 #include "Model.h"
 #include "Movement.h"
 #include "Renderer.h"
+#include "ResourceManager.h"
 #include "Scene.h"
 #include "Shader.h"
 #include "System.h"
@@ -31,16 +32,13 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	graphics = make_unique<Graphics>(windowWidth, windowHeight, true, hwnd, fullScreen);
 	input = make_unique<Input>();
 
-	// Assets
-	shader = make_shared<Shader>("Shaders/Surface.hlsl", graphics->GetDevice(), graphics->GetDeviceContext());
-
 	textureLoader = make_unique<TextureLoader>();
+	resourceManager = make_unique<ResourceManager>(*textureLoader.get(), graphics->GetDevice(), graphics->GetDeviceContext());
 
 	int width = 0, height = 0;
 	const auto textureData = textureLoader->LoadTexture("Assets/Stones/STONE#1/STONE#1_Textures/STONE#1_color.png", width, height);
 
-	texture = make_shared<Texture>(textureData.get(), width, height, graphics->GetDevice(), graphics->GetDeviceContext());
-	material = make_unique<Material>(texture, shader, graphics->GetDevice(), graphics->GetDeviceContext());
+	auto material = resourceManager->LoadMaterial("Assets/Rock.material");
 
 	// Create the scene
 	auto scene = new Scene(*this);
@@ -57,21 +55,21 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 		auto& object = *new Entity("Model 0", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto& model = object.AddComponent<Model>("Assets/Stones/STONE#1/STONE#1.obj", graphics->GetDevice(), graphics->GetDeviceContext());
-		object.AddComponent<Renderer>(model, *material.get(), modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
+		object.AddComponent<Renderer>(model, material, modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	}
 
 	{
 		auto& object = *new Entity("Model 1", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto& model = object.AddComponent<Model>("Assets/Cube.obj", graphics->GetDevice(), graphics->GetDeviceContext());
-		object.AddComponent<Renderer>(model, *material.get(), modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
+		object.AddComponent<Renderer>(model, material, modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	}
 
 	{
 		auto& object = *new Entity("Model 2", *scene);
 		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(-2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
 		auto& model = object.AddComponent<Model>(graphics->GetDevice(), graphics->GetDeviceContext());
-		object.AddComponent<Renderer>(model, *material.get(), modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
+		object.AddComponent<Renderer>(model, material, modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext());
 	}
 
 	// Hide the mouse cursor.

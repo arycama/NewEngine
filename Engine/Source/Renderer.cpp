@@ -20,7 +20,7 @@ struct PerDrawData
 	XMMATRIX model;
 };
 
-Renderer::Renderer(const Model& model, const Material& material, const Transform& transform, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : model(model), material(material), transform(transform), engine(engine), deviceContext(deviceContext)
+Renderer::Renderer(const Model& model, std::shared_ptr<const Material> material, const Transform& transform, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : model(model), material(material), transform(transform), engine(engine), deviceContext(deviceContext)
 {
 	engine.AddRenderer(*this);
 
@@ -48,7 +48,7 @@ void Renderer::Render() const
 	// Unlock the constant buffer.
 	deviceContext.Unmap(drawData.Get(), 0);
 
-	material.Render();
+	material->Render();
 	deviceContext.VSSetConstantBuffers(1, 1, drawData.GetAddressOf());
 	model.Render();
 }

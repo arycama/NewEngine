@@ -7,12 +7,11 @@ class Behaviour;
 class Camera;
 class Graphics;
 class Input;
-class RenderController;
 class Renderer;
+class ResourceManager;
 class Scene;
-class Shader;
 class System;
-class Texture;
+class TextureLoader;
 class WindowHandle;
 
 class Engine
@@ -46,11 +45,9 @@ private:
 
 	std::unique_ptr<Input> input;
 	std::unique_ptr<const Graphics> graphics;
-	std::unique_ptr<const class Material> material;
-	std::shared_ptr<const Shader> shader;
-	std::shared_ptr<const Texture> texture;
 	std::unique_ptr<const WindowHandle> windowHandle;
-	std::unique_ptr<const class TextureLoader> textureLoader;
+	std::unique_ptr<const TextureLoader> textureLoader;
+	std::unique_ptr<ResourceManager> resourceManager;
 
 	std::vector<Behaviour*> behaviours;
 	std::vector<const Camera*> cameras;

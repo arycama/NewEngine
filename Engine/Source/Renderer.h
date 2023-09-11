@@ -13,7 +13,7 @@ struct ID3D11DeviceContext;
 class Renderer : public Component
 {
 public:
-	Renderer(const Model& model, const Material& material, const Transform& transform, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
+	Renderer(const Model& model, std::shared_ptr<const Material> material, const Transform& transform, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
 	~Renderer();
 
 	void Render() const;
@@ -21,7 +21,7 @@ public:
 private:
 	const Transform& transform;
 	const Model& model;
-	const Material& material;
+	const std::shared_ptr<const Material> material;
 
 	Engine& engine;
 	ID3D11DeviceContext& deviceContext;

@@ -26,7 +26,7 @@ private:
 	ID3D11Device& device;
 	ID3D11DeviceContext& context;
 
-	std::unordered_map<std::string, std::shared_ptr<Material>> materials;
-	std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
-	std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
+	std::unordered_map<std::string, std::weak_ptr<Material>> materials;
+	std::unordered_map<std::string, std::weak_ptr<Shader>> shaders;
+	std::unordered_map<std::string, std::weak_ptr<Texture>> textures;
 };

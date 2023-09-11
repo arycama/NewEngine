@@ -15,8 +15,8 @@ ResourceManager::ResourceManager(const TextureLoader& texureLoader, ID3D11Device
 shared_ptr<Material> ResourceManager::LoadMaterial(const string& path)
 {
 	const auto result = materials.find(path);
-	if (result != materials.end())
-		return result->second;
+	if (result != materials.end() && !result->second.expired())
+		return result->second.lock();
 
 	ifstream file(path);
 	assert(file.is_open());
@@ -64,8 +64,8 @@ shared_ptr<Material> ResourceManager::LoadMaterial(const string& path)
 shared_ptr<Shader> ResourceManager::LoadShader(const string& path)
 {
 	const auto result = shaders.find(path);
-	if (result != shaders.end())
-		return result->second;
+	if (result != shaders.end() && !result->second.expired())
+		return result->second.lock();
 
 	auto shader = make_shared<Shader>("Shaders/Surface.hlsl", device, context);
 	shaders.insert_or_assign(path, shader);
@@ -75,8 +75,8 @@ shared_ptr<Shader> ResourceManager::LoadShader(const string& path)
 shared_ptr<Texture> ResourceManager::LoadTexture(const string& path)
 {
 	const auto result = textures.find(path);
-	if (result != textures.end())
-		return result->second;
+	if (result != textures.end() && !result->second.expired())
+		return result->second.lock();
 
 	int width = 0, height = 0;
 	const auto textureData = textureLoader.LoadTexture("Assets/Stones/STONE#1/STONE#1_Textures/STONE#1_color.png", width, height);
