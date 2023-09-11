@@ -32,16 +32,15 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	input = make_unique<Input>();
 
 	// Assets
-	shader = make_unique<Shader>("Shaders/Surface.hlsl", graphics->GetDevice(), graphics->GetDeviceContext());
+	shader = make_shared<Shader>("Shaders/Surface.hlsl", graphics->GetDevice(), graphics->GetDeviceContext());
 
 	textureLoader = make_unique<TextureLoader>();
 
 	int width = 0, height = 0;
 	const auto textureData = textureLoader->LoadTexture("Assets/Stones/STONE#1/STONE#1_Textures/STONE#1_color.png", width, height);
 
-	//texture = make_unique<Texture>("Assets/stone01.tga", graphics->GetDevice(), graphics->GetDeviceContext());
-	texture = make_unique<Texture>(textureData.get(), width, height, graphics->GetDevice(), graphics->GetDeviceContext());
-	material = make_unique<Material>(*texture, *shader, graphics->GetDevice(), graphics->GetDeviceContext());
+	texture = make_shared<Texture>(textureData.get(), width, height, graphics->GetDevice(), graphics->GetDeviceContext());
+	material = make_unique<Material>(texture, shader, graphics->GetDevice(), graphics->GetDeviceContext());
 
 	// Create the scene
 	auto scene = new Scene(*this);

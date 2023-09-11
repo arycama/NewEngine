@@ -9,7 +9,7 @@
 
 using namespace _com_util;
 
-Material::Material(const Texture& texture, const Shader& shader, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : shader(shader), texture(texture), deviceContext(deviceContext)
+Material::Material(const std::shared_ptr<const Texture> texture, const std::shared_ptr<const Shader> shader, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : shader(shader), texture(texture), deviceContext(deviceContext)
 { 
 	// Create a texture sampler state description.
 	// Create the texture sampler state.
@@ -20,9 +20,9 @@ Material::Material(const Texture& texture, const Shader& shader, ID3D11Device& d
 
 void Material::Render() const
 {
-	shader.Render();
+	shader->Render();
 
-	auto shaderResourceViews = &texture.GetTexture();
+	auto shaderResourceViews = &texture->GetTexture();
 	deviceContext.PSSetShaderResources(0, 1, &shaderResourceViews);
 	deviceContext.PSSetSamplers(0, 1, samplerState.GetAddressOf());
 }

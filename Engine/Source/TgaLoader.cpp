@@ -1,7 +1,7 @@
 #include "TgaLoader.h"
 
 #include <assert.h>
-#include <stdio.h>
+#include <fstream>
 
 using namespace std;
 
@@ -16,24 +16,18 @@ struct TargaHeader
 
 unique_ptr<unsigned char[]> TgaLoader::LoadFile(const string& path, unsigned int& width, unsigned int& height)
 {
-	FILE* filePtr;
-	auto error = fopen_s(&filePtr, path.c_str(), "rb");
-	assert(!error);
+	ifstream file(path);
+	assert(file.is_open());
 
 	TargaHeader tgaHeader;
-	auto headerSize = fread(&tgaHeader, sizeof(TargaHeader), 1, filePtr);
+	file.read((char*)&tgaHeader, sizeof(TargaHeader));
 
 	width = tgaHeader.width;
 	height = tgaHeader.height;
 
-	auto imageSize = tgaHeader.width * tgaHeader.height * 4;
+	auto imageSize = width * height * 4;
 	auto imageData = make_unique<unsigned char[]>(imageSize);
 
-	auto pixelCount = fread(imageData.get(), 1, imageSize, filePtr);
-	assert(pixelCount == imageSize);
-
-	auto closeError = fclose(filePtr);
-	assert(!closeError);
-
+	file.read((char*)imageData.get(), imageSize);
 	return imageData;
 }

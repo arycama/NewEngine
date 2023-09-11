@@ -47,16 +47,11 @@ Model::Model(ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceC
 
 Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext), vertexStride(sizeof(VertexType))
 {
-	// Open the model file.
-	ifstream fin;
-	fin.open(path);
-
-	// If it could not open the file then exit.
-	if (fin.fail())
-		return;
+	ifstream file(path);
+	assert(file.is_open());
 
 	char input;
-	fin.get(input);
+	file.get(input);
 #if 1
 
 	auto positions = make_unique<vector<XMFLOAT3>>();
@@ -65,67 +60,77 @@ Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& devi
 	auto vertices = make_unique<vector<VertexType>>();
 	auto indices = make_unique<vector<unsigned int>>();
 
-	while (!fin.eof())
+	while (!file.eof())
 	{
-		if (input == 'v')
+		switch (input)
 		{
-			fin.get(input);
-
-			if (input == ' ')
+			case 'v':
 			{
-				float x, y, z;
-				fin >> x >> y >> z;
-				positions->push_back(XMFLOAT3(x, y, z));
-			}
+				file.get(input);
 
-			// Read in the texture uv coordinates.
-			if (input == 't')
-			{
-				float x, y;
-				fin >> x >> y;
-				uvs->push_back(XMFLOAT2(x, y));
-			}
-
-			// Read in the normals.
-			if (input == 'n')
-			{
-				float x, y, z;
-				fin >> x >> y >> z;
-				normals->push_back(XMFLOAT3(x, y, z));
-			}
-		}
-
-		// Read in the faces.
-		if (input == 'f')
-		{
-			fin.get(input);
-			if (input == ' ')
-			{
-				for (auto i = 0; i < 3; i++)
+				switch (input)
 				{
-					char input2;
-					unsigned int vIndex, tIndex, nIndex;
-					fin >> vIndex >> input2 >> tIndex >> input2 >> nIndex;
-
-					VertexType vertex;
-					vertex.position = positions->at(vIndex - 1);
-					vertex.uv = uvs->at(tIndex - 1);
-					vertex.normal = normals->at(nIndex - 1);
-					vertices->push_back(vertex);
-					indices->push_back(indices->size());
+					case ' ':
+					{
+						// Normal
+						float x, y, z;
+						file >> x >> y >> z;
+						positions->push_back(XMFLOAT3(x, y, z));
+						break;
+					}
+					case 't':
+					{
+						// Uv
+						float x, y;
+						file >> x >> y;
+						uvs->push_back(XMFLOAT2(x, y));
+						break;
+					}
+					case 'n':
+					{
+						// Normal
+						float x, y, z;
+						file >> x >> y >> z;
+						normals->push_back(XMFLOAT3(x, y, z));
+						break;
+					}
 				}
+
+				break;
+			}
+
+			case 'f':
+			{
+				// Face
+				file.get(input);
+				if (input == ' ')
+				{
+					for (auto i = 0; i < 3; i++)
+					{
+						char input2;
+						unsigned int vIndex, tIndex, nIndex;
+						file >> vIndex >> input2 >> tIndex >> input2 >> nIndex;
+
+						VertexType vertex;
+						vertex.position = positions->at(vIndex - 1);
+						vertex.uv = uvs->at(tIndex - 1);
+						vertex.normal = normals->at(nIndex - 1);
+						vertices->push_back(vertex);
+						indices->push_back(indices->size());
+					}
+				}
+
+				break;
 			}
 		}
 
 		// Read in the remainder of the line.
 		while (input != '\n')
-			fin.get(input);
+			file.get(input);
 
 		// Start reading the beginning of the next line.
-		fin.get(input);
+		file.get(input);
 	}
-
-	fin.close();
 
 	vertexCount = vertices->size();
 	indexCount = indices->size();

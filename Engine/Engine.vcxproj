@@ -195,6 +195,7 @@
     <ClInclude Include="Source\Component.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\miniz.h" />
+    <ClInclude Include="Source\ResourceManager.h" />
     <ClInclude Include="Source\stb_image.h" />
     <ClInclude Include="Source\TextureFormat.h" />
     <ClInclude Include="Source\TextureLoader.h" />
@@ -223,6 +224,7 @@
     <ClCompile Include="Source\Component.cpp" />
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\miniz.c" />
+    <ClCompile Include="Source\ResourceManager.cpp" />
     <ClCompile Include="Source\TextureLoader.cpp" />
     <ClCompile Include="Source\Int2.cpp" />
     <ClInclude Include="Source\Int2.h" />
