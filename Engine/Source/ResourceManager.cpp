@@ -1,4 +1,5 @@
 #include "Material.h"
+#include "Model.h"
 #include "ResourceManager.h"
 #include "Shader.h"
 #include "Texture.h"
@@ -21,44 +22,26 @@ shared_ptr<Material> ResourceManager::LoadMaterial(const string& path)
 	ifstream file(path);
 	assert(file.is_open());
 
-	shared_ptr<Shader> shader;
-	shared_ptr<Texture> texture;
+	string texturePath, shaderPath;
+	file >> texturePath >> shaderPath;
 
-	string line;
-	while (getline(file, line))
-	{
-		auto pos = line.find_first_of(':');
-		assert(pos != string::npos);
-		auto variable = line.substr(0, pos);
-
-		if (variable == "texture")
-		{
-			auto start = line.find_first_of('"');
-			assert(start != string::npos);
-
-			auto end = line.find_last_of('"');
-			assert(end != string::npos);
-
-			auto path = line.substr(start, end - start);
-			texture = LoadTexture(path);
-		}
-
-		if (variable == "shader")
-		{
-			auto start = line.find_first_of('"');
-			assert(start != string::npos);
-
-			auto end = line.find_last_of('"');
-			assert(end != string::npos);
-
-			auto path = line.substr(start, end - start);
-			shader = LoadShader(path);
-		}
-	}
+	auto texture = LoadTexture(texturePath);
+	auto shader = LoadShader(shaderPath);
 
 	auto material = make_shared<Material>(texture, shader, device, context);
 	materials.insert_or_assign(path, material);
 	return material;
+}
+
+shared_ptr<Model> ResourceManager::LoadModel(const string& path)
+{
+	const auto result = models.find(path);
+	if (result != models.end() && !result->second.expired())
+		return result->second.lock();
+
+	auto model = make_shared<Model>(path, device, context);
+	models.insert_or_assign(path, model);
+	return model;
 }
 
 shared_ptr<Shader> ResourceManager::LoadShader(const string& path)
@@ -67,7 +50,7 @@ shared_ptr<Shader> ResourceManager::LoadShader(const string& path)
 	if (result != shaders.end() && !result->second.expired())
 		return result->second.lock();
 
-	auto shader = make_shared<Shader>("Shaders/Surface.hlsl", device, context);
+	auto shader = make_shared<Shader>(path, device, context);
 	shaders.insert_or_assign(path, shader);
 	return shader;
 }
@@ -79,7 +62,7 @@ shared_ptr<Texture> ResourceManager::LoadTexture(const string& path)
 		return result->second.lock();
 
 	int width = 0, height = 0;
-	const auto textureData = textureLoader.LoadTexture("Assets/Stones/STONE#1/STONE#1_Textures/STONE#1_color.png", width, height);
+	const auto textureData = textureLoader.LoadTexture(path, width, height);
 
 	auto texture = make_shared<Texture>(textureData.get(), width, height, device, context);
 	textures.insert_or_assign(path, texture);

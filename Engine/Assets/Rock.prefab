@@ -1,3 +1,6 @@
-Transform((0.0f, 0.0f, 0.0f), (0.0f, 0.0f, 0.0f)),
-Model("Assets/Stones/STONE#1/STONE#1.obj"),
-Renderer(1, "Rock.Material", 0)
+components:
+{
+	Transform((0.0f, 0.0f, 0.0f), (0.0f, 0.0f, 0.0f)),
+	Model("Assets/Stones/STONE#1/STONE#1.obj"),
+	Renderer(1, "Rock.Material", 0)
+}

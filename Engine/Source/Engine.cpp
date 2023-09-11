@@ -35,9 +35,6 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	textureLoader = make_unique<TextureLoader>();
 	resourceManager = make_unique<ResourceManager>(*textureLoader.get(), graphics->GetDevice(), graphics->GetDeviceContext());
 
-	int width = 0, height = 0;
-	const auto textureData = textureLoader->LoadTexture("Assets/Stones/STONE#1/STONE#1_Textures/STONE#1_color.png", width, height);
-
 	auto material = resourceManager->LoadMaterial("Assets/Rock.material");
 
 	// Create the scene

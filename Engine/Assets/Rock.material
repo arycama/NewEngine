@@ -1,2 +1,1 @@
-texture: "Stones/STONE#1/STONE#1_Textures/STONE#1_color.png",
-shader: "Surface.hlsl"
+Assets/Stones/STONE#1/STONE#1_Textures/STONE#1_color.png Assets/Surface.hlsl
