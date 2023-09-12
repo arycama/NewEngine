@@ -15,6 +15,7 @@
 
 using namespace _com_util;
 using namespace DirectX;
+using namespace std;
 
 struct PerCameraData
 {
@@ -33,6 +34,10 @@ Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const
 Camera::~Camera()
 {
 	engine.RemoveCamera(*this);
+}
+
+void Camera::Serialize(ofstream& stream) const
+{
 }
 
 XMMATRIX Camera::GetViewMatrix() const

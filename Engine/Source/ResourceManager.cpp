@@ -28,7 +28,7 @@ shared_ptr<Material> ResourceManager::LoadMaterial(const string& path)
 	auto texture = LoadTexture(texturePath);
 	auto shader = LoadShader(shaderPath);
 
-	auto material = make_shared<Material>(texture, shader, device, context);
+	auto material = make_shared<Material>(texture, shader, path, device, context);
 	materials.insert_or_assign(path, material);
 	return material;
 }

@@ -5,8 +5,16 @@
 #include <DirectXMathMisc.inl>
 
 using namespace DirectX;
+using namespace std;
 
 Transform::Transform(XMFLOAT3 position, XMFLOAT3 rotation) : position(position), rotation(rotation) { }
+
+void Transform::Serialize(ofstream& stream) const
+{
+	stream << "transform";
+	stream << position.x << position.y << position.z;
+	stream << rotation.x << rotation.y << rotation.z;
+}
 
 XMFLOAT3 Transform::GetPosition() const
 {

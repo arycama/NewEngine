@@ -11,7 +11,10 @@ class Entity
 {
 public:
 	Entity(const std::string& name, Scene& scene);
+	Entity(const std::string& path, const std::string& name, Scene& scene);
 	~Entity();
+
+	void Serialize(const std::string& path) const;
 
 	template <class T, class... K> T& AddComponent(K&&... _Args)
 	{

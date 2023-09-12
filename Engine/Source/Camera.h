@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include <string>
 #include <wrl/client.h>
 
 class Engine; 
@@ -21,7 +22,10 @@ public:
 	Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
 	~Camera();
 
+	void Serialize(std::ofstream& stream) const override;
+
 	void Render() const;
+
 private:
 	const float nearClipPlane, farClipPlane, fieldOfView;
 

@@ -10,8 +10,13 @@
 #include <DirectXMathVector.inl>
 
 using namespace DirectX;
+using namespace std;
 
 Movement::Movement(const Input& input, Transform& transform, Engine& engine) : Behaviour(engine), input(input), transform(transform) { }
+
+void Movement::Serialize(ofstream& stream) const
+{
+}
 
 void Movement::Update()
 {
