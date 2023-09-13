@@ -36,7 +36,7 @@ Camera::~Camera()
 	engine.RemoveCamera(*this);
 }
 
-void Camera::Serialize(ofstream& stream) const
+void Camera::Serialize(ostream& stream) const
 {
 }
 

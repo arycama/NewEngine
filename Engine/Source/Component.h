@@ -8,5 +8,5 @@ class Component
 public:
 	virtual ~Component();
 
-	virtual void Serialize(std::ofstream& stream) const = 0;
+	virtual void Serialize(std::ostream& stream) const = 0;
 };

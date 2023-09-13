@@ -22,7 +22,7 @@ public:
 	Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext);
 	~Camera();
 
-	void Serialize(std::ofstream& stream) const override;
+	void Serialize(std::ostream& stream) const override;
 
 	void Render() const;
 
