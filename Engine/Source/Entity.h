@@ -19,12 +19,15 @@ public:
 	template <class T, class... K> T& AddComponent(K&&... _Args)
 	{
 		auto component = new T(std::forward<K>(_Args)...);
-		components.push_back(std::unique_ptr<const Component>(component));
+		components.push_back(std::unique_ptr<Component>(component));
 		return *component;
 	}
+
+	int GetComponentIndex(const Component& component) const;
+	Component& GetComponentAt(int index) const;
 
 private:
 	Scene& scene;
 	const std::string& name;
-	std::vector<std::unique_ptr<const Component>> components;
+	std::vector<std::unique_ptr<Component>> components;
 };

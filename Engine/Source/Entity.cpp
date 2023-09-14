@@ -28,5 +28,19 @@ void Entity::Serialize(const string& path) const
 	assert(file.is_open());
 
 	for (auto& component : components)
+	{
 		component->Serialize(file);
+		file << endl;
+	}
+}
+
+int Entity::GetComponentIndex(const Component& component) const
+{
+	auto index = find_if(components.begin(), components.end(), [&](auto& obj) { return obj.get() == &component; });
+	return distance(components.begin(), index);
+}
+
+Component& Entity::GetComponentAt(int index) const
+{
+	return *components.at(index).get();
 }

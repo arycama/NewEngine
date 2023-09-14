@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Entity.h"
 #include "Material.h"
 #include "Model.h"
 #include "Renderer.h"
@@ -20,7 +21,7 @@ struct PerDrawData
 	XMMATRIX model;
 };
 
-Renderer::Renderer(shared_ptr<const Model> model, std::shared_ptr<const Material> material, const Transform& transform, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : model(model), material(material), transform(transform), engine(engine), deviceContext(deviceContext)
+Renderer::Renderer(shared_ptr<const Model> model, std::shared_ptr<const Material> material, const Transform& transform, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Entity& entity) : model(model), material(material), transform(transform), engine(engine), deviceContext(deviceContext), entity(entity)
 {
 	engine.AddRenderer(*this);
 
@@ -34,9 +35,11 @@ Renderer::~Renderer()
 	engine.RemoveRenderer(*this);
 }
 
-void Renderer::Serialize(ofstream& stream) const
+void Renderer::Serialize(ostream& stream) const
 {
-	stream << model->GetPath();
+	stream << "renderer" << ' ';
+	stream << entity.GetComponentIndex(transform) << ' ';
+	stream << model->GetPath() << ' ';
 	stream << material->GetPath();
 }
 

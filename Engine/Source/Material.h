@@ -19,7 +19,7 @@ public:
 	void Render() const;
 
 private:
-	const std::string& path;
+	const std::string path;
 
 	const std::shared_ptr<const Shader> shader;
 	const std::shared_ptr<const Texture> texture; // Todo this should probably be a vector

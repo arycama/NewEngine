@@ -18,7 +18,7 @@ public:
 	const std::string& GetPath() const;
 
 private:
-	const std::string& path;
+	const std::string path;
 	int vertexCount, vertexStride, indexCount;
 	ID3D11DeviceContext& deviceContext;
 

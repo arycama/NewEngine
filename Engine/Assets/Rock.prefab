@@ -1,6 +1,2 @@
-components:
-{
-	Transform((0.0f, 0.0f, 0.0f), (0.0f, 0.0f, 0.0f)),
-	Model("Assets/Stones/STONE#1/STONE#1.obj"),
-	Renderer(1, "Rock.Material", 0)
-}
+transform 0 0 0 0 0 0 
+Renderer 0 Assets/Stones/STONE#1/STONE#1.obj Assets/Rock.material

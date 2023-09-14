@@ -1,4 +1,5 @@
 #include "Behaviour.h"
+#include "Entity.h"
 #include "Movement.h"
 #include "Input.h"
 #include "Int2.h"
@@ -12,10 +13,22 @@
 using namespace DirectX;
 using namespace std;
 
-Movement::Movement(const Input& input, Transform& transform, Engine& engine) : Behaviour(engine), input(input), transform(transform) { }
-
-void Movement::Serialize(ofstream& stream) const
+Movement::Movement(Engine& engine, const Entity& entity, const Input& input, Transform& transform) : Behaviour(engine), input(input), transform(&transform), entity(entity)
 {
+}
+
+Movement::Movement(Engine& engine, const Entity& entity, const Input& input, istream& stream) : Behaviour(engine), input(input), entity(entity)
+{ 
+	int transformIndex;
+	stream >> transformIndex;
+
+	transform = &dynamic_cast<Transform&>(entity.GetComponentAt(transformIndex));
+}
+
+void Movement::Serialize(ostream& stream) const
+{
+	stream << "movement" << ' ';
+	stream << entity.GetComponentIndex(*transform);
 }
 
 void Movement::Update()
@@ -25,11 +38,11 @@ void Movement::Update()
 	auto mouseDelta = input.GetMouseDelta();
 
 	// Rotation
-	auto rotation = transform.GetRotation();
+	auto rotation = transform->GetRotation();
 	rotation.y += mouseDelta.x * rotateSpeed;
 	rotation.x += mouseDelta.y * rotateSpeed;
 
-	transform.SetRotation(rotation);
+	transform->SetRotation(rotation);
 
 	auto movementSpeed = 0.1f;
 	auto movement = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -53,12 +66,12 @@ void Movement::Update()
 	auto movementVector = XMLoadFloat3(&movement);
 	auto rotatedMovement = XMVector3Rotate(movementVector, rotationQuaternion);
 
-	auto position = transform.GetPosition();
+	auto position = transform->GetPosition();
 	auto positionVector = XMLoadFloat3(&position);
 	auto finalPosition = XMVectorAdd(positionVector, rotatedMovement);
 
 	XMFLOAT3 result;
 	XMStoreFloat3(&result, finalPosition);
 
-	transform.SetPosition(result);
+	transform->SetPosition(result);
 }
