@@ -1,3 +1,4 @@
+#include "Graphics.h"
 #include "Model.h"
 #include "Transform.h"
 
@@ -24,7 +25,7 @@ struct VertexType
 	XMFLOAT2 uv;
 };
 
-Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext), vertexStride(sizeof(VertexType)), path(path)
+Model::Model(const string& path, Graphics& graphics) : graphics(graphics), vertexStride(sizeof(VertexType)), path(path)
 {
 	ifstream file(path);
 	assert(file.is_open());
@@ -115,11 +116,11 @@ Model::Model(const string& path, ID3D11Device& device, ID3D11DeviceContext& devi
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
 	D3D11_SUBRESOURCE_DATA vertexData{ vertices->data(), 0, 0 };
-	CheckError(device.CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
+	CheckError(graphics.GetDevice().CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
 
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
 	D3D11_SUBRESOURCE_DATA indexData{ indices->data(), 0, 0 };
-	CheckError(device.CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
+	CheckError(graphics.GetDevice().CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
 }
 
 const std::string& Model::GetPath() const
@@ -133,8 +134,9 @@ void Model::Render() const
 	auto stride = static_cast<UINT>(vertexStride);
 	auto offset = 0u;
 
-	deviceContext.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-	deviceContext.IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	deviceContext.DrawIndexed(indexCount, 0, 0);
+	auto& context = graphics.GetDeviceContext();
+	context.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+	context.IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	context.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context.DrawIndexed(indexCount, 0, 0);
 }

@@ -1,3 +1,4 @@
+#include "Graphics.h"
 #include "Shader.h"
 
 #include <d3d11.h>
@@ -21,13 +22,15 @@ struct PerCameraData
 	XMMATRIX projection;
 };
 
-Shader::Shader(const string& path, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext)
+Shader::Shader(const string& path, Graphics& graphics) : graphics(graphics)
 {
 	auto fileName = wstring(path.begin(), path.end());
 
 	// Create the vertex shader
 	ComPtr<ID3D10Blob> vertexShaderBuffer;
 	CheckError(D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), nullptr));
+
+	auto& device = graphics.GetDevice();
 	CheckError(device.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
 
 	// TODO: Move to model?
@@ -70,7 +73,8 @@ Shader::Shader(const string& path, ID3D11Device& device, ID3D11DeviceContext& de
 
 void Shader::Render() const
 {
-	deviceContext.IASetInputLayout(layout.Get());
-	deviceContext.VSSetShader(vertexShader.Get(), nullptr, 0);
-	deviceContext.PSSetShader(pixelShader.Get(), nullptr, 0);
+	auto& context = graphics.GetDeviceContext();
+	context.IASetInputLayout(layout.Get());
+	context.VSSetShader(vertexShader.Get(), nullptr, 0);
+	context.PSSetShader(pixelShader.Get(), nullptr, 0);
 }

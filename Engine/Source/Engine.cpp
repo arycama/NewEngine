@@ -1,25 +1,17 @@
 #include "Behaviour.h"
 #include "Camera.h"
 #include "Engine.h"
-#include "Entity.h"
 #include "Graphics.h"
 #include "Input.h"
 #include "Int2.h"
-#include "Material.h"
-#include "Model.h"
-#include "Movement.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "Scene.h"
-#include "Shader.h"
 #include "System.h"
-#include "Texture.h"
 #include "TextureLoader.h"
-#include "Transform.h"
 #include "WindowHandle.h"
 
 using namespace std;
-using namespace DirectX;
 
 const bool fullScreen = false;
 
@@ -33,21 +25,11 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	input = make_unique<Input>();
 
 	textureLoader = make_unique<TextureLoader>();
-	resourceManager = make_unique<ResourceManager>(*textureLoader.get(), graphics->GetDevice(), graphics->GetDeviceContext());
-
-	auto material = resourceManager->LoadMaterial("Assets/Rock.material");
-
-	// Create the scene
-	//auto& scene = *new Scene(*this);
+	resourceManager = make_unique<ResourceManager>(*textureLoader.get(), *graphics.get());
 
 	auto& scene = *new Scene("Assets/Scene.scene", *this, *resourceManager.get(), *graphics.get(), *input.get());
 	AddScene(scene);
 
-	/*new Entity("Assets/Camera.prefab", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
-	new Entity("Assets/Rock.prefab", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
-	new Entity("Assets/Cube.prefab", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());*/
-
-	// Hide the mouse cursor.
 	ShowCursor(false);
 }
 
@@ -68,7 +50,6 @@ void Engine::Update()
 	// Clear the buffers to begin the scene.
 	graphics->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
 
-	// Render the model using the texture shader.
 	for (auto camera : cameras)
 	{
 		camera->Render();
