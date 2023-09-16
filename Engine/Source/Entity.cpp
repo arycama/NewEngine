@@ -15,15 +15,14 @@
 
 using namespace std;
 
-Entity::Entity(const string& name, Scene& scene) : name(name), scene(scene)
+Entity::Entity(Scene& scene) : scene(scene), path("")
 {
 	scene.AddEntity(*this);
 }
 
-Entity::Entity(const string& path, const string& name, Scene& scene, ResourceManager& resourceManager, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& context, const Graphics& graphics, const Input& input) : Entity(name, scene)
+Entity::Entity(const string& path, Scene& scene, ResourceManager& resourceManager, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& context, const Graphics& graphics, const Input& input) : path(path), scene(scene)
 {
 	ifstream stream(path);
-
 	while (!stream.eof())
 	{
 		string componentType;
@@ -41,6 +40,8 @@ Entity::Entity(const string& path, const string& name, Scene& scene, ResourceMan
 		if (componentType == "transform")
 			this->AddComponent<Transform>(stream);
 	}
+
+	scene.AddEntity(*this);
 }
 
 Entity::~Entity()
@@ -58,6 +59,11 @@ void Entity::Serialize(const string& path) const
 		component->Serialize(file);
 		file << endl;
 	}
+}
+
+const string& Entity::GetPath() const
+{
+	return path;
 }
 
 int Entity::GetComponentIndex(const Component& component) const

@@ -1,6 +1,9 @@
 #include "Engine.h"
 #include "Entity.h"
+#include "Graphics.h"
+#include "ResourceManager.h"
 #include "Scene.h"
+#include <fstream>
 #include <memory>
 #include <vector>
 
@@ -8,10 +11,35 @@ using namespace std;
 
 Scene::Scene(Engine& engine) : engine(engine), isBeingUnloaded(false) { }
 
+Scene::Scene(const string& path, Engine& engine, ResourceManager& resourceManager, const Graphics& graphics, Input& input) : Scene(engine)
+{
+	ifstream stream(path);
+
+	while (!stream.eof())
+	{
+		string entityPath;
+		stream >> entityPath;
+		new Entity(entityPath, *this, resourceManager, engine, graphics.GetDevice(), graphics.GetDeviceContext(), graphics, input);
+	}
+}
+
 Scene::~Scene()
 {
 	engine.RemoveScene(*this);
 	isBeingUnloaded = true;
+}
+
+void Scene::Serialize(const string& path) const
+{
+	ofstream stream(path);
+
+	for (const auto& entity : entities)
+	{
+		stream << entity->GetPath();
+
+		if (entity != entities.back())
+			stream << endl;
+	}
 }
 
 void Scene::AddEntity(const Entity& entity)

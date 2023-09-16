@@ -38,12 +38,14 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	auto material = resourceManager->LoadMaterial("Assets/Rock.material");
 
 	// Create the scene
-	auto& scene = *new Scene(*this);
+	//auto& scene = *new Scene(*this);
+
+	auto& scene = *new Scene("Assets/Scene.scene", *this, *resourceManager.get(), *graphics.get(), *input.get());
 	AddScene(scene);
 
-	new Entity("Assets/Camera.prefab", "Camera", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
-	new Entity("Assets/Rock.prefab", "Rock 0", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
-	new Entity("Assets/Cube.prefab", "Cube", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
+	/*new Entity("Assets/Camera.prefab", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
+	new Entity("Assets/Rock.prefab", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
+	new Entity("Assets/Cube.prefab", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());*/
 
 	// Hide the mouse cursor.
 	ShowCursor(false);

@@ -88,9 +88,6 @@
     <ClInclude Include="Source\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\AssetCache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ofbx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -107,9 +104,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EntityFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\miniz.h">
@@ -184,9 +178,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\TextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EntityFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\miniz.c">
@@ -284,16 +275,12 @@
     <None Include="Assets\stone01.tga">
       <Filter>Assets</Filter>
     </None>
-    <None Include="Shaders\Surface.hlsl">
-      <Filter>Assets</Filter>
-    </None>
     <None Include="Assets\Rock.material">
       <Filter>Assets</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ImageContentTask Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_color.png">
-      <Filter>Assets</Filter>
-    </ImageContentTask>
+    <None Include="Assets\Stones\STONE#1\STONE#1_Textures\STONE#1_color.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Surface.hlsl" />
   </ItemGroup>
 </Project>
