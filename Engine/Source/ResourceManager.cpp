@@ -13,7 +13,7 @@ using namespace std;
 
 ResourceManager::ResourceManager(const TextureLoader& texureLoader, ID3D11Device& device, ID3D11DeviceContext& context) :textureLoader(textureLoader), device(device), context(context) { }
 
-shared_ptr<Material> ResourceManager::LoadMaterial(const string& path)
+shared_ptr<const Material> ResourceManager::LoadMaterial(const string& path)
 {
 	const auto result = materials.find(path);
 	if (result != materials.end() && !result->second.expired())
@@ -33,7 +33,7 @@ shared_ptr<Material> ResourceManager::LoadMaterial(const string& path)
 	return material;
 }
 
-shared_ptr<Model> ResourceManager::LoadModel(const string& path)
+shared_ptr<const Model> ResourceManager::LoadModel(const string& path)
 {
 	const auto result = models.find(path);
 	if (result != models.end() && !result->second.expired())
@@ -44,7 +44,7 @@ shared_ptr<Model> ResourceManager::LoadModel(const string& path)
 	return model;
 }
 
-shared_ptr<Shader> ResourceManager::LoadShader(const string& path)
+shared_ptr<const Shader> ResourceManager::LoadShader(const string& path)
 {
 	const auto result = shaders.find(path);
 	if (result != shaders.end() && !result->second.expired())
@@ -55,7 +55,7 @@ shared_ptr<Shader> ResourceManager::LoadShader(const string& path)
 	return shader;
 }
 
-shared_ptr<Texture> ResourceManager::LoadTexture(const string& path)
+shared_ptr<const Texture> ResourceManager::LoadTexture(const string& path)
 {
 	const auto result = textures.find(path);
 	if (result != textures.end() && !result->second.expired())

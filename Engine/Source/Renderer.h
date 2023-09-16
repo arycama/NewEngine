@@ -9,7 +9,10 @@ class Engine;
 class Entity;
 class Material;
 class Model;
+class ResourceManager;
 class Transform;
+
+struct ID3D11Buffer;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
@@ -18,7 +21,7 @@ class Renderer : public Component
 public:
 	Renderer(std::shared_ptr<const Model> model, std::shared_ptr<const Material> material, const Transform& transform, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Entity& entity);
 
-	Renderer(std::istream& stream);
+	Renderer(std::istream& stream, ResourceManager& resourceManager, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, const Entity& entity);
 
 	~Renderer();
 
@@ -27,9 +30,9 @@ public:
 
 private:
 	const Entity& entity;
-	const Transform& transform;
-	const std::shared_ptr<const Model> model;
-	const std::shared_ptr<const Material> material;
+	const Transform* transform;
+	std::shared_ptr<const Model> model;
+	std::shared_ptr<const Material> material;
 
 	Engine& engine;
 	ID3D11DeviceContext& deviceContext;

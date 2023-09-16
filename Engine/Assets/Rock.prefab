@@ -1,2 +1,2 @@
 transform 0 0 0 0 0 0 
-Renderer 0 Assets/Stones/STONE#1/STONE#1.obj Assets/Rock.material
+renderer 0 Assets/Stones/STONE#1/STONE#1.obj Assets/Rock.material

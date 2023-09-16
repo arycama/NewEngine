@@ -18,10 +18,10 @@ class ResourceManager
 public:
 	ResourceManager(const TextureLoader& texureLoader, ID3D11Device& device, ID3D11DeviceContext& context);
 
-	std::shared_ptr<Material> LoadMaterial(const std::string& path);
-	std::shared_ptr<Model> LoadModel(const std::string& path);
-	std::shared_ptr<Shader> LoadShader(const std::string& path);
-	std::shared_ptr<Texture> LoadTexture(const std::string& path);
+	std::shared_ptr<const Material> LoadMaterial(const std::string& path);
+	std::shared_ptr<const Model> LoadModel(const std::string& path);
+	std::shared_ptr<const Shader> LoadShader(const std::string& path);
+	std::shared_ptr<const Texture> LoadTexture(const std::string& path);
 
 private:
 	const TextureLoader& textureLoader;
