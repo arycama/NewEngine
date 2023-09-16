@@ -1,6 +1,9 @@
+#include "Camera.h"
 #include "Component.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "Input.h"
+#include "Movement.h"
 #include "Scene.h"
 #include "Transform.h"
 #include "Renderer.h"
@@ -17,7 +20,7 @@ Entity::Entity(const string& name, Scene& scene) : name(name), scene(scene)
 	scene.AddEntity(*this);
 }
 
-Entity::Entity(const string& path, const string& name, Scene& scene, ResourceManager& resourceManager, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& context) : Entity(name, scene)
+Entity::Entity(const string& path, const string& name, Scene& scene, ResourceManager& resourceManager, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& context, const Graphics& graphics, const Input& input) : Entity(name, scene)
 {
 	ifstream stream(path);
 
@@ -26,10 +29,17 @@ Entity::Entity(const string& path, const string& name, Scene& scene, ResourceMan
 		string componentType;
 		stream >> componentType;
 
+		if (componentType == "camera")
+			this->AddComponent<Camera>(stream, graphics, engine, device, context, *this);
+
+		if(componentType == "movement")
+			this->AddComponent<Movement>(engine, *this, input, stream);
+		
+		if (componentType == "renderer")
+			this->AddComponent<Renderer>(stream, resourceManager, engine, device, context, *this);
+
 		if (componentType == "transform")
 			this->AddComponent<Transform>(stream);
-		else if (componentType == "renderer")
-			this->AddComponent<Renderer>(stream, resourceManager, engine, device, context, *this);
 	}
 }
 

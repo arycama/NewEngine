@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Engine.h"
+#include "Entity.h"
 #include "Graphics.h"
 #include "Transform.h"
 
@@ -23,8 +24,24 @@ struct PerCameraData
 	XMMATRIX projection;
 };
 
-Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext) : transform(transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine), deviceContext(deviceContext)
+Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, Entity& entity) : transform(&transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine), deviceContext(deviceContext), entity(entity)
 { 
+	engine.AddCamera(*this);
+	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+	CheckError(device.CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
+	SetDebugObjectName(cameraData.Get(), "Camera Data");
+}
+
+Camera::Camera(std::istream& stream, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, Entity& entity) : graphics(graphics), engine(engine), deviceContext(deviceContext), entity(entity)
+{
+	int transformIndex;
+	stream >> transformIndex;
+	transform = &dynamic_cast<Transform&>(entity.GetComponentAt(transformIndex));
+
+	stream >> nearClipPlane;
+	stream >> farClipPlane;
+	stream >> fieldOfView;
+
 	engine.AddCamera(*this);
 	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 	CheckError(device.CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
@@ -38,16 +55,19 @@ Camera::~Camera()
 
 void Camera::Serialize(ostream& stream) const
 {
+	stream << "camera" << ' ';
+	stream << entity.GetComponentIndex(*transform) << ' ';
+	stream << nearClipPlane << ' ' << farClipPlane << ' ' << fieldOfView;
 }
 
 XMMATRIX Camera::GetViewMatrix() const
 {
 	// Setup the position of the camera in the world and load it into a XMVECTOR structure.
-	auto position = transform.GetPosition();
+	auto position = transform->GetPosition();
 	auto positionVector = XMLoadFloat3(&position);
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
-	auto rotation = transform.GetRotation();
+	auto rotation = transform->GetRotation();
 	auto rotationVector = XMLoadFloat3(&rotation);
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.

@@ -41,30 +41,9 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	auto& scene = *new Scene(*this);
 	AddScene(scene);
 
-	// Create the camera object and set the initial position of the camera.
-	auto& camera = *new Entity("Camera", scene);
-
-	auto& cameraTransform = camera.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, -5.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-	camera.AddComponent<Camera>(0.1f, 1000.0f, 45, cameraTransform, *graphics, *this, graphics->GetDevice(), graphics->GetDeviceContext());
-	camera.AddComponent<Movement>(*this, camera, *input.get(), cameraTransform);
-
-	{
-		new Entity("Assets/Rock.prefab", "Model 0", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext());
-
-		//auto& object = *new Entity("Model 0", *scene);
-		//auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		//auto model = resourceManager->LoadModel("Assets/Stones/STONE#1/STONE#1.obj");
-		//object.AddComponent<Renderer>(model, material, modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext(), object);
-
-		//object.Serialize("Assets/Rock.prefab");
-	}
-
-	{
-		auto& object = *new Entity("Model 1", scene);
-		auto& modelTransform = object.AddComponent<Transform>(XMFLOAT3(2.5f, 0.0f, 2.5f), XMFLOAT3(0.0f, 0.0f, 0.0f));
-		auto model = resourceManager->LoadModel("Assets/Cube.obj");
-		object.AddComponent<Renderer>(model, material, modelTransform, *this, graphics->GetDevice(), graphics->GetDeviceContext(), object);
-	}
+	new Entity("Assets/Camera.prefab", "Camera", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
+	new Entity("Assets/Rock.prefab", "Rock 0", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
+	new Entity("Assets/Cube.prefab", "Cube", scene, *resourceManager.get(), *this, graphics->GetDevice(), graphics->GetDeviceContext(), *graphics.get(), *input.get());
 
 	// Hide the mouse cursor.
 	ShowCursor(false);

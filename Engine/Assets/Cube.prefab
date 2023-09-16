@@ -1,0 +1,2 @@
+transform 2.5 0 2.5 0 0 0 
+renderer 0 Assets/Cube.obj Assets/Rock.material
