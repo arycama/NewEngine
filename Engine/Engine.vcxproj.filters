@@ -136,6 +136,7 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Assets\Surface.hlsl" />
+    <None Include="Engine.aps" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Components\Behaviour.cpp">
@@ -157,9 +158,6 @@
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\D3D11GraphicsBuffer.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Graphics.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Systems\Entity.cpp">
@@ -213,6 +211,12 @@
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\D3D11GraphicsDevice.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\GraphicsDevice.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Components\Behaviour.h">
@@ -234,9 +238,6 @@
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\D3D11GraphicsBuffer.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Graphics.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\GraphicsBuffer.h">
@@ -304,6 +305,15 @@
     </ClInclude>
     <ClInclude Include="Source\Engine.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Source\Graphics\D3D11GraphicsDevice.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GraphicsDevice.h">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

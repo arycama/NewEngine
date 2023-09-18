@@ -6,7 +6,7 @@
 
 class Engine;
 class Entity;
-class Graphics;
+class GraphicsDevice;
 class Input;
 class ResourceManager;
 
@@ -14,7 +14,7 @@ class Scene
 {
 public:
 	Scene(Engine& engine);
-	Scene(const std::string& path, Engine& engine, ResourceManager& resourceManager, const Graphics& graphics, Input& input);
+	Scene(const std::string& path, Engine& engine, ResourceManager& resourceManager, GraphicsDevice& graphics, Input& input);
 	~Scene();
 
 	void Serialize(const std::string& path) const;

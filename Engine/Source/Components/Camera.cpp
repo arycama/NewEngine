@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "Entity.h"
-#include "Graphics.h"
+#include "GraphicsDevice.h"
 #include "Transform.h"
 
 #include <d3d11.h>
@@ -24,15 +24,15 @@ struct PerCameraData
 	XMMATRIX projection;
 };
 
-Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, Entity& entity) : transform(&transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphics(graphics), engine(engine), deviceContext(deviceContext), entity(entity)
+Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity) : transform(&transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphicsDevice(graphicsDevice), engine(engine), entity(entity)
 { 
 	engine.AddCamera(*this);
 	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	CheckError(device.CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
+	CheckError(graphicsDevice.GetDevice().CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
 	SetDebugObjectName(cameraData.Get(), "Camera Data");
 }
 
-Camera::Camera(std::istream& stream, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, Entity& entity) : graphics(graphics), engine(engine), deviceContext(deviceContext), entity(entity)
+Camera::Camera(std::istream& stream, const GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity) : graphicsDevice(graphicsDevice), engine(engine), entity(entity)
 {
 	int transformIndex;
 	stream >> transformIndex;
@@ -44,7 +44,7 @@ Camera::Camera(std::istream& stream, const Graphics& graphics, Engine& engine, I
 
 	engine.AddCamera(*this);
 	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	CheckError(device.CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
+	CheckError(graphicsDevice.GetDevice().CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
 	SetDebugObjectName(cameraData.Get(), "Camera Data");
 }
 
@@ -87,7 +87,7 @@ XMMATRIX Camera::GetViewMatrix() const
 
 XMMATRIX Camera::GetProjectionMatrix() const
 {
-	const auto aspect = graphics.GetAspectRatio();
+	const auto aspect = graphicsDevice.GetAspectRatio();
 	const auto fovRadians = XMConvertToRadians(fieldOfView);
 	return XMMatrixPerspectiveFovLH(fovRadians, aspect, nearClipPlane, farClipPlane);
 }
@@ -96,7 +96,7 @@ void Camera::Render() const
 {
 	// Set the shader parameters that it will use for rendering.
 	D3D11_MAPPED_SUBRESOURCE perCameraDataMappedResource;
-	CheckError(deviceContext.Map(cameraData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perCameraDataMappedResource));
+	CheckError(graphicsDevice.GetDeviceContext().Map(cameraData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perCameraDataMappedResource));
 
 	// Get a pointer to the data in the constant buffer.
 	auto perCameraDataPtr = static_cast<PerCameraData*>(perCameraDataMappedResource.pData);
@@ -106,7 +106,7 @@ void Camera::Render() const
 	perCameraDataPtr->projection = GetProjectionMatrix();
 
 	// Unlock the constant buffer.
-	deviceContext.Unmap(cameraData.Get(), 0);
+	graphicsDevice.GetDeviceContext().Unmap(cameraData.Get(), 0);
 
-	deviceContext.VSSetConstantBuffers(0, 1, cameraData.GetAddressOf());
+	graphicsDevice.GetDeviceContext().VSSetConstantBuffers(0, 1, cameraData.GetAddressOf());
 }

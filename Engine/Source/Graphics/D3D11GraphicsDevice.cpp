@@ -2,7 +2,7 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-#include "Graphics.h"
+#include "D3D11GraphicsDevice.h"
 #include <d3d11.h>
 #include <memory>
 #include <dxgi.h>
@@ -20,7 +20,7 @@ using namespace std;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-Graphics::Graphics(int width, int height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height), vsync(vsync)
+D3D11GraphicsDevice::D3D11GraphicsDevice(int width, int height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height), vsync(vsync)
 {
 	ComPtr<IDXGIFactory> factory;
 	CheckError(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)factory.GetAddressOf()));
@@ -38,7 +38,7 @@ Graphics::Graphics(int width, int height, bool vsync, HWND hwnd, bool fullscreen
 	CheckError(adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModes.get()));
 
 	// Find the display mode that matches our resolution
-	int numerator, denominator;
+	int numerator = 0, denominator = 0;
 	for (auto i = 0; i < numModes; i++)
 	{
 		auto& displayMode = displayModes[i];
@@ -85,36 +85,36 @@ Graphics::Graphics(int width, int height, bool vsync, HWND hwnd, bool fullscreen
 	deviceContext->RSSetState(rasterState.Get());
 }
 
-Graphics::~Graphics()
+D3D11GraphicsDevice::~D3D11GraphicsDevice()
 {
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 	swapChain->SetFullscreenState(false, nullptr);
 }
 
-void Graphics::BeginScene(float red, float green, float blue, float alpha) const
+void D3D11GraphicsDevice::BeginScene(float red, float green, float blue, float alpha) const
 {
 	const float color[4]{ red, green, blue, alpha };
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
 	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Graphics::EndScene() const
+void D3D11GraphicsDevice::EndScene() const
 {
 	// Lock to screen refresh rate.
 	swapChain->Present(vsync ? 1 : 0, 0);
 }
 
-ID3D11Device& Graphics::GetDevice() const
+ID3D11Device& D3D11GraphicsDevice::GetDevice() const
 {
 	return *device.Get();
 }
 
-ID3D11DeviceContext& Graphics::GetDeviceContext() const
+ID3D11DeviceContext& D3D11GraphicsDevice::GetDeviceContext() const
 {
 	return *deviceContext.Get();
 }
 
-float Graphics::GetAspectRatio() const
+float D3D11GraphicsDevice::GetAspectRatio() const
 {
 	return static_cast<float>(width) / static_cast<float>(height);
 }

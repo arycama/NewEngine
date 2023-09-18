@@ -6,7 +6,7 @@
 
 class Component;
 class Engine;
-class Graphics;
+class GraphicsDevice;
 class Input;
 class ResourceManager;
 class Scene;
@@ -18,7 +18,7 @@ class Entity
 {
 public:
 	Entity(Scene& scene);
-	Entity(const std::string& path, Scene& scene, ResourceManager& resourceManager, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& context, const Graphics& graphics, const Input& input);
+	Entity(const std::string& path, Scene& scene, ResourceManager& resourceManager, Engine& engine, GraphicsDevice& graphicsDevice, const Input& input);
 
 	~Entity();
 

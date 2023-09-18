@@ -1,4 +1,4 @@
-#include "Graphics.h"
+#include "GraphicsDevice.h"
 #include "Model.h"
 #include "Transform.h"
 
@@ -25,7 +25,7 @@ struct VertexType
 	XMFLOAT2 uv;
 };
 
-Model::Model(const string& path, Graphics& graphics) : graphics(graphics), vertexStride(sizeof(VertexType)), path(path)
+Model::Model(const string& path, GraphicsDevice& graphicsDevice) : graphicsDevice(graphicsDevice), vertexStride(sizeof(VertexType)), path(path)
 {
 	ifstream file(path);
 	assert(file.is_open());
@@ -90,10 +90,7 @@ Model::Model(const string& path, Graphics& graphics) : graphics(graphics), verte
 						unsigned int vIndex, tIndex, nIndex;
 						file >> vIndex >> input2 >> tIndex >> input2 >> nIndex;
 
-						VertexType vertex;
-						vertex.position = positions->at(vIndex - 1);
-						vertex.uv = uvs->at(tIndex - 1);
-						vertex.normal = normals->at(nIndex - 1);
+						VertexType vertex{ positions->at(vIndex - 1), normals->at(nIndex - 1), uvs->at(tIndex - 1) };
 						vertices->push_back(vertex);
 						indices->push_back(indices->size());
 					}
@@ -116,11 +113,11 @@ Model::Model(const string& path, Graphics& graphics) : graphics(graphics), verte
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
 	D3D11_SUBRESOURCE_DATA vertexData{ vertices->data(), 0, 0 };
-	CheckError(graphics.GetDevice().CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
+	CheckError(graphicsDevice.GetDevice().CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
 
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
 	D3D11_SUBRESOURCE_DATA indexData{ indices->data(), 0, 0 };
-	CheckError(graphics.GetDevice().CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
+	CheckError(graphicsDevice.GetDevice().CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
 }
 
 const std::string& Model::GetPath() const
@@ -134,7 +131,7 @@ void Model::Render() const
 	auto stride = static_cast<UINT>(vertexStride);
 	auto offset = 0u;
 
-	auto& context = graphics.GetDeviceContext();
+	auto& context = graphicsDevice.GetDeviceContext();
 	context.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
 	context.IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	context.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

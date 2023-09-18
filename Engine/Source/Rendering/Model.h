@@ -4,20 +4,20 @@
 #include <string>
 #include <wrl/client.h>
 
-class Graphics;
+class GraphicsDevice;
 class Transform;
 struct ID3D11Buffer;
 
 class Model
 {
 public:
-	Model(const std::string& path, Graphics& graphics);
+	Model(const std::string& path, GraphicsDevice& graphicsDevice);
 	void Render() const;
 
 	const std::string& GetPath() const;
 
 private:
-	Graphics& graphics;
+	GraphicsDevice& graphicsDevice;
 	const std::string path;
 	int vertexCount, vertexStride, indexCount;
 

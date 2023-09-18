@@ -6,7 +6,7 @@
 
 class Engine; 
 class Entity;
-class Graphics; 
+class GraphicsDevice; 
 class Transform;
 struct ID3D11Buffer;
 struct ID3D11Device;
@@ -20,8 +20,8 @@ namespace DirectX
 class Camera : public Component
 {
 public:
-	Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, Entity& entity);
-	Camera(std::istream& stream, const Graphics& graphics, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& deviceContext, Entity& entity);
+	Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity);
+	Camera(std::istream& stream, const GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity);
 	~Camera();
 
 	void Serialize(std::ostream& stream) const override;
@@ -31,11 +31,10 @@ public:
 private:
 	float nearClipPlane, farClipPlane, fieldOfView;
 
-	const Graphics& graphics;
+	const GraphicsDevice& graphicsDevice;
 	const Transform* transform;
 	Engine& engine;
 	Entity& entity;
-	ID3D11DeviceContext& deviceContext;
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> cameraData;
 

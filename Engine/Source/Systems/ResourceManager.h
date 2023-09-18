@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-class Graphics;
+class GraphicsDevice;
 class Material;
 class Model;
 class Shader;
@@ -14,7 +14,7 @@ class TextureLoader;
 class ResourceManager
 {
 public:
-	ResourceManager(const TextureLoader& texureLoader, Graphics& graphics);
+	ResourceManager(const TextureLoader& texureLoader, GraphicsDevice& graphicsDevice);
 
 	std::shared_ptr<const Material> LoadMaterial(const std::string& path);
 	std::shared_ptr<const Model> LoadModel(const std::string& path);
@@ -23,7 +23,7 @@ public:
 
 private:
 	const TextureLoader& textureLoader;
-	Graphics& graphics;
+	GraphicsDevice& graphicsDevice;
 
 	std::unordered_map<std::string, std::weak_ptr<Material>> materials;
 	std::unordered_map<std::string, std::weak_ptr<Model>> models;

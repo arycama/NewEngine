@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GraphicsDevice.h"
 #include <wrl/client.h>
 
 struct ID3D11DepthStencilState;
@@ -11,19 +12,19 @@ struct ID3D11RenderTargetView;
 struct ID3D11Texture2D;
 struct IDXGISwapChain;
 
-class Graphics
+class D3D11GraphicsDevice : public GraphicsDevice
 {
 public:
-	Graphics(int width, int height, bool vsync, HWND hwnd, bool fullscreen);
-	~Graphics();
+	D3D11GraphicsDevice(int width, int height, bool vsync, HWND hwnd, bool fullscreen);
+	~D3D11GraphicsDevice();
 
-	void BeginScene(float red, float green, float blue, float alpha) const;
-	void EndScene() const;
+	void BeginScene(float red, float green, float blue, float alpha) const override;
+	void EndScene() const override;
 
-	ID3D11Device& GetDevice() const;
-	ID3D11DeviceContext& GetDeviceContext() const;
+	ID3D11Device& GetDevice() const override;
+	ID3D11DeviceContext& GetDeviceContext() const override;
 
-	float GetAspectRatio() const;
+	float GetAspectRatio() const override;
 
 private:
 	const int width, height;

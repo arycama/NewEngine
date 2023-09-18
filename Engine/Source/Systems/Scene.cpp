@@ -1,6 +1,6 @@
 #include "Engine.h"
 #include "Entity.h"
-#include "Graphics.h"
+#include "GraphicsDevice.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 #include <fstream>
@@ -11,7 +11,7 @@ using namespace std;
 
 Scene::Scene(Engine& engine) : engine(engine), isBeingUnloaded(false) { }
 
-Scene::Scene(const string& path, Engine& engine, ResourceManager& resourceManager, const Graphics& graphics, Input& input) : Scene(engine)
+Scene::Scene(const string& path, Engine& engine, ResourceManager& resourceManager, GraphicsDevice& graphicsDevice, Input& input) : Scene(engine)
 {
 	ifstream stream(path);
 
@@ -19,7 +19,7 @@ Scene::Scene(const string& path, Engine& engine, ResourceManager& resourceManage
 	{
 		string entityPath;
 		stream >> entityPath;
-		new Entity(entityPath, *this, resourceManager, engine, graphics.GetDevice(), graphics.GetDeviceContext(), graphics, input);
+		new Entity(entityPath, *this, resourceManager, engine, graphicsDevice, input);
 	}
 }
 

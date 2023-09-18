@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "GraphicsDevice.h"
 #include "Input.h"
 #include "Movement.h"
 #include "Scene.h"
@@ -20,7 +21,7 @@ Entity::Entity(Scene& scene) : scene(scene), path("")
 	scene.AddEntity(*this);
 }
 
-Entity::Entity(const string& path, Scene& scene, ResourceManager& resourceManager, Engine& engine, ID3D11Device& device, ID3D11DeviceContext& context, const Graphics& graphics, const Input& input) : path(path), scene(scene)
+Entity::Entity(const string& path, Scene& scene, ResourceManager& resourceManager, Engine& engine, GraphicsDevice& graphicsDevice, const Input& input) : path(path), scene(scene)
 {
 	ifstream stream(path);
 	while (!stream.eof())
@@ -29,13 +30,13 @@ Entity::Entity(const string& path, Scene& scene, ResourceManager& resourceManage
 		stream >> componentType;
 
 		if (componentType == "camera")
-			this->AddComponent<Camera>(stream, graphics, engine, device, context, *this);
+			this->AddComponent<Camera>(stream, graphicsDevice, engine, *this);
 
 		if(componentType == "movement")
 			this->AddComponent<Movement>(engine, *this, input, stream);
 		
 		if (componentType == "renderer")
-			this->AddComponent<Renderer>(stream, resourceManager, engine, device, context, *this);
+			this->AddComponent<Renderer>(stream, resourceManager, engine, graphicsDevice, *this);
 
 		if (componentType == "transform")
 			this->AddComponent<Transform>(stream);
@@ -69,7 +70,7 @@ const string& Entity::GetPath() const
 int Entity::GetComponentIndex(const Component& component) const
 {
 	auto index = find_if(components.begin(), components.end(), [&](auto& obj) { return obj.get() == &component; });
-	return distance(components.begin(), index);
+	return static_cast<int>(distance(components.begin(), index));
 }
 
 Component& Entity::GetComponentAt(int index) const

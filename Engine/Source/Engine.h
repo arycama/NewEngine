@@ -5,7 +5,7 @@
 
 class Behaviour;
 class Camera;
-class Graphics;
+class GraphicsDevice;
 class Input;
 class Renderer;
 class ResourceManager;
@@ -44,7 +44,7 @@ private:
 	System& system;
 
 	std::unique_ptr<Input> input;
-	std::unique_ptr<Graphics> graphics;
+	std::unique_ptr<GraphicsDevice> graphics;
 	std::unique_ptr<const WindowHandle> windowHandle;
 	std::unique_ptr<const TextureLoader> textureLoader;
 	std::unique_ptr<ResourceManager> resourceManager;

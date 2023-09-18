@@ -1,7 +1,8 @@
 #include "Behaviour.h"
 #include "Camera.h"
 #include "Engine.h"
-#include "Graphics.h"
+#include "GraphicsDevice.h"
+#include "D3D11GraphicsDevice.h" // Todo: Get this from System
 #include "Input.h"
 #include "Int2.h"
 #include "Renderer.h"
@@ -21,7 +22,7 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 	auto hwnd = system.InitializeWindow(fullScreen, windowWidth, windowHeight);
 
 	windowHandle = make_unique<WindowHandle>(hwnd);
-	graphics = make_unique<Graphics>(windowWidth, windowHeight, true, hwnd, fullScreen);
+	graphics = make_unique<D3D11GraphicsDevice>(windowWidth, windowHeight, true, hwnd, fullScreen);
 	input = make_unique<Input>();
 
 	textureLoader = make_unique<TextureLoader>();

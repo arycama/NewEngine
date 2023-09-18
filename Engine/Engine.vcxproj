@@ -75,9 +75,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
-    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <AllProjectIncludesArePublic>false</AllProjectIncludesArePublic>
     <SourcePath>$(VC_SourcePath);</SourcePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Types;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Systems;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Rendering;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Graphics;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Components;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source;$(PublicIncludeDirectories)</IncludePath>
+    <PublicIncludeDirectories>
+    </PublicIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,7 +116,9 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/Bt+ %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Types;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Systems;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Rendering;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Graphics;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Components;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source;$(PublicIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -206,6 +210,7 @@
     <None Include="Assets\Stones\STONE#4\STONE#4.blend">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
+    <None Include="Engine.aps" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +266,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Components\Behaviour.cpp" />
     <ClCompile Include="Source\Components\Camera.cpp" />
     <ClCompile Include="Source\Components\Component.cpp" />
@@ -269,7 +275,7 @@
     <ClCompile Include="Source\Components\Transform.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\Graphics\D3D11GraphicsBuffer.cpp" />
-    <ClCompile Include="Source\Graphics\Graphics.cpp" />
+    <ClCompile Include="Source\Graphics\D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Rendering\Material.cpp" />
     <ClCompile Include="Source\Rendering\Model.cpp" />
@@ -288,6 +294,9 @@
     <ClCompile Include="Source\Types\Int2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="Source\Graphics\GraphicsDevice.h" />
+    <ClInclude Include="Resource.h" />
     <ClInclude Include="Source\Components\Behaviour.h" />
     <ClInclude Include="Source\Components\Camera.h" />
     <ClInclude Include="Source\Components\Component.h" />
@@ -296,7 +305,7 @@
     <ClInclude Include="Source\Components\Transform.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\Graphics\D3D11GraphicsBuffer.h" />
-    <ClInclude Include="Source\Graphics\Graphics.h" />
+    <ClInclude Include="Source\Graphics\D3D11GraphicsDevice.h" />
     <ClInclude Include="Source\Graphics\GraphicsBuffer.h" />
     <ClInclude Include="Source\Graphics\GraphicsBufferCpuAccess.h" />
     <ClInclude Include="Source\Graphics\GraphicsBufferType.h" />
@@ -318,6 +327,7 @@
     <ClInclude Include="Source\Systems\TgaLoader.h" />
     <ClInclude Include="Source\Systems\WindowHandle.h" />
     <ClInclude Include="Source\Types\Int2.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

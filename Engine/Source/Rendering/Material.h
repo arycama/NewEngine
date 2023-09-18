@@ -4,7 +4,7 @@
 #include <string>
 #include <wrl/client.h>
 
-class Graphics;
+class GraphicsDevice;
 class Shader;
 class Texture;
 struct ID3D11SamplerState;
@@ -12,14 +12,14 @@ struct ID3D11SamplerState;
 class Material
 {
 public:
-	Material(std::shared_ptr<const Texture> texture, std::shared_ptr<const Shader> shader, const std::string& path, Graphics& graphics);
+	Material(std::shared_ptr<const Texture> texture, std::shared_ptr<const Shader> shader, const std::string& path, GraphicsDevice& graphicsDevice);
 
 	const std::string& GetPath() const;
 	void Render() const;
 
 private:
 
-	Graphics& graphics;
+	GraphicsDevice& graphicsDevice;
 
 	const std::string path;
 	const std::shared_ptr<const Shader> shader;

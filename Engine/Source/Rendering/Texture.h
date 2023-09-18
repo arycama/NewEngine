@@ -4,12 +4,12 @@
 #include <string>
 #include <wrl/client.h>
 
-class Graphics;
+class GraphicsDevice;
 
 class Texture
 {
 public:
-	Texture(unsigned char* data, int width, int height, Graphics& graphics);
+	Texture(unsigned char* data, int width, int height, GraphicsDevice& graphicsDevice);
 
 	ID3D11ShaderResourceView& GetTexture() const;
 

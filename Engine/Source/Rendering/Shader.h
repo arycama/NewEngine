@@ -3,7 +3,7 @@
 #include <string>
 #include <wrl/client.h>
 
-class Graphics;
+class GraphicsDevice;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11InputLayout;
@@ -13,11 +13,11 @@ struct ID3D11VertexShader;
 class Shader
 {
 public:
-	Shader(const std::string& path, Graphics& graphics);
+	Shader(const std::string& path, GraphicsDevice& graphicsDevice);
 	void Render() const;
 
 private:
-	Graphics& graphics;
+	GraphicsDevice& graphicsDevice;
 
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
