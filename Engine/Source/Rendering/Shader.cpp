@@ -1,3 +1,4 @@
+#include "GraphicsContext.h"
 #include "GraphicsDevice.h"
 #include "Shader.h"
 
@@ -71,10 +72,9 @@ Shader::Shader(const string& path, GraphicsDevice& graphicsDevice) : graphicsDev
 	CheckError(device.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
 }
 
-void Shader::Render() const
+void Shader::Render(GraphicsContext& graphicsContext) const
 {
-	auto& context = graphicsDevice.GetDeviceContext();
-	context.IASetInputLayout(layout.Get());
-	context.VSSetShader(vertexShader.Get(), nullptr, 0);
-	context.PSSetShader(pixelShader.Get(), nullptr, 0);
+	graphicsContext.IASetInputLayout(*layout.Get());
+	graphicsContext.VSSetShader(*vertexShader.Get());
+	graphicsContext.PSSetShader(*pixelShader.Get());
 }

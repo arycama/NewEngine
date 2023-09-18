@@ -1,23 +1,21 @@
 #pragma once
 
-#include "Component.h"
 #include <string>
 #include <wrl/client.h>
 
+class GraphicsContext;
 class GraphicsDevice;
-class Transform;
 struct ID3D11Buffer;
 
 class Model
 {
 public:
 	Model(const std::string& path, GraphicsDevice& graphicsDevice);
-	void Render() const;
+	void Render(GraphicsContext& graphicsContext) const;
 
 	const std::string& GetPath() const;
 
 private:
-	GraphicsDevice& graphicsDevice;
 	const std::string path;
 	int vertexCount, vertexStride, indexCount;
 

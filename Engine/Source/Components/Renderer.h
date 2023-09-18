@@ -7,6 +7,7 @@
 
 class Engine;
 class Entity;
+class GraphicsContext;
 class GraphicsDevice;
 class Material;
 class Model;
@@ -25,7 +26,7 @@ public:
 	~Renderer();
 
 	void Serialize(std::ostream& stream) const override;
-	void Render() const;
+	void Render(GraphicsContext& graphicsContext) const;
 
 private:
 	GraphicsDevice& graphicsDevice;

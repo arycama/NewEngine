@@ -1,3 +1,4 @@
+#include "GraphicsContext.h"
 #include "GraphicsDevice.h"
 #include "Model.h"
 #include "Transform.h"
@@ -25,7 +26,7 @@ struct VertexType
 	XMFLOAT2 uv;
 };
 
-Model::Model(const string& path, GraphicsDevice& graphicsDevice) : graphicsDevice(graphicsDevice), vertexStride(sizeof(VertexType)), path(path)
+Model::Model(const string& path, GraphicsDevice& graphicsDevice) : vertexStride(sizeof(VertexType)), path(path)
 {
 	ifstream file(path);
 	assert(file.is_open());
@@ -125,15 +126,10 @@ const std::string& Model::GetPath() const
 	return path;
 }
 
-void Model::Render() const
+void Model::Render(GraphicsContext& graphicsContext) const
 {
-	// Set vertex buffer stride and offset.
-	auto stride = static_cast<UINT>(vertexStride);
-	auto offset = 0u;
-
-	auto& context = graphicsDevice.GetDeviceContext();
-	context.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-	context.IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	context.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context.DrawIndexed(indexCount, 0, 0);
+	graphicsContext.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), vertexStride, 0);
+	graphicsContext.IASetIndexBuffer(indexBuffer.Get());
+	graphicsContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	graphicsContext.DrawIndexed(indexCount, 0, 0);
 }

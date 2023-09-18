@@ -57,7 +57,7 @@ void Engine::Update()
 
 		for (auto renderer : renderers)
 		{
-			renderer->Render();
+			renderer->Render(graphics->GetGraphicsContext());
 		}
 	}
 

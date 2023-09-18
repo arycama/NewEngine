@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Entity.h"
+#include "GraphicsContext.h"
 #include "GraphicsDevice.h"
 #include "Material.h"
 #include "Rendering/Model.h"
@@ -66,21 +67,17 @@ void Renderer::Serialize(ostream& stream) const
 	stream << material->GetPath();
 }
 
-void Renderer::Render() const
+void Renderer::Render(GraphicsContext& graphicsContext) const
 {
 	D3D11_MAPPED_SUBRESOURCE perDrawDataMappedResource;
-	CheckError(graphicsDevice.GetDeviceContext().Map(drawData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perDrawDataMappedResource));
+	graphicsContext.BeginWrite(drawData.Get(), &perDrawDataMappedResource);
 
-	// Get a pointer to the data in the constant buffer.
 	auto drawDataPtr = static_cast<PerDrawData*>(perDrawDataMappedResource.pData);
-
-	// Copy the matrices into the constant buffer.
 	drawDataPtr->model = transform->GetWorldMatrix();
 
-	// Unlock the constant buffer.
-	graphicsDevice.GetDeviceContext().Unmap(drawData.Get(), 0);
+	graphicsContext.EndWrite(drawData.Get());
 
-	material->Render();
-	graphicsDevice.GetDeviceContext().VSSetConstantBuffers(1, 1, drawData.GetAddressOf());
-	model->Render();
+	material->Render(graphicsContext);
+	graphicsContext.VSSetConstantBuffers(1, 1, drawData.GetAddressOf());
+	model->Render(graphicsContext);
 }

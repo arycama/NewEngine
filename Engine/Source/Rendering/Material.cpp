@@ -1,3 +1,4 @@
+#include "GraphicsContext.h"
 #include "GraphicsDevice.h"
 #include "Material.h"
 #include "Shader.h"
@@ -25,11 +26,11 @@ const string& Material::GetPath() const
 	return path;
 }
 
-void Material::Render() const
+void Material::Render(GraphicsContext& graphicsContext) const
 {
-	shader->Render();
+	shader->Render(graphicsContext);
 
 	auto shaderResourceViews = &texture->GetTexture();
-	graphicsDevice.GetDeviceContext().PSSetShaderResources(0, 1, &shaderResourceViews);
-	graphicsDevice.GetDeviceContext().PSSetSamplers(0, 1, samplerState.GetAddressOf());
+	graphicsContext.PSSetShaderResources(0, 1, &shaderResourceViews);
+	graphicsContext.PSSetSamplers(0, 1, samplerState.GetAddressOf());
 }

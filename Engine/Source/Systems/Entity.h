@@ -11,9 +11,6 @@ class Input;
 class ResourceManager;
 class Scene;
 
-struct ID3D11Device;
-struct ID3D11DeviceContext;
-
 class Entity
 {
 public:

@@ -4,6 +4,7 @@
 #include <string>
 #include <wrl/client.h>
 
+class GraphicsContext;
 class GraphicsDevice;
 class Shader;
 class Texture;
@@ -15,7 +16,7 @@ public:
 	Material(std::shared_ptr<const Texture> texture, std::shared_ptr<const Shader> shader, const std::string& path, GraphicsDevice& graphicsDevice);
 
 	const std::string& GetPath() const;
-	void Render() const;
+	void Render(GraphicsContext& graphicsContext) const;
 
 private:
 
