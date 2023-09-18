@@ -75,6 +75,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,6 +114,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/Bt+ %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Types;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Systems;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Rendering;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Graphics;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Components;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source;$(PublicIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -190,65 +194,6 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Behaviour.h" />
-    <ClInclude Include="Source\Camera.h" />
-    <ClInclude Include="Source\Component.h" />
-    <ClInclude Include="Source\Entity.h" />
-    <ClInclude Include="Source\miniz.h" />
-    <ClInclude Include="Source\ResourceManager.h" />
-    <ClInclude Include="Source\stb_image.h" />
-    <ClInclude Include="Source\TextureFormat.h" />
-    <ClInclude Include="Source\TextureLoader.h" />
-    <ClInclude Include="Source\Material.h" />
-    <ClInclude Include="Source\Movement.h" />
-    <ClInclude Include="Source\Graphics.h" />
-    <ClInclude Include="Source\Engine.h" />
-    <ClInclude Include="Source\Input.h" />
-    <ClInclude Include="Source\Model.h" />
-    <ClInclude Include="Source\ofbx.h" />
-    <ClInclude Include="Source\Renderer.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="Source\Scene.h" />
-    <ClInclude Include="Source\System.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="Source\Texture.h" />
-    <ClInclude Include="Source\Shader.h" />
-    <ClInclude Include="Source\TgaLoader.h" />
-    <ClInclude Include="Source\Transform.h" />
-    <ClInclude Include="Source\WindowHandle.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Behaviour.cpp" />
-    <ClCompile Include="Source\Camera.cpp" />
-    <ClCompile Include="Source\Component.cpp" />
-    <ClCompile Include="Source\Entity.cpp" />
-    <ClCompile Include="Source\miniz.c" />
-    <ClCompile Include="Source\ResourceManager.cpp" />
-    <ClCompile Include="Source\TextureLoader.cpp" />
-    <ClCompile Include="Source\Int2.cpp" />
-    <ClInclude Include="Source\Int2.h" />
-    <ClCompile Include="Source\Material.cpp" />
-    <ClCompile Include="Source\Movement.cpp" />
-    <ClCompile Include="Source\Graphics.cpp" />
-    <ClCompile Include="Source\Engine.cpp" />
-    <ClCompile Include="Source\Input.cpp" />
-    <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\Model.cpp" />
-    <ClCompile Include="Source\ofbx.cpp" />
-    <ClCompile Include="Source\Renderer.cpp" />
-    <ClCompile Include="Source\Scene.cpp" />
-    <ClCompile Include="Source\System.cpp" />
-    <ClCompile Include="Source\Texture.cpp" />
-    <ClCompile Include="Source\Shader.cpp" />
-    <ClCompile Include="Source\TgaLoader.cpp" />
-    <ClCompile Include="Source\Transform.cpp">
-      <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</MultiProcessorCompilation>
-      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Fast</FloatingPointModel>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\WindowHandle.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Assets\Stones\STONE#1\STONE#1.blend">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
@@ -314,6 +259,65 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Components\Behaviour.cpp" />
+    <ClCompile Include="Source\Components\Camera.cpp" />
+    <ClCompile Include="Source\Components\Component.cpp" />
+    <ClCompile Include="Source\Components\Movement.cpp" />
+    <ClCompile Include="Source\Components\Renderer.cpp" />
+    <ClCompile Include="Source\Components\Transform.cpp" />
+    <ClCompile Include="Source\Engine.cpp" />
+    <ClCompile Include="Source\Graphics\D3D11GraphicsBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\Graphics.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Rendering\Material.cpp" />
+    <ClCompile Include="Source\Rendering\Model.cpp" />
+    <ClCompile Include="Source\Rendering\Shader.cpp" />
+    <ClCompile Include="Source\Rendering\Texture.cpp" />
+    <ClCompile Include="Source\Systems\Entity.cpp" />
+    <ClCompile Include="Source\Systems\Input.cpp" />
+    <ClCompile Include="Source\Systems\miniz.c" />
+    <ClCompile Include="Source\Systems\ofbx.cpp" />
+    <ClCompile Include="Source\Systems\ResourceManager.cpp" />
+    <ClCompile Include="Source\Systems\Scene.cpp" />
+    <ClCompile Include="Source\Systems\System.cpp" />
+    <ClCompile Include="Source\Systems\TextureLoader.cpp" />
+    <ClCompile Include="Source\Systems\TgaLoader.cpp" />
+    <ClCompile Include="Source\Systems\WindowHandle.cpp" />
+    <ClCompile Include="Source\Types\Int2.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Components\Behaviour.h" />
+    <ClInclude Include="Source\Components\Camera.h" />
+    <ClInclude Include="Source\Components\Component.h" />
+    <ClInclude Include="Source\Components\Movement.h" />
+    <ClInclude Include="Source\Components\Renderer.h" />
+    <ClInclude Include="Source\Components\Transform.h" />
+    <ClInclude Include="Source\Engine.h" />
+    <ClInclude Include="Source\Graphics\D3D11GraphicsBuffer.h" />
+    <ClInclude Include="Source\Graphics\Graphics.h" />
+    <ClInclude Include="Source\Graphics\GraphicsBuffer.h" />
+    <ClInclude Include="Source\Graphics\GraphicsBufferCpuAccess.h" />
+    <ClInclude Include="Source\Graphics\GraphicsBufferType.h" />
+    <ClInclude Include="Source\Graphics\GraphicsBufferUsage.h" />
+    <ClInclude Include="Source\Rendering\Material.h" />
+    <ClInclude Include="Source\Rendering\Model.h" />
+    <ClInclude Include="Source\Rendering\Shader.h" />
+    <ClInclude Include="Source\Rendering\Texture.h" />
+    <ClInclude Include="Source\Rendering\TextureFormat.h" />
+    <ClInclude Include="Source\Systems\Entity.h" />
+    <ClInclude Include="Source\Systems\Input.h" />
+    <ClInclude Include="Source\Systems\miniz.h" />
+    <ClInclude Include="Source\Systems\ofbx.h" />
+    <ClInclude Include="Source\Systems\ResourceManager.h" />
+    <ClInclude Include="Source\Systems\Scene.h" />
+    <ClInclude Include="Source\Systems\stb_image.h" />
+    <ClInclude Include="Source\Systems\System.h" />
+    <ClInclude Include="Source\Systems\TextureLoader.h" />
+    <ClInclude Include="Source\Systems\TgaLoader.h" />
+    <ClInclude Include="Source\Systems\WindowHandle.h" />
+    <ClInclude Include="Source\Types\Int2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

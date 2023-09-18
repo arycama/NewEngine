@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include "Entity.h"
 #include "Material.h"
-#include "Model.h"
+#include "Rendering/Model.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "Transform.h"
