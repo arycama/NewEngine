@@ -27,6 +27,9 @@
     <Filter Include="Source\Systems">
       <UniqueIdentifier>{1d668e0b-339d-4974-81a4-70ecd19f244e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\D3D11">
+      <UniqueIdentifier>{7da53605-ba89-4979-9f30-a24e3d02787c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -157,9 +160,6 @@
     <ClCompile Include="Source\Components\Transform.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\D3D11GraphicsBuffer.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Systems\Entity.cpp">
       <Filter>Source\Systems</Filter>
     </ClCompile>
@@ -211,11 +211,17 @@
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\D3D11GraphicsDevice.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsBuffer.cpp">
+      <Filter>Source\Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsDevice.cpp">
+      <Filter>Source\Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsContext.cpp">
+      <Filter>Source\Graphics\D3D11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,9 +242,6 @@
     </ClInclude>
     <ClInclude Include="Source\Components\Transform.h">
       <Filter>Source\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\D3D11GraphicsBuffer.h">
-      <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\GraphicsBuffer.h">
       <Filter>Source\Graphics</Filter>
@@ -309,11 +312,20 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Source\Graphics\D3D11GraphicsDevice.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\GraphicsDevice.h">
       <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GraphicsContext.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsBuffer.h">
+      <Filter>Source\Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsDevice.h">
+      <Filter>Source\Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsContext.h">
+      <Filter>Source\Graphics\D3D11</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

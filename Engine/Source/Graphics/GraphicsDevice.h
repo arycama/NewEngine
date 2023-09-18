@@ -1,5 +1,6 @@
 #pragma once
 
+class GraphicsContext;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
@@ -16,4 +17,5 @@ public:
 	// Todo: abstract
 	virtual ID3D11Device& GetDevice() const = 0;
 	virtual ID3D11DeviceContext& GetDeviceContext() const = 0;
+	virtual GraphicsContext& GetGraphicsContext() const = 0;
 };

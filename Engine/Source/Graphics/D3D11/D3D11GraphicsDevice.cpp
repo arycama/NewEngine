@@ -3,6 +3,8 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include "D3D11GraphicsDevice.h"
+#include "D3D11GraphicsContext.h"
+
 #include <d3d11.h>
 #include <memory>
 #include <dxgi.h>
@@ -83,6 +85,8 @@ D3D11GraphicsDevice::D3D11GraphicsDevice(int width, int height, bool vsync, HWND
 	deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 0);
 
 	deviceContext->RSSetState(rasterState.Get());
+
+	context = make_unique<D3D11GraphicsContext>(*deviceContext.Get());
 }
 
 D3D11GraphicsDevice::~D3D11GraphicsDevice()
@@ -112,6 +116,11 @@ ID3D11Device& D3D11GraphicsDevice::GetDevice() const
 ID3D11DeviceContext& D3D11GraphicsDevice::GetDeviceContext() const
 {
 	return *deviceContext.Get();
+}
+
+GraphicsContext& D3D11GraphicsDevice::GetGraphicsContext() const
+{
+	return *context.get();
 }
 
 float D3D11GraphicsDevice::GetAspectRatio() const

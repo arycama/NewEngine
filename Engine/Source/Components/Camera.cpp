@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "GraphicsContext.h"
 #include "GraphicsDevice.h"
 #include "Transform.h"
 
@@ -92,21 +93,17 @@ XMMATRIX Camera::GetProjectionMatrix() const
 	return XMMatrixPerspectiveFovLH(fovRadians, aspect, nearClipPlane, farClipPlane);
 }
 
-void Camera::Render() const
+void Camera::Render(GraphicsContext& graphicsContext) const
 {
-	// Set the shader parameters that it will use for rendering.
 	D3D11_MAPPED_SUBRESOURCE perCameraDataMappedResource;
-	CheckError(graphicsDevice.GetDeviceContext().Map(cameraData.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &perCameraDataMappedResource));
+	graphicsContext.BeginWrite(cameraData.Get(), &perCameraDataMappedResource);
 
-	// Get a pointer to the data in the constant buffer.
 	auto perCameraDataPtr = static_cast<PerCameraData*>(perCameraDataMappedResource.pData);
 
 	// Copy the matrices into the constant buffer.
 	perCameraDataPtr->view = GetViewMatrix();
 	perCameraDataPtr->projection = GetProjectionMatrix();
 
-	// Unlock the constant buffer.
-	graphicsDevice.GetDeviceContext().Unmap(cameraData.Get(), 0);
-
-	graphicsDevice.GetDeviceContext().VSSetConstantBuffers(0, 1, cameraData.GetAddressOf());
+	graphicsContext.EndWrite(cameraData.Get());
+	graphicsContext.VSSetConstantBuffers(0, 1, cameraData.GetAddressOf());
 }

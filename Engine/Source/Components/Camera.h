@@ -6,11 +6,10 @@
 
 class Engine; 
 class Entity;
-class GraphicsDevice; 
+class GraphicsContext;
+class GraphicsDevice;
 class Transform;
 struct ID3D11Buffer;
-struct ID3D11Device;
-struct ID3D11DeviceContext;
 
 namespace DirectX
 {
@@ -26,7 +25,7 @@ public:
 
 	void Serialize(std::ostream& stream) const override;
 
-	void Render() const;
+	void Render(GraphicsContext& graphicsContext) const;
 
 private:
 	float nearClipPlane, farClipPlane, fieldOfView;

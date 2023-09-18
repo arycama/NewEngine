@@ -266,6 +266,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsContext.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Components\Behaviour.cpp" />
     <ClCompile Include="Source\Components\Camera.cpp" />
@@ -274,8 +275,8 @@
     <ClCompile Include="Source\Components\Renderer.cpp" />
     <ClCompile Include="Source\Components\Transform.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
-    <ClCompile Include="Source\Graphics\D3D11GraphicsBuffer.cpp" />
-    <ClCompile Include="Source\Graphics\D3D11GraphicsDevice.cpp" />
+    <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Rendering\Material.cpp" />
     <ClCompile Include="Source\Rendering\Model.cpp" />
@@ -294,7 +295,9 @@
     <ClCompile Include="Source\Types\Int2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsContext.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Source\Graphics\GraphicsContext.h" />
     <ClInclude Include="Source\Graphics\GraphicsDevice.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Source\Components\Behaviour.h" />
@@ -304,8 +307,8 @@
     <ClInclude Include="Source\Components\Renderer.h" />
     <ClInclude Include="Source\Components\Transform.h" />
     <ClInclude Include="Source\Engine.h" />
-    <ClInclude Include="Source\Graphics\D3D11GraphicsBuffer.h" />
-    <ClInclude Include="Source\Graphics\D3D11GraphicsDevice.h" />
+    <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsBuffer.h" />
+    <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsDevice.h" />
     <ClInclude Include="Source\Graphics\GraphicsBuffer.h" />
     <ClInclude Include="Source\Graphics\GraphicsBufferCpuAccess.h" />
     <ClInclude Include="Source\Graphics\GraphicsBufferType.h" />

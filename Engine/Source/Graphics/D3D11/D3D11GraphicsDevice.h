@@ -1,8 +1,11 @@
 #pragma once
 
 #include "GraphicsDevice.h"
+
+#include <memory>
 #include <wrl/client.h>
 
+class D3D11GraphicsContext;
 struct ID3D11DepthStencilState;
 struct ID3D11DepthStencilView;
 struct ID3D11Device;
@@ -23,6 +26,7 @@ public:
 
 	ID3D11Device& GetDevice() const override;
 	ID3D11DeviceContext& GetDeviceContext() const override;
+	GraphicsContext& GetGraphicsContext() const override;
 
 	float GetAspectRatio() const override;
 
@@ -38,4 +42,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
+
+	std::unique_ptr<D3D11GraphicsContext> context;
 };

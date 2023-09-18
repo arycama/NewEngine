@@ -2,7 +2,7 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "GraphicsDevice.h"
-#include "D3D11GraphicsDevice.h" // Todo: Get this from System
+#include "Graphics/D3D11/D3D11GraphicsDevice.h" // Todo: Get this from System
 #include "Input.h"
 #include "Int2.h"
 #include "Renderer.h"
@@ -53,7 +53,7 @@ void Engine::Update()
 
 	for (auto camera : cameras)
 	{
-		camera->Render();
+		camera->Render(graphics->GetGraphicsContext());
 
 		for (auto renderer : renderers)
 		{
