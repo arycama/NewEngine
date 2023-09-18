@@ -20,4 +20,6 @@ public:
 	virtual void IASetIndexBuffer(ID3D11Buffer* buffer) = 0;
 	virtual void IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY topology) = 0;
 	virtual void DrawIndexed(int count, int indexStart, int vertexStart) = 0;
+	virtual void UpdateSubresource(ID3D11Resource& resource, int subresource, struct D3D11_BOX* box, void* data, int rowPitch, int depthPitch) = 0;
+	virtual void GenerateMips(ID3D11ShaderResourceView& shaderResourceView) = 0;
 };

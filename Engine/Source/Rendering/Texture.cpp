@@ -1,3 +1,4 @@
+#include "GraphicsContext.h"
 #include "GraphicsDevice.h"
 #include "Texture.h"
 #include "DirectXHelpers.h"
@@ -22,13 +23,13 @@ Texture::Texture(unsigned char* data, int width, int height, GraphicsDevice& gra
 	CheckError(device.CreateTexture2D(&desc, nullptr, texture.GetAddressOf()));
 
 	auto rowPitch = (width * 4) * sizeof(char);
-	auto& context = graphicsDevice.GetDeviceContext();
-	context.UpdateSubresource(texture.Get(), 0, nullptr, data, rowPitch, 0);
+	auto& context = graphicsDevice.GetGraphicsContext();
+	context.UpdateSubresource(*texture.Get(), 0, nullptr, data, rowPitch, 0);
 
 	CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D, desc.Format, 0, -1);
 	CheckError(device.CreateShaderResourceView(texture.Get(), &srvDesc, textureView.GetAddressOf()));
 
-	context.GenerateMips(textureView.Get());
+	context.GenerateMips(*textureView.Get());
 }
 
 ID3D11ShaderResourceView& Texture::GetTexture() const

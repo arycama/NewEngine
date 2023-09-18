@@ -68,3 +68,13 @@ void D3D11GraphicsContext::DrawIndexed(int count, int indexStart, int vertexStar
 {
 	deviceContext.DrawIndexed(count, indexStart, vertexStart);
 }
+
+void D3D11GraphicsContext::UpdateSubresource(ID3D11Resource& resource, int subresource, D3D11_BOX* box, void* data, int rowPitch, int depthPitch)
+{
+	deviceContext.UpdateSubresource(&resource, subresource, box, data, rowPitch, depthPitch);
+}
+
+void D3D11GraphicsContext::GenerateMips(ID3D11ShaderResourceView& shaderResourceView)
+{
+	deviceContext.GenerateMips(&shaderResourceView);
+}

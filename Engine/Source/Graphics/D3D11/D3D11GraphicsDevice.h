@@ -25,7 +25,6 @@ public:
 	void EndScene() const override;
 
 	ID3D11Device& GetDevice() const override;
-	ID3D11DeviceContext& GetDeviceContext() const override;
 	GraphicsContext& GetGraphicsContext() const override;
 
 	float GetAspectRatio() const override;

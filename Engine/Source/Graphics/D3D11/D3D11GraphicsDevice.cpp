@@ -113,11 +113,6 @@ ID3D11Device& D3D11GraphicsDevice::GetDevice() const
 	return *device.Get();
 }
 
-ID3D11DeviceContext& D3D11GraphicsDevice::GetDeviceContext() const
-{
-	return *deviceContext.Get();
-}
-
 GraphicsContext& D3D11GraphicsDevice::GetGraphicsContext() const
 {
 	return *context.get();
