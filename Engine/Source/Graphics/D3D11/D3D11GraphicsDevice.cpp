@@ -4,6 +4,7 @@
 
 #include "D3D11GraphicsDevice.h"
 #include "D3D11GraphicsContext.h"
+#include "TextureFormat.h"
 
 #include <d3d11.h>
 #include <memory>
@@ -121,4 +122,26 @@ GraphicsContext& D3D11GraphicsDevice::GetGraphicsContext() const
 float D3D11GraphicsDevice::GetAspectRatio() const
 {
 	return static_cast<float>(width) / static_cast<float>(height);
+}
+
+void D3D11GraphicsDevice::CreateTexture2D(int width, int height, ID3D11Texture2D** texture)
+{
+	CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 0, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET, D3D11_USAGE_DEFAULT, 0, 1, 0, D3D11_RESOURCE_MISC_GENERATE_MIPS);
+	CheckError(device->CreateTexture2D(&desc, nullptr, texture));
+}
+
+void D3D11GraphicsDevice::CreateShaderResourceView(ID3D11Resource& resource, TextureFormat format, ID3D11ShaderResourceView** result)
+{
+	// Make this a method?
+	DXGI_FORMAT convertedFormat;
+	switch (format)
+	{
+		case TextureFormat::R8G8B8A8Unorm:
+		default:
+			convertedFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+			break;
+	}
+
+	CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D, convertedFormat, 0, -1);
+	CheckError(device->CreateShaderResourceView(&resource, &srvDesc, result));
 }

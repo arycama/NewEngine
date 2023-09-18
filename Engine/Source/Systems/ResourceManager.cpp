@@ -65,7 +65,7 @@ shared_ptr<const Texture> ResourceManager::LoadTexture(const string& path)
 	int width = 0, height = 0;
 	const auto textureData = textureLoader.LoadTexture(path, width, height);
 
-	auto texture = make_shared<Texture>(textureData.get(), width, height, graphicsDevice);
+	auto texture = make_shared<Texture>(textureData.get(), width, height, graphicsDevice, graphicsDevice.GetGraphicsContext());
 	textures.insert_or_assign(path, texture);
 	return texture;
 }

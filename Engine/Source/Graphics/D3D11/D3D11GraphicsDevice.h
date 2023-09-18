@@ -28,6 +28,8 @@ public:
 	GraphicsContext& GetGraphicsContext() const override;
 
 	float GetAspectRatio() const override;
+	void CreateTexture2D(int width, int height, ID3D11Texture2D** texture) override;
+	void CreateShaderResourceView(ID3D11Resource& resource, TextureFormat format, ID3D11ShaderResourceView** result) override;
 
 private:
 	const int width, height;

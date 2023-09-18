@@ -327,5 +327,8 @@
     <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsContext.h">
       <Filter>Source\Graphics\D3D11</Filter>
     </ClInclude>
+    <ClInclude Include="TextureFormat.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
