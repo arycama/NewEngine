@@ -77,7 +77,7 @@
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <AllProjectIncludesArePublic>false</AllProjectIncludesArePublic>
     <SourcePath>$(VC_SourcePath);</SourcePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Types;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Systems;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Rendering;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Graphics;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source\Components;C:\Users\Ben\Documents\Projects\arycama\NewEngine\Engine\Source;$(PublicIncludeDirectories)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)Source\Types;$(ProjectDir)Source\Systems;$(ProjectDir)Source\Rendering;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\Components;$(ProjectDir)Source;$(PublicIncludeDirectories)</IncludePath>
     <PublicIncludeDirectories>
     </PublicIncludeDirectories>
   </PropertyGroup>
