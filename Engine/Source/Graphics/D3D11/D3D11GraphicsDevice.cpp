@@ -109,11 +109,6 @@ void D3D11GraphicsDevice::EndScene() const
 	swapChain->Present(vsync ? 1 : 0, 0);
 }
 
-ID3D11Device& D3D11GraphicsDevice::GetDevice() const
-{
-	return *device.Get();
-}
-
 GraphicsContext& D3D11GraphicsDevice::GetGraphicsContext() const
 {
 	return *context.get();
@@ -144,4 +139,9 @@ void D3D11GraphicsDevice::CreateShaderResourceView(ID3D11Resource& resource, Tex
 
 	CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D, convertedFormat, 0, -1);
 	CheckError(device->CreateShaderResourceView(&resource, &srvDesc, result));
+}
+
+void D3D11GraphicsDevice::CreateVertexShader(const void* shaderBytecode, int size, ID3D11VertexShader** vertexShader)
+{
+	CheckError(device->CreateVertexShader(shaderBytecode, size, nullptr, vertexShader));
 }

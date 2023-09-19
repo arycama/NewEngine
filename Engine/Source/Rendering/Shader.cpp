@@ -31,8 +31,7 @@ Shader::Shader(const string& path, GraphicsDevice& graphicsDevice) : graphicsDev
 	ComPtr<ID3D10Blob> vertexShaderBuffer;
 	CheckError(D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), nullptr));
 
-	auto& device = graphicsDevice.GetDevice();
-	CheckError(device.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
+	graphicsDevice.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), vertexShader.GetAddressOf());
 
 	// TODO: Move to model?
 	// Create the vertex input layout description.
@@ -64,6 +63,7 @@ Shader::Shader(const string& path, GraphicsDevice& graphicsDevice) : graphicsDev
 	polygonLayout[2].InstanceDataStepRate = 0;
 
 	// Create the vertex input layout.
+	ID3D11Device device = graphicsDevice.GetDevice();
 	CheckError(device.CreateInputLayout(polygonLayout, layoutSize, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), layout.GetAddressOf()));
 
 	// Create the pixel shader

@@ -2,7 +2,6 @@
 
 class GraphicsContext;
 enum class TextureFormat;
-struct ID3D11Device;
 
 class GraphicsDevice
 {
@@ -16,8 +15,9 @@ public:
 	virtual void CreateTexture2D(int width, int height, struct ID3D11Texture2D** texture) = 0;
 	virtual void CreateShaderResourceView(struct ID3D11Resource& resource, TextureFormat format, struct ID3D11ShaderResourceView** result) = 0;
 
-	// Todo: abstract
-	virtual ID3D11Device& GetDevice() const = 0;
+	virtual void CreateVertexShader(const void* shaderBytecode, int size, struct ID3D11VertexShader** vertexShader) = 0;
+
+	virtual void CreateInputLayout(const struct D3D11_INPUT_ELEMENT_DESC* inputs, int count);
 
 	// Todo: Move to system
 	virtual GraphicsContext& GetGraphicsContext() const = 0;

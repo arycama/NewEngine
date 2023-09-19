@@ -24,12 +24,13 @@ public:
 	void BeginScene(float red, float green, float blue, float alpha) const override;
 	void EndScene() const override;
 
-	ID3D11Device& GetDevice() const override;
 	GraphicsContext& GetGraphicsContext() const override;
 
 	float GetAspectRatio() const override;
 	void CreateTexture2D(int width, int height, ID3D11Texture2D** texture) override;
 	void CreateShaderResourceView(ID3D11Resource& resource, TextureFormat format, ID3D11ShaderResourceView** result) override;
+
+	void CreateVertexShader(const void* shaderBytecode, int size, struct ID3D11VertexShader** vertexShader) override;
 
 private:
 	const int width, height;
