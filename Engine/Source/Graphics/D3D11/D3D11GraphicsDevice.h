@@ -32,6 +32,14 @@ public:
 
 	void CreateVertexShader(const void* shaderBytecode, int size, struct ID3D11VertexShader** vertexShader) override;
 
+	void CreateInputLayout(const struct D3D11_INPUT_ELEMENT_DESC* inputs, int count, void* shader, int shaderSize, struct ID3D11InputLayout** result) override;
+
+	void CreatePixelShader(const void* bytecode, int size, struct ID3D11PixelShader** result) override;
+
+	void CreateSamplerState(struct CD3D11_SAMPLER_DESC& desc, struct ID3D11SamplerState** result) override;
+
+	void CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA& initialData, struct ID3D11Buffer** result) override;
+
 private:
 	const int width, height;
 	const bool vsync;

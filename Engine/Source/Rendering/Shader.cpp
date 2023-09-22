@@ -63,13 +63,13 @@ Shader::Shader(const string& path, GraphicsDevice& graphicsDevice) : graphicsDev
 	polygonLayout[2].InstanceDataStepRate = 0;
 
 	// Create the vertex input layout.
-	ID3D11Device device = graphicsDevice.GetDevice();
-	CheckError(device.CreateInputLayout(polygonLayout, layoutSize, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), layout.GetAddressOf()));
+	graphicsDevice.CreateInputLayout(polygonLayout, layoutSize, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), layout.GetAddressOf());
 
 	// Create the pixel shader
 	ComPtr<ID3D10Blob> pixelShaderBuffer;
 	CheckError(D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), nullptr));
-	CheckError(device.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
+
+	graphicsDevice.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), pixelShader.GetAddressOf());
 }
 
 void Shader::Render(GraphicsContext& graphicsContext) const

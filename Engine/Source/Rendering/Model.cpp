@@ -114,11 +114,11 @@ Model::Model(const string& path, GraphicsDevice& graphicsDevice) : vertexStride(
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
 	D3D11_SUBRESOURCE_DATA vertexData{ vertices->data(), 0, 0 };
-	CheckError(graphicsDevice.GetDevice().CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
+	graphicsDevice.CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
 
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
 	D3D11_SUBRESOURCE_DATA indexData{ indices->data(), 0, 0 };
-	CheckError(graphicsDevice.GetDevice().CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
+	graphicsDevice.CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf()));
 }
 
 const std::string& Model::GetPath() const

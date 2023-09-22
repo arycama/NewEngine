@@ -145,3 +145,23 @@ void D3D11GraphicsDevice::CreateVertexShader(const void* shaderBytecode, int siz
 {
 	CheckError(device->CreateVertexShader(shaderBytecode, size, nullptr, vertexShader));
 }
+
+void D3D11GraphicsDevice::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* inputs, int count, void* shader, int shaderSize, struct ID3D11InputLayout** result)
+{
+	CheckError(device->CreateInputLayout(inputs, count, shader, shaderSize, result));
+}
+
+void D3D11GraphicsDevice::CreatePixelShader(const void* bytecode, int size, ID3D11PixelShader** result)
+{
+	CheckError(device->CreatePixelShader(bytecode, size, nullptr, result));
+}
+
+void D3D11GraphicsDevice::CreateSamplerState(CD3D11_SAMPLER_DESC& desc, ID3D11SamplerState** result)
+{
+	CheckError(device->CreateSamplerState(&desc, result));
+}
+
+void D3D11GraphicsDevice::CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA& initialData, struct ID3D11Buffer** result)
+{
+	CheckError(device->CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
+}
