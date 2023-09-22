@@ -25,15 +25,15 @@ struct PerCameraData
 	XMMATRIX projection;
 };
 
-Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity) : transform(&transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphicsDevice(graphicsDevice), engine(engine), entity(entity)
+Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity) : transform(&transform), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane), fieldOfView(fieldOfView), graphicsDevice(graphicsDevice), engine(engine), entity(entity)
 { 
 	engine.AddCamera(*this);
 	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	CheckError(graphicsDevice.GetDevice().CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
+	graphicsDevice.CreateBuffer(cameraDataDesc, nullptr, cameraData.GetAddressOf());
 	SetDebugObjectName(cameraData.Get(), "Camera Data");
 }
 
-Camera::Camera(std::istream& stream, const GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity) : graphicsDevice(graphicsDevice), engine(engine), entity(entity)
+Camera::Camera(std::istream& stream, GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity) : graphicsDevice(graphicsDevice), engine(engine), entity(entity)
 {
 	int transformIndex;
 	stream >> transformIndex;
@@ -45,7 +45,7 @@ Camera::Camera(std::istream& stream, const GraphicsDevice& graphicsDevice, Engin
 
 	engine.AddCamera(*this);
 	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	CheckError(graphicsDevice.GetDevice().CreateBuffer(&cameraDataDesc, nullptr, &cameraData));
+	graphicsDevice.CreateBuffer(cameraDataDesc, nullptr, cameraData.GetAddressOf());
 	SetDebugObjectName(cameraData.Get(), "Camera Data");
 }
 

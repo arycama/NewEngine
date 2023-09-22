@@ -19,8 +19,8 @@ namespace DirectX
 class Camera : public Component
 {
 public:
-	Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, const GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity);
-	Camera(std::istream& stream, const GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity);
+	Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const Transform& transform, GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity);
+	Camera(std::istream& stream, GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity);
 	~Camera();
 
 	void Serialize(std::ostream& stream) const override;

@@ -161,7 +161,7 @@ void D3D11GraphicsDevice::CreateSamplerState(CD3D11_SAMPLER_DESC& desc, ID3D11Sa
 	CheckError(device->CreateSamplerState(&desc, result));
 }
 
-void D3D11GraphicsDevice::CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA& initialData, struct ID3D11Buffer** result)
+void D3D11GraphicsDevice::CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData, struct ID3D11Buffer** result)
 {
-	CheckError(device->CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf()));
+	CheckError(device->CreateBuffer(&desc, initialData, result));
 }

@@ -29,7 +29,7 @@ Renderer::Renderer(shared_ptr<const Model> model, std::shared_ptr<const Material
 	engine.AddRenderer(*this);
 
 	CD3D11_BUFFER_DESC drawDataDesc(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	CheckError(graphicsDevice.GetDevice().CreateBuffer(&drawDataDesc, nullptr, &drawData));
+	graphicsDevice.CreateBuffer(drawDataDesc, nullptr, &drawData);
 	SetDebugObjectName(drawData.Get(), "Draw Data");
 }
 
@@ -50,7 +50,7 @@ Renderer::Renderer(istream& stream, ResourceManager& resourceManager, Engine& en
 	engine.AddRenderer(*this);
 
 	CD3D11_BUFFER_DESC drawDataDesc(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	CheckError(graphicsDevice.GetDevice().CreateBuffer(&drawDataDesc, nullptr, &drawData));
+	graphicsDevice.CreateBuffer(drawDataDesc, nullptr, &drawData);
 	SetDebugObjectName(drawData.Get(), "Draw Data");
 }
 
