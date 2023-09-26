@@ -38,7 +38,7 @@ public:
 
 	void CreateSamplerState(struct CD3D11_SAMPLER_DESC& desc, struct ID3D11SamplerState** result) override;
 
-	void CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData, struct ID3D11Buffer** result) override;
+	std::unique_ptr<GraphicsBuffer> CreateBuffer(int size, GraphicsBufferCpuAccess access, GraphicsBufferType type, GraphicsBufferUsage usage) override;
 
 private:
 	const int width, height;
