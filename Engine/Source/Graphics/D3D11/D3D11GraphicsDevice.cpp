@@ -2,7 +2,6 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-#include "D3D11GraphicsBuffer.h"
 #include "D3D11GraphicsDevice.h"
 #include "D3D11GraphicsContext.h"
 #include "TextureFormat.h"
@@ -162,7 +161,7 @@ void D3D11GraphicsDevice::CreateSamplerState(CD3D11_SAMPLER_DESC& desc, ID3D11Sa
 	CheckError(device->CreateSamplerState(&desc, result));
 }
 
-unique_ptr<GraphicsBuffer> D3D11GraphicsDevice::CreateBuffer(int size, GraphicsBufferCpuAccess access, GraphicsBufferType type, GraphicsBufferUsage usage)
+void D3D11GraphicsDevice::CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData, struct ID3D11Buffer** result)
 {
-	return make_unique<D3D11GraphicsBuffer>(&device, size, static_cast<D3D11_BIND_FLAG>(type), static_cast<D3D11_USAGE>(usage), static_cast<D3D11_CPU_ACCESS_FLAG>(access));
+	CheckError(device->CreateBuffer(&desc, initialData, result));
 }
