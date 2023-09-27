@@ -161,7 +161,25 @@ void D3D11GraphicsDevice::CreateSamplerState(CD3D11_SAMPLER_DESC& desc, ID3D11Sa
 	CheckError(device->CreateSamplerState(&desc, result));
 }
 
-void D3D11GraphicsDevice::CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData, struct ID3D11Buffer** result)
+int D3D11GraphicsDevice::CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData)
 {
-	CheckError(device->CreateBuffer(&desc, initialData, result));
+	ID3D11Buffer* buffer;
+	CheckError(device->CreateBuffer(&desc, initialData, &buffer));
+
+	// Find an index
+	if (context->availableIndices.empty())
+	{
+		// No more indices, add new one and return it's value
+		auto index = context->buffers.size();
+		context->buffers.push_back(buffer);
+		return index;
+	}
+	else
+	{
+		// Get the next available index and insert
+		auto index = context->availableIndices.front();
+		context->availableIndices.pop();
+		context->buffers[index] = buffer;
+		return index;
+	}
 }

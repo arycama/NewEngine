@@ -2,6 +2,9 @@
 
 #include "GraphicsContext.h"
 
+#include <queue>
+#include <vector>
+
 struct ID3D11DeviceContext;
 
 class D3D11GraphicsContext : public GraphicsContext
@@ -24,6 +27,9 @@ public:
 	void DrawIndexed(int count, int indexStart, int vertexStart) override;
 	void UpdateSubresource(ID3D11Resource& resource, int subresource, struct D3D11_BOX* box, void* data, int rowPitch, int depthPitch) override;
 	void GenerateMips(ID3D11ShaderResourceView& shaderResourceView) override;
+
+	std::vector<ID3D11Buffer*> buffers;
+	std::queue<int> availableIndices;
 
 private:
 	ID3D11DeviceContext& deviceContext;
