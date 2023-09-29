@@ -4,6 +4,7 @@
 
 #include "D3D11GraphicsDevice.h"
 #include "D3D11GraphicsContext.h"
+#include "Handle.h"
 #include "TextureFormat.h"
 
 #include <d3d11.h>
@@ -161,7 +162,7 @@ void D3D11GraphicsDevice::CreateSamplerState(CD3D11_SAMPLER_DESC& desc, ID3D11Sa
 	CheckError(device->CreateSamplerState(&desc, result));
 }
 
-int D3D11GraphicsDevice::CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData)
+Handle D3D11GraphicsDevice::CreateBuffer(const CD3D11_BUFFER_DESC& desc, const D3D11_SUBRESOURCE_DATA* initialData)
 {
 	ID3D11Buffer* buffer;
 	CheckError(device->CreateBuffer(&desc, initialData, &buffer));
@@ -171,15 +172,24 @@ int D3D11GraphicsDevice::CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, con
 	{
 		// No more indices, add new one and return it's value
 		auto index = context->buffers.size();
-		context->buffers.push_back(buffer);
-		return index;
+		context->buffers.push_back(make_pair(buffer, 0));
+		return Handle(index, 0);
 	}
 	else
 	{
 		// Get the next available index and insert
-		auto index = context->availableIndices.front();
+		auto& index = context->availableIndices.front();
 		context->availableIndices.pop();
-		context->buffers[index] = buffer;
-		return index;
+
+		context->buffers[index.first] = make_pair(buffer, index.second);
+
+		return Handle(index.first, index.second);
 	}
+}
+
+void D3D11GraphicsDevice::ReleaseBuffer(const Handle& handle)
+{
+	auto& data = context->buffers.at(handle.GetIndex());
+	data.first->Release();
+	context->availableIndices.push(make_pair(handle.GetIndex() + 1, handle.GetVersion()));
 }

@@ -29,8 +29,8 @@ Renderer::Renderer(shared_ptr<const Model> model, std::shared_ptr<const Material
 	engine.AddRenderer(*this);
 
 	CD3D11_BUFFER_DESC drawDataDesc(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	graphicsDevice.CreateBuffer(drawDataDesc, nullptr, &drawData);
-	SetDebugObjectName(drawData.Get(), "Draw Data");
+	drawData = graphicsDevice.CreateBuffer(drawDataDesc, nullptr);
+	//SetDebugObjectName(drawData.Get(), "Draw Data");
 }
 
 Renderer::Renderer(istream& stream, ResourceManager& resourceManager, Engine& engine, GraphicsDevice& graphicsDevice, const Entity& entity) : engine(engine), graphicsDevice(graphicsDevice), entity(entity)
@@ -50,8 +50,8 @@ Renderer::Renderer(istream& stream, ResourceManager& resourceManager, Engine& en
 	engine.AddRenderer(*this);
 
 	CD3D11_BUFFER_DESC drawDataDesc(sizeof(PerDrawData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	graphicsDevice.CreateBuffer(drawDataDesc, nullptr, &drawData);
-	SetDebugObjectName(drawData.Get(), "Draw Data");
+	drawData = graphicsDevice.CreateBuffer(drawDataDesc, nullptr);
+	//SetDebugObjectName(drawData.Get(), "Draw Data");
 }
 
 Renderer::~Renderer()
@@ -70,14 +70,14 @@ void Renderer::Serialize(ostream& stream) const
 void Renderer::Render(GraphicsContext& graphicsContext) const
 {
 	D3D11_MAPPED_SUBRESOURCE perDrawDataMappedResource;
-	graphicsContext.BeginWrite(drawData.Get(), &perDrawDataMappedResource);
+	graphicsContext.BeginWrite(drawData, &perDrawDataMappedResource);
 
 	auto drawDataPtr = static_cast<PerDrawData*>(perDrawDataMappedResource.pData);
 	drawDataPtr->model = transform->GetWorldMatrix();
 
-	graphicsContext.EndWrite(drawData.Get());
+	graphicsContext.EndWrite(drawData);
 
 	material->Render(graphicsContext);
-	graphicsContext.VSSetConstantBuffers(1, 1, drawData.GetAddressOf());
+	graphicsContext.VSSetConstantBuffers(1, 1, drawData);
 	model->Render(graphicsContext);
 }

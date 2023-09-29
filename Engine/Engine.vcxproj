@@ -277,6 +277,7 @@
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsBuffer.cpp" />
     <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsDevice.cpp" />
+    <ClCompile Include="Source\Handle.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Rendering\Material.cpp" />
     <ClCompile Include="Source\Rendering\Model.cpp" />

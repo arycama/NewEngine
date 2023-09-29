@@ -1,11 +1,11 @@
 #pragma once
 
+#include "Handle.h"
 #include <string>
 #include <wrl/client.h>
 
 class GraphicsContext;
 class GraphicsDevice;
-struct ID3D11Buffer;
 
 class Model
 {
@@ -19,5 +19,5 @@ private:
 	const std::string path;
 	int vertexCount, vertexStride, indexCount;
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer, indexBuffer;
+	Handle vertexBuffer, indexBuffer;
 };

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Component.h"
+#include "Handle.h"
+
 #include <fstream>
 #include <string>
 #include <wrl/client.h>
@@ -36,5 +38,5 @@ private:
 	std::shared_ptr<const Material> material;
 
 	Engine& engine;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> drawData;
+	Handle drawData;
 };

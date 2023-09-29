@@ -1,4 +1,5 @@
 #include "D3D11GraphicsContext.h"
+#include "Handle.h"
 
 #include <d3d11.h>
 #include <comdef.h>
@@ -7,19 +8,29 @@ using namespace _com_util;
 
 D3D11GraphicsContext::D3D11GraphicsContext(ID3D11DeviceContext& deviceContext) : deviceContext(deviceContext) { }
 
-void D3D11GraphicsContext::BeginWrite(ID3D11Resource* resource, D3D11_MAPPED_SUBRESOURCE* mappedResource)
+D3D11GraphicsContext::~D3D11GraphicsContext()
 {
-	CheckError(deviceContext.Map(resource, 0, D3D11_MAP_WRITE_DISCARD, 0, mappedResource));
+	for (auto& buffer : buffers)
+		buffer.first->Release();
+
 }
 
-void D3D11GraphicsContext::EndWrite(ID3D11Resource* resource)
+void D3D11GraphicsContext::BeginWrite(const Handle& handle, D3D11_MAPPED_SUBRESOURCE* mappedResource)
 {
-	deviceContext.Unmap(resource, 0);
+	auto& buffer = buffers.at(handle.GetIndex());
+	CheckError(deviceContext.Map(buffer.first, 0, D3D11_MAP_WRITE_DISCARD, 0, mappedResource));
 }
 
-void D3D11GraphicsContext::VSSetConstantBuffers(int start, int count, ID3D11Buffer* const* constantBuffers)
+void D3D11GraphicsContext::EndWrite(const Handle& handle)
 {
-	deviceContext.VSSetConstantBuffers(start, count, constantBuffers);
+	auto& buffer = buffers.at(handle.GetIndex()).first;
+	deviceContext.Unmap(buffer, 0);
+}
+
+void D3D11GraphicsContext::VSSetConstantBuffers(int start, int count, const Handle& handle)
+{
+	auto& buffer = buffers.at(handle.GetIndex()).first;
+	deviceContext.VSSetConstantBuffers(start, count, &buffer);
 }
 
 void D3D11GraphicsContext::PSSetShaderResources(int start, int count, ID3D11ShaderResourceView* const* ppShaderResourceViews)
@@ -47,16 +58,17 @@ void D3D11GraphicsContext::PSSetShader(ID3D11PixelShader& shader)
 	deviceContext.PSSetShader(&shader, nullptr, 0);
 }
 
-void D3D11GraphicsContext::IASetVertexBuffers(int start, int count, ID3D11Buffer* const* vertexBuffer, int stride, int offset)
+void D3D11GraphicsContext::IASetVertexBuffers(int start, int count, const Handle& handle, int stride, int offset)
 {
 	auto stride1 = static_cast<UINT>(stride);
 	auto offset1 = static_cast<UINT>(offset);
-	deviceContext.IASetVertexBuffers(start, count, vertexBuffer, &stride1, &offset1);
+	auto& buffer = buffers.at(handle.GetIndex());
+	deviceContext.IASetVertexBuffers(start, count, &buffer.first, &stride1, &offset1);
 }
 
-void D3D11GraphicsContext::IASetIndexBuffer(ID3D11Buffer* buffer)
+void D3D11GraphicsContext::IASetIndexBuffer(const Handle& handle)
 {
-	deviceContext.IASetIndexBuffer(buffer, DXGI_FORMAT_R32_UINT, 0);
+	deviceContext.IASetIndexBuffer(buffers.at(handle.GetIndex()).first, DXGI_FORMAT_R32_UINT, 0);
 }
 
 void D3D11GraphicsContext::IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY topology)

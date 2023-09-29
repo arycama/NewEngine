@@ -6,6 +6,7 @@
 #include <wrl/client.h>
 
 class D3D11GraphicsContext;
+class Handle;
 struct ID3D11DepthStencilState;
 struct ID3D11DepthStencilView;
 struct ID3D11Device;
@@ -38,7 +39,9 @@ public:
 
 	void CreateSamplerState(struct CD3D11_SAMPLER_DESC& desc, struct ID3D11SamplerState** result) override;
 
-	void CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData, struct ID3D11Buffer** result) override;
+	Handle CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData) override;
+
+	void ReleaseBuffer(const Handle& handle) override;
 
 private:
 	const int width, height;

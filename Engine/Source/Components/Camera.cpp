@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "GraphicsContext.h"
 #include "GraphicsDevice.h"
+#include "Handle.h"
 #include "Transform.h"
 
 #include <d3d11.h>
@@ -29,8 +30,8 @@ Camera::Camera(float nearClipPlane, float farClipPlane, float fieldOfView, const
 { 
 	engine.AddCamera(*this);
 	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	graphicsDevice.CreateBuffer(cameraDataDesc, nullptr, cameraData.GetAddressOf());
-	SetDebugObjectName(cameraData.Get(), "Camera Data");
+	cameraData = graphicsDevice.CreateBuffer(cameraDataDesc, nullptr);
+	//SetDebugObjectName(cameraData.Get(), "Camera Data");
 }
 
 Camera::Camera(std::istream& stream, GraphicsDevice& graphicsDevice, Engine& engine, Entity& entity) : graphicsDevice(graphicsDevice), engine(engine), entity(entity)
@@ -45,8 +46,8 @@ Camera::Camera(std::istream& stream, GraphicsDevice& graphicsDevice, Engine& eng
 
 	engine.AddCamera(*this);
 	CD3D11_BUFFER_DESC cameraDataDesc(sizeof(PerCameraData), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-	graphicsDevice.CreateBuffer(cameraDataDesc, nullptr, cameraData.GetAddressOf());
-	SetDebugObjectName(cameraData.Get(), "Camera Data");
+	cameraData = graphicsDevice.CreateBuffer(cameraDataDesc, nullptr);
+	//SetDebugObjectName(cameraData.Get(), "Camera Data");
 }
 
 Camera::~Camera()
@@ -96,7 +97,7 @@ XMMATRIX Camera::GetProjectionMatrix() const
 void Camera::Render(GraphicsContext& graphicsContext) const
 {
 	D3D11_MAPPED_SUBRESOURCE perCameraDataMappedResource;
-	graphicsContext.BeginWrite(cameraData.Get(), &perCameraDataMappedResource);
+	graphicsContext.BeginWrite(cameraData, &perCameraDataMappedResource);
 
 	auto perCameraDataPtr = static_cast<PerCameraData*>(perCameraDataMappedResource.pData);
 
@@ -104,6 +105,6 @@ void Camera::Render(GraphicsContext& graphicsContext) const
 	perCameraDataPtr->view = GetViewMatrix();
 	perCameraDataPtr->projection = GetProjectionMatrix();
 
-	graphicsContext.EndWrite(cameraData.Get());
-	graphicsContext.VSSetConstantBuffers(0, 1, cameraData.GetAddressOf());
+	graphicsContext.EndWrite(cameraData);
+	graphicsContext.VSSetConstantBuffers(0, 1, cameraData);
 }

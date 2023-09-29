@@ -1,6 +1,7 @@
 #pragma once
 
 class GraphicsContext;
+class Handle;
 enum class TextureFormat;
 
 class GraphicsDevice
@@ -23,7 +24,9 @@ public:
 
 	virtual void CreateSamplerState(struct CD3D11_SAMPLER_DESC& desc, struct ID3D11SamplerState** result) = 0;
 
-	virtual void CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData, struct ID3D11Buffer** result) = 0;
+	virtual Handle CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData) = 0;
+
+	virtual void ReleaseBuffer(const Handle& handle) = 0;
 
 	// Todo: Move to system
 	virtual GraphicsContext& GetGraphicsContext() const = 0;

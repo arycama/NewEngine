@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Component.h"
+#include "Handle.h"
+
 #include <string>
 #include <wrl/client.h>
 
@@ -35,7 +37,7 @@ private:
 	Engine& engine;
 	Entity& entity;
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer> cameraData;
+	Handle cameraData;
 
 	DirectX::XMMATRIX GetViewMatrix() const;
 	DirectX::XMMATRIX GetProjectionMatrix() const;

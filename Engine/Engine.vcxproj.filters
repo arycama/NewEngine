@@ -223,6 +223,9 @@
     <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsContext.cpp">
       <Filter>Source\Graphics\D3D11</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Handle.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Components\Behaviour.h">

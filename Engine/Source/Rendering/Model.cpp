@@ -114,11 +114,11 @@ Model::Model(const string& path, GraphicsDevice& graphicsDevice) : vertexStride(
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(VertexType) * vertexCount, D3D11_BIND_VERTEX_BUFFER);
 	D3D11_SUBRESOURCE_DATA vertexData{ vertices->data(), 0, 0 };
-	graphicsDevice.CreateBuffer(vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf());
+	vertexBuffer = graphicsDevice.CreateBuffer(vertexBufferDesc, &vertexData);
 
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned int) * indexCount, D3D11_BIND_INDEX_BUFFER);;
 	D3D11_SUBRESOURCE_DATA indexData{ indices->data(), 0, 0 };
-	graphicsDevice.CreateBuffer(indexBufferDesc, &indexData, indexBuffer.GetAddressOf());
+	indexBuffer = graphicsDevice.CreateBuffer(indexBufferDesc, &indexData);
 }
 
 const std::string& Model::GetPath() const
@@ -128,8 +128,8 @@ const std::string& Model::GetPath() const
 
 void Model::Render(GraphicsContext& graphicsContext) const
 {
-	graphicsContext.IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), vertexStride, 0);
-	graphicsContext.IASetIndexBuffer(indexBuffer.Get());
+	graphicsContext.IASetVertexBuffers(0, 1, vertexBuffer, vertexStride, 0);
+	graphicsContext.IASetIndexBuffer(indexBuffer);
 	graphicsContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphicsContext.DrawIndexed(indexCount, 0, 0);
 }
