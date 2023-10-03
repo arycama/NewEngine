@@ -97,7 +97,7 @@ D3D11GraphicsDevice::~D3D11GraphicsDevice()
 	swapChain->SetFullscreenState(false, nullptr);
 }
 
-void D3D11GraphicsDevice::BeginScene(float red, float green, float blue, float alpha) const
+void D3D11GraphicsDevice::ClearRenderTarget(float red, float green, float blue, float alpha) const
 {
 	const float color[4]{ red, green, blue, alpha };
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
@@ -181,6 +181,8 @@ Handle D3D11GraphicsDevice::CreateBuffer(const CD3D11_BUFFER_DESC& desc, const D
 		auto& index = context->availableIndices.front();
 		context->availableIndices.pop();
 
+		// Increment the version
+		index.second++;
 		context->buffers[index.first] = make_pair(buffer, index.second);
 
 		return Handle(index.first, index.second);
@@ -191,5 +193,5 @@ void D3D11GraphicsDevice::ReleaseBuffer(const Handle& handle)
 {
 	auto& data = context->buffers.at(handle.GetIndex());
 	data.first->Release();
-	context->availableIndices.push(make_pair(handle.GetIndex() + 1, handle.GetVersion()));
+	context->availableIndices.push(make_pair(handle.GetIndex(), handle.GetVersion()));
 }

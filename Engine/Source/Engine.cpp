@@ -49,7 +49,7 @@ void Engine::Update()
 	input->Reset();
 
 	// Clear the buffers to begin the scene.
-	graphics->BeginScene(0.0f, 0.5f, 1.0f, 1.0f);
+	graphics->ClearRenderTarget(0.0f, 0.5f, 1.0f, 1.0f);
 
 	for (auto camera : cameras)
 	{

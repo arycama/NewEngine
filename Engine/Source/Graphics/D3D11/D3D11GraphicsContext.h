@@ -6,6 +6,7 @@
 #include <vector>
 
 class Handle;
+struct ID3D11Buffer;
 struct ID3D11DeviceContext;
 
 class D3D11GraphicsContext : public GraphicsContext
@@ -30,7 +31,7 @@ public:
 	void UpdateSubresource(ID3D11Resource& resource, int subresource, struct D3D11_BOX* box, void* data, int rowPitch, int depthPitch) override;
 	void GenerateMips(ID3D11ShaderResourceView& shaderResourceView) override;
 
-	std::vector<std::pair<struct ID3D11Buffer*, int>> buffers;
+	std::vector<std::pair<ID3D11Buffer*, int>> buffers;
 	std::queue<std::pair<int, int>> availableIndices;
 
 private:

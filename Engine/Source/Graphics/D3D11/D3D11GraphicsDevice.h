@@ -22,7 +22,7 @@ public:
 	D3D11GraphicsDevice(int width, int height, bool vsync, HWND hwnd, bool fullscreen);
 	~D3D11GraphicsDevice();
 
-	void BeginScene(float red, float green, float blue, float alpha) const override;
+	void ClearRenderTarget(float red, float green, float blue, float alpha) const override;
 	void EndScene() const override;
 
 	GraphicsContext& GetGraphicsContext() const override;
