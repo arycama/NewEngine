@@ -28,16 +28,16 @@ public:
 	GraphicsContext& GetGraphicsContext() const override;
 
 	float GetAspectRatio() const override;
-	void CreateTexture2D(int width, int height, ID3D11Texture2D** texture) override;
-	void CreateShaderResourceView(ID3D11Resource& resource, TextureFormat format, ID3D11ShaderResourceView** result) override;
+	Handle CreateTexture2D(int width, int height) override;
+	Handle CreateShaderResourceView(const Handle& resource, TextureFormat format) override;
 
-	void CreateVertexShader(const void* shaderBytecode, int size, struct ID3D11VertexShader** vertexShader) override;
+	Handle CreateVertexShader(const void* shaderBytecode, int size) override;
 
-	void CreateInputLayout(const struct D3D11_INPUT_ELEMENT_DESC* inputs, int count, void* shader, int shaderSize, struct ID3D11InputLayout** result) override;
+	Handle CreateInputLayout(const struct D3D11_INPUT_ELEMENT_DESC* inputs, int count, void* shader, int shaderSize) override;
 
-	void CreatePixelShader(const void* bytecode, int size, struct ID3D11PixelShader** result) override;
+	Handle CreatePixelShader(const void* bytecode, int size) override;
 
-	void CreateSamplerState(struct CD3D11_SAMPLER_DESC& desc, struct ID3D11SamplerState** result) override;
+	Handle CreateSamplerState(struct CD3D11_SAMPLER_DESC& desc) override;
 
 	Handle CreateBuffer(const struct CD3D11_BUFFER_DESC& desc, const struct D3D11_SUBRESOURCE_DATA* initialData) override;
 

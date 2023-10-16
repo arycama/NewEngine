@@ -226,6 +226,9 @@
     <ClCompile Include="Source\Handle.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\HandlePool.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Components\Behaviour.h">
@@ -335,6 +338,9 @@
     </ClInclude>
     <ClInclude Include="Source\Handle.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\HandlePool.h">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

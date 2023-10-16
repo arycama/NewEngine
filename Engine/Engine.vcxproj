@@ -266,6 +266,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\HandlePool.cpp" />
     <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsContext.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Components\Behaviour.cpp" />
@@ -296,6 +297,7 @@
     <ClCompile Include="Source\Types\Int2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Graphics\HandlePool.h" />
     <ClInclude Include="Source\Handle.h" />
     <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsContext.h" />
     <ClInclude Include="framework.h" />

@@ -1,5 +1,6 @@
 #include "GraphicsContext.h"
 #include "GraphicsDevice.h"
+#include "Handle.h"
 #include "Shader.h"
 
 #include <d3d11.h>
@@ -31,7 +32,7 @@ Shader::Shader(const string& path, GraphicsDevice& graphicsDevice) : graphicsDev
 	ComPtr<ID3D10Blob> vertexShaderBuffer;
 	CheckError(D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "Vertex", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), nullptr));
 
-	graphicsDevice.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), vertexShader.GetAddressOf());
+	vertexShader = graphicsDevice.CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize());
 
 	// TODO: Move to model?
 	// Create the vertex input layout description.
@@ -63,18 +64,18 @@ Shader::Shader(const string& path, GraphicsDevice& graphicsDevice) : graphicsDev
 	polygonLayout[2].InstanceDataStepRate = 0;
 
 	// Create the vertex input layout.
-	graphicsDevice.CreateInputLayout(polygonLayout, layoutSize, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), layout.GetAddressOf());
+	layout = graphicsDevice.CreateInputLayout(polygonLayout, layoutSize, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize());
 
 	// Create the pixel shader
 	ComPtr<ID3D10Blob> pixelShaderBuffer;
 	CheckError(D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "Pixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), nullptr));
 
-	graphicsDevice.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), pixelShader.GetAddressOf());
+	pixelShader = graphicsDevice.CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize());
 }
 
 void Shader::Render(GraphicsContext& graphicsContext) const
 {
-	graphicsContext.IASetInputLayout(*layout.Get());
-	graphicsContext.VSSetShader(*vertexShader.Get());
-	graphicsContext.PSSetShader(*pixelShader.Get());
+	graphicsContext.IASetInputLayout(layout);
+	graphicsContext.VSSetShader(vertexShader);
+	graphicsContext.PSSetShader(pixelShader);
 }

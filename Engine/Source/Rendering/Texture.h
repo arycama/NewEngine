@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Handle.h"
+
 #include <d3d11.h>
 #include <string>
 #include <wrl/client.h>
@@ -12,9 +14,9 @@ class Texture
 public:
 	Texture(unsigned char* data, int width, int height, GraphicsDevice& graphicsDevice, GraphicsContext& graphicsContext);
 
-	ID3D11ShaderResourceView& GetTexture() const;
+	const Handle GetShaderResourceView() const;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureView;
+	Handle texture;
+	Handle textureView;
 };

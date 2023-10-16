@@ -18,7 +18,7 @@ public:
 private:
 	GraphicsDevice& graphicsDevice;
 
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> layout;
+	Handle vertexShader;
+	Handle pixelShader;
+	Handle layout;
 };

@@ -120,13 +120,15 @@ float D3D11GraphicsDevice::GetAspectRatio() const
 	return static_cast<float>(width) / static_cast<float>(height);
 }
 
-void D3D11GraphicsDevice::CreateTexture2D(int width, int height, ID3D11Texture2D** texture)
+Handle D3D11GraphicsDevice::CreateTexture2D(int width, int height)
 {
 	CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 0, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET, D3D11_USAGE_DEFAULT, 0, 1, 0, D3D11_RESOURCE_MISC_GENERATE_MIPS);
-	CheckError(device->CreateTexture2D(&desc, nullptr, texture));
+	ID3D11Texture2D* texture;
+	CheckError(device->CreateTexture2D(&desc, nullptr, &texture));
+	return context->textures.CreateHandle(*texture);
 }
 
-void D3D11GraphicsDevice::CreateShaderResourceView(ID3D11Resource& resource, TextureFormat format, ID3D11ShaderResourceView** result)
+Handle D3D11GraphicsDevice::CreateShaderResourceView(const Handle& handle, TextureFormat format)
 {
 	// Make this a method?
 	DXGI_FORMAT convertedFormat;
@@ -139,59 +141,48 @@ void D3D11GraphicsDevice::CreateShaderResourceView(ID3D11Resource& resource, Tex
 	}
 
 	CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D, convertedFormat, 0, -1);
-	CheckError(device->CreateShaderResourceView(&resource, &srvDesc, result));
+	ID3D11ShaderResourceView* shaderResourceView;
+	auto& texture = context->textures.GetResource(handle);
+	CheckError(device->CreateShaderResourceView(&texture, &srvDesc, &shaderResourceView));
+	return context->shaderResourceViews.CreateHandle(*shaderResourceView);
 }
 
-void D3D11GraphicsDevice::CreateVertexShader(const void* shaderBytecode, int size, ID3D11VertexShader** vertexShader)
+Handle D3D11GraphicsDevice::CreateVertexShader(const void* shaderBytecode, int size)
 {
-	CheckError(device->CreateVertexShader(shaderBytecode, size, nullptr, vertexShader));
+	ID3D11VertexShader* resource;
+	CheckError(device->CreateVertexShader(shaderBytecode, size, nullptr, &resource));
+	return context->vertexShaders.CreateHandle(*resource);
 }
 
-void D3D11GraphicsDevice::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* inputs, int count, void* shader, int shaderSize, struct ID3D11InputLayout** result)
+Handle D3D11GraphicsDevice::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* inputs, int count, void* shader, int shaderSize)
 {
-	CheckError(device->CreateInputLayout(inputs, count, shader, shaderSize, result));
+	ID3D11InputLayout* resource;
+	CheckError(device->CreateInputLayout(inputs, count, shader, shaderSize, &resource));
+	return context->inputLayouts.CreateHandle(*resource);
 }
 
-void D3D11GraphicsDevice::CreatePixelShader(const void* bytecode, int size, ID3D11PixelShader** result)
+Handle D3D11GraphicsDevice::CreatePixelShader(const void* bytecode, int size)
 {
-	CheckError(device->CreatePixelShader(bytecode, size, nullptr, result));
+	ID3D11PixelShader* result;
+	CheckError(device->CreatePixelShader(bytecode, size, nullptr, &result));
+	return context->pixelShaders.CreateHandle(*result);
 }
 
-void D3D11GraphicsDevice::CreateSamplerState(CD3D11_SAMPLER_DESC& desc, ID3D11SamplerState** result)
+Handle D3D11GraphicsDevice::CreateSamplerState(CD3D11_SAMPLER_DESC& desc)
 {
-	CheckError(device->CreateSamplerState(&desc, result));
+	ID3D11SamplerState* result;
+	CheckError(device->CreateSamplerState(&desc, &result));
+	return context->samplerStates.CreateHandle(*result);
 }
 
 Handle D3D11GraphicsDevice::CreateBuffer(const CD3D11_BUFFER_DESC& desc, const D3D11_SUBRESOURCE_DATA* initialData)
 {
 	ID3D11Buffer* buffer;
 	CheckError(device->CreateBuffer(&desc, initialData, &buffer));
-
-	// Find an index
-	if (context->availableIndices.empty())
-	{
-		// No more indices, add new one and return it's value
-		auto index = context->buffers.size();
-		context->buffers.push_back(make_pair(buffer, 0));
-		return Handle(index, 0);
-	}
-	else
-	{
-		// Get the next available index and insert
-		auto& index = context->availableIndices.front();
-		context->availableIndices.pop();
-
-		// Increment the version
-		index.second++;
-		context->buffers[index.first] = make_pair(buffer, index.second);
-
-		return Handle(index.first, index.second);
-	}
+	return context->buffers.CreateHandle(*buffer);
 }
 
 void D3D11GraphicsDevice::ReleaseBuffer(const Handle& handle)
 {
-	auto& data = context->buffers.at(handle.GetIndex());
-	data.first->Release();
-	context->availableIndices.push(make_pair(handle.GetIndex(), handle.GetVersion()));
+	context->buffers.ReleaseHandle(handle);
 }

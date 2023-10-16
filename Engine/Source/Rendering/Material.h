@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Handle.h"
+
 #include <memory>
 #include <string>
 #include <wrl/client.h>
@@ -26,5 +28,5 @@ private:
 	const std::shared_ptr<const Shader> shader;
 	const std::shared_ptr<const Texture> texture; // Todo this should probably be a vector
 
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
+	Handle samplerState;
 };

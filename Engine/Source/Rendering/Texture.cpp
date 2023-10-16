@@ -5,14 +5,14 @@
 
 Texture::Texture(unsigned char* data, int width, int height, GraphicsDevice& graphicsDevice, GraphicsContext& graphicsContext)
 {
-	graphicsDevice.CreateTexture2D(width, height, texture.GetAddressOf());
-	graphicsDevice.CreateShaderResourceView(*texture.Get(), TextureFormat::R8G8B8A8Unorm, textureView.GetAddressOf());
+	texture = graphicsDevice.CreateTexture2D(width, height);
+	textureView = graphicsDevice.CreateShaderResourceView(texture, TextureFormat::R8G8B8A8Unorm);
 
-	graphicsContext.UpdateSubresource(*texture.Get(), 0, nullptr, data, width * 4, 0);
-	graphicsContext.GenerateMips(*textureView.Get());
+	graphicsContext.UpdateTextureSubresource(texture, 0, nullptr, data, width * 4, 0);
+	graphicsContext.GenerateMips(textureView);
 }
 
-ID3D11ShaderResourceView& Texture::GetTexture() const
+const Handle Texture::GetShaderResourceView() const
 {
-	return *textureView.Get();
+	return textureView;
 }
