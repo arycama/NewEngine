@@ -266,7 +266,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Graphics\HandlePool.cpp" />
     <ClCompile Include="Source\Graphics\D3D11\D3D11GraphicsContext.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Components\Behaviour.cpp" />

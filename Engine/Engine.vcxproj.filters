@@ -226,9 +226,6 @@
     <ClCompile Include="Source\Handle.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\HandlePool.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Components\Behaviour.h">
