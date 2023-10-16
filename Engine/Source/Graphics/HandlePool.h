@@ -16,14 +16,14 @@ public:
 				resource.first->Release();
 	}
 
-	Handle CreateHandle(const T& resource)
+	Handle CreateHandle(T& resource)
 	{
 		// Find an index
 		if (availableIndices.empty())
 		{
 			// No more indices, add new one and return it's value
 			auto index = resources.size();
-			resources.push_back(std::make_pair(resource, 0));
+			resources.push_back(std::make_pair(&resource, 0));
 			return Handle(index, 0);
 		}
 		else
@@ -34,7 +34,7 @@ public:
 
 			// Increment the version
 			index.second++;
-			resources[index.first] = std::make_pair(resource, index.second);
+			resources[index.first] = std::make_pair(&resource, index.second);
 
 			return Handle(index.first, index.second);
 		}
