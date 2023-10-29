@@ -1,11 +1,18 @@
 #include "WindowHandle.h"
 #include <windef.h>
 
-WindowHandle::WindowHandle(HWND hwnd) : hwnd(hwnd)
+using namespace std;
+
+WindowHandle::WindowHandle(HWND hwnd, const string& name) : hwnd(hwnd), name(name)
 {
 }
 
-HWND WindowHandle::GetHandle() const
+const HWND WindowHandle::GetHandle() const
 {
 	return hwnd;
+}
+
+const string& WindowHandle::GetName() const
+{
+	return name;
 }

@@ -18,11 +18,20 @@ const bool fullScreen = false;
 
 Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 {
-	int windowWidth, windowHeight;
-	auto hwnd = system.InitializeWindow(fullScreen, windowWidth, windowHeight);
+	int windowWidth = 800, windowHeight = 600;
+	auto posX = (system.GetScreenWidth() - windowWidth) / 2;
+	auto posY = (system.GetScreenHeight() - windowHeight) / 2;
+	auto hwnd = system.InitializeWindow(posX, posY, windowWidth, windowHeight, "Engine");
 
-	windowHandle = make_unique<WindowHandle>(hwnd);
-	graphics = make_unique<D3D11GraphicsDevice>(windowWidth, windowHeight, true, hwnd, fullScreen);
+	system.ToggleFullscreen(true);
+
+	system.RegisterRawInputDevice(hwnd);
+
+	windowHandle = make_unique<WindowHandle>(hwnd, "Engine");
+
+	auto hwnd1 = windowHandle->GetHandle();
+
+	graphics = make_unique<D3D11GraphicsDevice>(windowWidth, windowHeight, true, hwnd1, fullScreen);
 	input = make_unique<Input>();
 
 	textureLoader = make_unique<TextureLoader>();
@@ -36,7 +45,7 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 
 Engine::~Engine()
 {
-	system.ReleaseWindow(windowHandle->GetHandle(), fullScreen);
+	system.ReleaseWindow(*windowHandle.get(), fullScreen);
 	ShowCursor(true);
 }
 

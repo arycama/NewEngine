@@ -1,7 +1,9 @@
 #define WIN32_LEAN_AND_MEAN
 
-#include "System.h"
 #include "Engine.h"
+#include "System.h"
+#include "WindowHandle.h"
+
 #include <hidusage.h>
 #include <memory>
 #include <string>
@@ -15,8 +17,50 @@ LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	return system->MessageHandler(hwnd, umessage, wparam, lParam);
 }
 
-System::System() : hInstance(GetModuleHandleA(nullptr)), applicationName("Engine")
+System::System() : hInstance(GetModuleHandleA(nullptr))
 {	
+	engine = make_unique<Engine>(*this);
+}
+
+System::~System()
+{
+	// Remove the application instance.
+}
+
+int System::GetScreenWidth() const
+{
+	return GetSystemMetrics(SM_CXSCREEN);
+}
+
+int System::GetScreenHeight() const
+{
+	return GetSystemMetrics(SM_CYSCREEN);
+}
+
+void System::ToggleFullscreen(bool isFullscreen)
+{
+	//	// If full screen set the screen to maximum size of the users desktop and 32bit.
+		DEVMODE dmScreenSettings;
+		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+
+		auto width = GetScreenWidth();
+		auto height = GetScreenHeight();
+
+		dmScreenSettings.dmPelsWidth = static_cast<unsigned long>(width);
+		dmScreenSettings.dmPelsHeight = static_cast<unsigned long>(height);
+		dmScreenSettings.dmBitsPerPel = 32;
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+		// Change the display settings to full screen.
+		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+
+		// Set the position of the window to the top left corner.
+		//posX = posY = 0;
+}
+
+HWND System::InitializeWindow(int x, int y, int width, int height, const string& name)
+{
 	// Setup the windows class with default settings.
 	WNDCLASSEXA wc =
 	{
@@ -30,60 +74,14 @@ System::System() : hInstance(GetModuleHandleA(nullptr)), applicationName("Engine
 		LoadCursor(nullptr, IDC_ARROW),
 		static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
 		nullptr,
-		applicationName.c_str(),
+		name.c_str(),
 		wc.hIcon
 	};
 
 	RegisterClassExA(&wc);
 
-	engine = make_unique<Engine>(*this);
-}
-
-System::~System()
-{
-	// Remove the application instance.
-	UnregisterClassA(applicationName.c_str(), hInstance);
-}
-
-HWND System::InitializeWindow(bool fullScreen, int& width, int& height)
-{
-	// Determine the resolution of the clients desktop screen.
-	width = GetSystemMetrics(SM_CXSCREEN);
-	height = GetSystemMetrics(SM_CYSCREEN);
-
-	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	int posX, posY;
-
-	if (fullScreen)
-	{
-		// If full screen set the screen to maximum size of the users desktop and 32bit.
-		DEVMODE dmScreenSettings;
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = static_cast<unsigned long>(width);
-		dmScreenSettings.dmPelsHeight = static_cast<unsigned long>(height);
-		dmScreenSettings.dmBitsPerPel = 32;
-		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		// Change the display settings to full screen.
-		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-
-		// Set the position of the window to the top left corner.
-		posX = posY = 0;
-	}
-	else
-	{
-		// If windowed then set it to 800x600 resolution.
-		width = 800;
-		height = 600;
-
-		// Place the window in the middle of the screen.
-		posX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
-	}
-
 	// Create the window with the screen settings and get the handle to it.
-	auto hwnd = CreateWindowExA(WS_EX_APPWINDOW, applicationName.c_str(), applicationName.c_str(), WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, posX, posY, width, height, nullptr, nullptr, hInstance, nullptr);
+	auto hwnd = CreateWindowExA(WS_EX_APPWINDOW, name.c_str(), name.c_str(), WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, x, y, width, height, nullptr, nullptr, hInstance, nullptr);
 
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
@@ -92,28 +90,33 @@ HWND System::InitializeWindow(bool fullScreen, int& width, int& height)
 	ShowWindow(hwnd, SW_SHOW);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
+	
+	return hwnd;
+}
 
+void System::RegisterRawInputDevice(HWND hwnd)
+{
 	RAWINPUTDEVICE Rid[1];
 	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
 	Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
 	Rid[0].dwFlags = RIDEV_INPUTSINK;
 	Rid[0].hwndTarget = hwnd;
 	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
-
-	return hwnd;
 }
 
-void System::ReleaseWindow(HWND hwnd, bool fullScreen)
+void System::ReleaseWindow(const WindowHandle& handle, bool fullScreen)
 {
 	// Fix the display settings if leaving full screen mode.
 	if (fullScreen)
 		ChangeDisplaySettings(nullptr, 0);
 
 	// Release the pointer to this class.
-	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)nullptr);
+	SetWindowLongPtr(handle.GetHandle(), GWLP_USERDATA, (LONG_PTR)nullptr);
 
 	// Remove the window.
-	DestroyWindow(hwnd);
+	DestroyWindow(handle.GetHandle());
+
+	UnregisterClassA(handle.GetName().c_str(), hInstance);
 }
 
 void System::Update()

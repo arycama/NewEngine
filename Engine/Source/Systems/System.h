@@ -6,20 +6,27 @@
 #include <string>
 #include <windows.h>
 
+class WindowHandle;
+
 class System
 {
 public:
 	System();
 	~System();
 
-	HWND InitializeWindow(bool fullScreen, int& width, int& height);
-	void ReleaseWindow(HWND hwnd, bool fullScreen);
+	int GetScreenWidth() const;
+	int GetScreenHeight() const;
+
+	void ToggleFullscreen(bool isFullscreen);
+
+	HWND InitializeWindow(int x, int y, int width, int height, const std::string& name);
+	void RegisterRawInputDevice(HWND hwnd);
+	void ReleaseWindow(const WindowHandle& handle, bool fullScreen);
 
 	void Update();
 	void Quit();
 
 private:
-	const std::string applicationName;
 	const HINSTANCE hInstance;
 	bool quit;
 
