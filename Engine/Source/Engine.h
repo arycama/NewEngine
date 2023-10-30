@@ -17,10 +17,10 @@ class WindowHandle;
 class Engine
 {
 public:
-	Engine(System& system);
+	Engine();
 	~Engine();
 
-	void Update();
+	bool Update();
 
 	void KeyDown(int key);
 	void KeyUp(int key);
@@ -41,8 +41,8 @@ public:
 
 private:
 	bool isBeingUnloaded;
-	System& system;
 
+	std::unique_ptr<System> system;
 	std::unique_ptr<Input> input;
 	std::unique_ptr<GraphicsDevice> graphics;
 	std::unique_ptr<const WindowHandle> windowHandle;

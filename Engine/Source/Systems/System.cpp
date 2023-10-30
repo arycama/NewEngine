@@ -17,14 +17,18 @@ LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	return system->MessageHandler(hwnd, umessage, wparam, lParam);
 }
 
-System::System() : hInstance(GetModuleHandleA(nullptr))
+System::System(Engine& engine) : hInstance(GetModuleHandleA(nullptr)), engine(engine), quit(false)
 {	
-	engine = make_unique<Engine>(*this);
 }
 
 System::~System()
 {
 	// Remove the application instance.
+}
+
+bool System::GetQuit() const
+{
+	return quit;
 }
 
 int System::GetScreenWidth() const
@@ -121,23 +125,13 @@ void System::ReleaseWindow(const WindowHandle& handle, bool fullScreen)
 
 void System::Update()
 {
-	// Loop until there is a quit message from the window or the user.
-	while(true)
+	// Handle the windows messages.
+	MSG msg;
+	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
-		// Handle the windows messages.
-		MSG msg;
-		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		if(quit)
-			return;
-
-		engine->Update();
-
-	} while (!quit);
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 }
 
 void System::Quit()
@@ -151,6 +145,11 @@ LRESULT System::MessageHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	{
 		// Check if the window is being destroyed or closed
 		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
+
 		case WM_CLOSE:
 		{
 			PostQuitMessage(0);
@@ -161,7 +160,7 @@ LRESULT System::MessageHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		case WM_KEYDOWN:
 		{
 			// If a key is pressed send it to the input object so it can record that state.
-			engine->KeyDown(static_cast<int>(wParam));
+			engine.KeyDown(static_cast<int>(wParam));
 			return 0;
 		}
 
@@ -169,7 +168,7 @@ LRESULT System::MessageHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		case WM_KEYUP:
 		{
 			// If a key is released then send it to the input object so it can unset the state for that key.
-			engine->KeyUp(static_cast<int>(wParam));
+			engine.KeyUp(static_cast<int>(wParam));
 			return 0;
 		}
 
@@ -177,7 +176,7 @@ LRESULT System::MessageHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		{
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
-			engine->SetMousePosition(xPos, yPos);
+			engine.SetMousePosition(xPos, yPos);
 			return 0;
 		}
 
@@ -191,7 +190,7 @@ LRESULT System::MessageHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 			RAWINPUT* raw = (RAWINPUT*)lpb;
 
 			if (raw->header.dwType == RIM_TYPEMOUSE)
-				engine->SetMouseDelta(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
+				engine.SetMouseDelta(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
 
 			break;
 		}

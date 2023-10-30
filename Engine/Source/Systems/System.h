@@ -6,13 +6,16 @@
 #include <string>
 #include <windows.h>
 
+class Engine;
 class WindowHandle;
 
 class System
 {
 public:
-	System();
+	System(Engine& engine);
 	~System();
+
+	bool GetQuit() const;
 
 	int GetScreenWidth() const;
 	int GetScreenHeight() const;
@@ -30,7 +33,7 @@ private:
 	const HINSTANCE hInstance;
 	bool quit;
 
-	std::unique_ptr<class Engine> engine;
+	Engine& engine;
 	static LRESULT CALLBACK WndProc(HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 	LRESULT MessageHandler(HWND, UINT, WPARAM, LPARAM);
 };

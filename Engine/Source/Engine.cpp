@@ -16,16 +16,18 @@ using namespace std;
 
 const bool fullScreen = false;
 
-Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
+Engine::Engine() : isBeingUnloaded(false)
 {
+	system = make_unique<System>(*this);
+
 	int windowWidth = 800, windowHeight = 600;
-	auto posX = (system.GetScreenWidth() - windowWidth) / 2;
-	auto posY = (system.GetScreenHeight() - windowHeight) / 2;
-	auto hwnd = system.InitializeWindow(posX, posY, windowWidth, windowHeight, "Engine");
+	auto posX = (system->GetScreenWidth() - windowWidth) / 2;
+	auto posY = (system->GetScreenHeight() - windowHeight) / 2;
+	auto hwnd = system->InitializeWindow(posX, posY, windowWidth, windowHeight, "Engine");
 
-	system.ToggleFullscreen(true);
+	system->ToggleFullscreen(true);
 
-	system.RegisterRawInputDevice(hwnd);
+	system->RegisterRawInputDevice(hwnd);
 
 	windowHandle = make_unique<WindowHandle>(hwnd, "Engine");
 
@@ -45,12 +47,18 @@ Engine::Engine(System& system) : isBeingUnloaded(false), system(system)
 
 Engine::~Engine()
 {
-	system.ReleaseWindow(*windowHandle.get(), fullScreen);
+	system->ReleaseWindow(*windowHandle.get(), fullScreen);
 	ShowCursor(true);
 }
 
-void Engine::Update()
+bool Engine::Update()
 {
+	// Update system messages
+	system->Update();
+
+	if (system->GetQuit())
+		return false;
+
 	// Update scene
 	for (auto behaviour : behaviours)
 		behaviour->Update();
@@ -72,13 +80,15 @@ void Engine::Update()
 
 	// Present the rendered scene to the screen.
 	graphics->EndScene();
+
+	return true;
 }
 
 void Engine::KeyDown(int key)
 {
 	if (key == VK_ESCAPE)
 	{
-		system.Quit();
+		system->Quit();
 		return;
 	}
 
