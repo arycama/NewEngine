@@ -19,13 +19,19 @@ const bool fullScreen = false;
 Engine::Engine() : isBeingUnloaded(false)
 {
 	system = make_unique<System>(*this);
+	
+	auto editorWidth = system->GetScreenWidth();
+	auto editorHeight = system->GetScreenHeight();
+	auto editorHwnd = system->InitializeWindow(0, 0, editorWidth, editorHeight, "Editor", nullptr);
+
+	editorWindowHandle = make_unique<WindowHandle>(editorHwnd, "Editor");
 
 	int windowWidth = 800, windowHeight = 600;
 	auto posX = (system->GetScreenWidth() - windowWidth) / 2;
 	auto posY = (system->GetScreenHeight() - windowHeight) / 2;
-	auto hwnd = system->InitializeWindow(posX, posY, windowWidth, windowHeight, "Engine");
+	auto hwnd = system->InitializeWindow(posX, posY, windowWidth, windowHeight, "Engine", editorHwnd);
 
-	system->ToggleFullscreen(true);
+	//system->ToggleFullscreen(true);
 
 	system->RegisterRawInputDevice(hwnd);
 
@@ -48,6 +54,7 @@ Engine::Engine() : isBeingUnloaded(false)
 Engine::~Engine()
 {
 	system->ReleaseWindow(*windowHandle.get(), fullScreen);
+	system->ReleaseWindow(*editorWindowHandle.get(), fullScreen);
 	ShowCursor(true);
 }
 

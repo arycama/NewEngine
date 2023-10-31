@@ -63,7 +63,7 @@ void System::ToggleFullscreen(bool isFullscreen)
 		//posX = posY = 0;
 }
 
-HWND System::InitializeWindow(int x, int y, int width, int height, const string& name)
+HWND System::InitializeWindow(int x, int y, int width, int height, const string& name, HWND parent)
 {
 	// Setup the windows class with default settings.
 	WNDCLASSEXA wc =
@@ -85,7 +85,14 @@ HWND System::InitializeWindow(int x, int y, int width, int height, const string&
 	RegisterClassExA(&wc);
 
 	// Create the window with the screen settings and get the handle to it.
-	auto hwnd = CreateWindowExA(WS_EX_APPWINDOW, name.c_str(), name.c_str(), WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, x, y, width, height, nullptr, nullptr, hInstance, nullptr);
+	auto flags = 0ul;// WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
+
+	if (parent == nullptr)
+		flags |= WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+	else
+		flags |= WS_CHILDWINDOW;
+
+	auto hwnd = CreateWindowExA(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, x, y, width, height, parent, nullptr, hInstance, nullptr);
 
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
