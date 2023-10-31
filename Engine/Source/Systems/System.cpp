@@ -11,24 +11,33 @@
 
 using namespace std;
 
+#define IDM_NEW 1001
+#define IDM_OPEN 1002
+#define IDM_SAVE 1003
+#define IDM_QUIT 1004
+
 LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lParam)
 {
 	const auto system = reinterpret_cast<System*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 	return system->MessageHandler(hwnd, umessage, wparam, lParam);
 }
 
-System::System(Engine& engine) : hInstance(GetModuleHandleA(nullptr)), engine(engine), quit(false)
+System::System(Engine& engine) : hInstance(GetModuleHandle(nullptr)), engine(engine), quit(false)
 {	
 }
 
 System::~System()
 {
-	// Remove the application instance.
 }
 
 bool System::GetQuit() const
 {
 	return quit;
+}
+
+void System::ToggleCursor(bool isVisible)
+{
+	ShowCursor(isVisible);
 }
 
 int System::GetScreenWidth() const
@@ -58,47 +67,74 @@ void System::ToggleFullscreen(bool isFullscreen)
 
 		// Change the display settings to full screen.
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-
-		// Set the position of the window to the top left corner.
-		//posX = posY = 0;
 }
 
-HWND System::InitializeWindow(int x, int y, int width, int height, const string& name, HWND parent)
+HWND System::CreateMainWindow(int x, int y, int width, int height, const string& name)
 {
 	// Setup the windows class with default settings.
-	WNDCLASSEXA wc =
-	{
-		sizeof(WNDCLASSEXA),
-		CS_HREDRAW | CS_VREDRAW | CS_OWNDC,
-		System::WndProc,
-		0,
-		0,
-		hInstance,
-		LoadIcon(nullptr, IDI_WINLOGO),
-		LoadCursor(nullptr, IDC_ARROW),
-		static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
-		nullptr,
-		name.c_str(),
-		wc.hIcon
-	};
+	WNDCLASSEXA wc;
+	wc.cbSize = sizeof(WNDCLASSEXA),
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.lpfnWndProc = System::WndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = hInstance;
+	wc.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
+	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+	wc.lpszMenuName = nullptr;
+	wc.lpszClassName = name.c_str();
+	wc.hIconSm = LoadIcon(nullptr, IDI_WINLOGO);
 
-	RegisterClassExA(&wc);
+	RegisterClassEx(&wc);
+
+	auto hMenu = CreateMenu();
+	AppendMenu(hMenu, MF_STRING, IDM_NEW, "&New");
+	AppendMenu(hMenu, MF_STRING, IDM_OPEN, "&Open");
+	AppendMenu(hMenu, MF_STRING, IDM_SAVE, "&Save");
+	AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
+	AppendMenu(hMenu, MF_STRING, IDM_QUIT, "&Quit");
+
+	auto hMenubar = CreateMenu();
+	AppendMenu(hMenubar, MF_POPUP, (UINT_PTR)hMenu, "&File");
 
 	// Create the window with the screen settings and get the handle to it.
-	auto flags = 0ul;// WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
+	auto flags = WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN;
+	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, hMenubar, hInstance, nullptr);
 
-	if (parent == nullptr)
-		flags |= WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-	else
-		flags |= WS_CHILDWINDOW;
+	// Set a pointer to this object so that messages can be forwarded
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
 
-	auto hwnd = CreateWindowExA(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, x, y, width, height, parent, nullptr, hInstance, nullptr);
+	return hwnd;
+}
+
+HWND System::CreateChildWindow(int x, int y, int width, int height, const string& name, HWND parent)
+{
+	// Setup the windows class with default settings.
+	WNDCLASSEXA wc;
+	wc.cbSize = sizeof(WNDCLASSEXA),
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.lpfnWndProc = System::WndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = hInstance;
+	wc.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
+	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+	wc.lpszMenuName = nullptr;
+	wc.lpszClassName = name.c_str();
+	wc.hIconSm = LoadIcon(nullptr, IDI_WINLOGO);
+
+	RegisterClassEx(&wc);
+
+	// Create the window with the screen settings and get the handle to it.
+	auto flags = WS_VISIBLE | WS_CHILD | WS_THICKFRAME;
+	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, CW_USEDEFAULT, CW_USEDEFAULT, width, height, parent, nullptr, hInstance, nullptr);
 
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
 
 	// Bring the window up on the screen and set it as main focus.
-	ShowWindow(hwnd, SW_SHOW);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
 	
@@ -127,7 +163,7 @@ void System::ReleaseWindow(const WindowHandle& handle, bool fullScreen)
 	// Remove the window.
 	DestroyWindow(handle.GetHandle());
 
-	UnregisterClassA(handle.GetName().c_str(), hInstance);
+	UnregisterClass(handle.GetName().c_str(), hInstance);
 }
 
 void System::Update()
@@ -138,6 +174,12 @@ void System::Update()
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+
+		if(msg.message == WM_QUIT)
+		{
+			Quit();
+			break;
+		}
 	}
 }
 
@@ -161,6 +203,22 @@ LRESULT System::MessageHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		{
 			PostQuitMessage(0);
 			return 0;
+		}
+
+		case WM_COMMAND:
+		{
+			switch (wParam)
+			{
+				case IDM_NEW:
+					break;
+				case IDM_OPEN:
+					break;
+				case IDM_SAVE:
+					break;
+				case IDM_QUIT:
+					PostQuitMessage(0);
+					return 0;
+			}
 		}
 
 		// Check if a key has been pressed on the keyboard.
@@ -200,12 +258,6 @@ LRESULT System::MessageHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 				engine.SetMouseDelta(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
 
 			break;
-		}
-
-		case WM_QUIT:
-		{
-			Quit();
-			return 0;
 		}
 
 		// Any other messages send to the default message handler as our application won't make use of them.

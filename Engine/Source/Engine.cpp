@@ -20,22 +20,22 @@ Engine::Engine() : isBeingUnloaded(false)
 {
 	system = make_unique<System>(*this);
 	
-	auto editorWidth = system->GetScreenWidth();
-	auto editorHeight = system->GetScreenHeight();
-	auto editorHwnd = system->InitializeWindow(0, 0, editorWidth, editorHeight, "Editor", nullptr);
+	auto editorWidth = 1024;// system->GetScreenWidth();
+	auto editorHeight = 768;// system->GetScreenHeight();
+	auto editorHwnd = system->CreateMainWindow(0, 0, editorWidth, editorHeight, "Editor");
 
 	editorWindowHandle = make_unique<WindowHandle>(editorHwnd, "Editor");
 
+	// TODO: This should be in engine.. editor doesn't need raw input
+	system->RegisterRawInputDevice(editorHwnd);
+
 	int windowWidth = 800, windowHeight = 600;
-	auto posX = (system->GetScreenWidth() - windowWidth) / 2;
-	auto posY = (system->GetScreenHeight() - windowHeight) / 2;
-	auto hwnd = system->InitializeWindow(posX, posY, windowWidth, windowHeight, "Engine", editorHwnd);
+	auto posX = 0;// (system->GetScreenWidth() - windowWidth) / 2;
+	auto posY = 0;// (system->GetScreenHeight() - windowHeight) / 2;
+	auto engineHwnd = system->CreateChildWindow(posX, posY, windowWidth, windowHeight, "Engine", editorHwnd);
 
 	//system->ToggleFullscreen(true);
-
-	system->RegisterRawInputDevice(hwnd);
-
-	windowHandle = make_unique<WindowHandle>(hwnd, "Engine");
+	windowHandle = make_unique<WindowHandle>(engineHwnd, "Engine");
 
 	auto hwnd1 = windowHandle->GetHandle();
 
@@ -48,14 +48,14 @@ Engine::Engine() : isBeingUnloaded(false)
 	auto& scene = *new Scene("Assets/Scene.scene", *this, *resourceManager.get(), *graphics.get(), *input.get());
 	AddScene(scene);
 
-	ShowCursor(false);
+	//system->ToggleCursor(false);
 }
 
 Engine::~Engine()
 {
 	system->ReleaseWindow(*windowHandle.get(), fullScreen);
 	system->ReleaseWindow(*editorWindowHandle.get(), fullScreen);
-	ShowCursor(true);
+	//system->ToggleCursor(true);
 }
 
 bool Engine::Update()
@@ -93,12 +93,6 @@ bool Engine::Update()
 
 void Engine::KeyDown(int key)
 {
-	if (key == VK_ESCAPE)
-	{
-		system->Quit();
-		return;
-	}
-
 	input->SetKeyDown(key);
 }
 

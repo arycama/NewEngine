@@ -22,11 +22,15 @@ public:
 
 	void ToggleFullscreen(bool isFullscreen);
 
-	HWND InitializeWindow(int x, int y, int width, int height, const std::string& name, HWND parent);
+	HWND CreateMainWindow(int x, int y, int width, int height, const std::string& name);
+	HWND CreateChildWindow(int x, int y, int width, int height, const std::string& name, HWND parent);
 	void RegisterRawInputDevice(HWND hwnd);
 	void ReleaseWindow(const WindowHandle& handle, bool fullScreen);
 
 	void Update();
+
+	void ToggleCursor(bool isVisible);
+
 	void Quit();
 
 private:
