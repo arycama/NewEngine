@@ -45,8 +45,11 @@ private:
 	std::unique_ptr<System> system;
 	std::unique_ptr<Input> input;
 	std::unique_ptr<GraphicsDevice> graphics;
-	std::unique_ptr<const WindowHandle> editorWindowHandle;
-	std::unique_ptr<const WindowHandle> windowHandle;
+	std::unique_ptr<const WindowHandle> editorWindow;
+	std::unique_ptr<const WindowHandle> engineWindow;
+	std::unique_ptr<const WindowHandle> hierachyWindowHandle;
+	std::unique_ptr<const WindowHandle> inspectorWindowHandle;
+	std::unique_ptr<const WindowHandle> projectWindowHandle;
 	std::unique_ptr<const TextureLoader> textureLoader;
 	std::unique_ptr<ResourceManager> resourceManager;
 

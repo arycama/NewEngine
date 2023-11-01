@@ -22,24 +22,20 @@ Engine::Engine() : isBeingUnloaded(false)
 	
 	auto editorWidth = 1024;// system->GetScreenWidth();
 	auto editorHeight = 768;// system->GetScreenHeight();
-	auto editorHwnd = system->CreateMainWindow(0, 0, editorWidth, editorHeight, "Editor");
 
-	editorWindowHandle = make_unique<WindowHandle>(editorHwnd, "Editor");
+	editorWindow = make_unique<WindowHandle>(system->CreateMainWindow(0, 0, editorWidth, editorHeight, "Editor"));
 
 	// TODO: This should be in engine.. editor doesn't need raw input
-	system->RegisterRawInputDevice(editorHwnd);
+	system->RegisterRawInputDevice(editorWindow->GetHandle());
 
 	int windowWidth = 800, windowHeight = 600;
 	auto posX = 0;// (system->GetScreenWidth() - windowWidth) / 2;
 	auto posY = 0;// (system->GetScreenHeight() - windowHeight) / 2;
-	auto engineHwnd = system->CreateChildWindow(posX, posY, windowWidth, windowHeight, "Engine", editorHwnd);
+	engineWindow = make_unique<WindowHandle>(system->CreateChildWindow(posX, posY, windowWidth, windowHeight, "Engine", *editorWindow.get()));
 
 	//system->ToggleFullscreen(true);
-	windowHandle = make_unique<WindowHandle>(engineHwnd, "Engine");
 
-	auto hwnd1 = windowHandle->GetHandle();
-
-	graphics = make_unique<D3D11GraphicsDevice>(windowWidth, windowHeight, true, hwnd1, fullScreen);
+	graphics = make_unique<D3D11GraphicsDevice>(windowWidth, windowHeight, true, *engineWindow.get(), fullScreen);
 	input = make_unique<Input>();
 
 	textureLoader = make_unique<TextureLoader>();
@@ -53,8 +49,8 @@ Engine::Engine() : isBeingUnloaded(false)
 
 Engine::~Engine()
 {
-	system->ReleaseWindow(*windowHandle.get(), fullScreen);
-	system->ReleaseWindow(*editorWindowHandle.get(), fullScreen);
+	system->ReleaseWindow(*engineWindow.get(), fullScreen);
+	system->ReleaseWindow(*editorWindow.get(), fullScreen);
 	//system->ToggleCursor(true);
 }
 

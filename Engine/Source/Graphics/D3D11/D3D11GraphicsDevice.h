@@ -7,6 +7,7 @@
 
 class D3D11GraphicsContext;
 class Handle;
+class WindowHandle;
 struct ID3D11DepthStencilState;
 struct ID3D11DepthStencilView;
 struct ID3D11Device;
@@ -19,7 +20,7 @@ struct IDXGISwapChain;
 class D3D11GraphicsDevice : public GraphicsDevice
 {
 public:
-	D3D11GraphicsDevice(int width, int height, bool vsync, HWND hwnd, bool fullscreen);
+	D3D11GraphicsDevice(int width, int height, bool vsync, const WindowHandle& window, bool fullscreen);
 	~D3D11GraphicsDevice();
 
 	void ClearRenderTarget(float red, float green, float blue, float alpha) const override;

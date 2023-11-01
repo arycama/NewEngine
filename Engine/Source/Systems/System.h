@@ -22,8 +22,8 @@ public:
 
 	void ToggleFullscreen(bool isFullscreen);
 
-	HWND CreateMainWindow(int x, int y, int width, int height, const std::string& name);
-	HWND CreateChildWindow(int x, int y, int width, int height, const std::string& name, HWND parent);
+	WindowHandle CreateMainWindow(int x, int y, int width, int height, const std::string& name);
+	WindowHandle CreateChildWindow(int x, int y, int width, int height, const std::string& name, const WindowHandle& parent);
 	void RegisterRawInputDevice(HWND hwnd);
 	void ReleaseWindow(const WindowHandle& handle, bool fullScreen);
 

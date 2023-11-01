@@ -69,7 +69,7 @@ void System::ToggleFullscreen(bool isFullscreen)
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 }
 
-HWND System::CreateMainWindow(int x, int y, int width, int height, const string& name)
+WindowHandle System::CreateMainWindow(int x, int y, int width, int height, const string& name)
 {
 	// Setup the windows class with default settings.
 	WNDCLASSEXA wc;
@@ -105,10 +105,10 @@ HWND System::CreateMainWindow(int x, int y, int width, int height, const string&
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
 
-	return hwnd;
+	return WindowHandle(hwnd, name);
 }
 
-HWND System::CreateChildWindow(int x, int y, int width, int height, const string& name, HWND parent)
+WindowHandle System::CreateChildWindow(int x, int y, int width, int height, const string& name, const WindowHandle& parent)
 {
 	// Setup the windows class with default settings.
 	WNDCLASSEXA wc;
@@ -129,7 +129,7 @@ HWND System::CreateChildWindow(int x, int y, int width, int height, const string
 
 	// Create the window with the screen settings and get the handle to it.
 	auto flags = WS_VISIBLE | WS_CHILD | WS_THICKFRAME;
-	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, CW_USEDEFAULT, CW_USEDEFAULT, width, height, parent, nullptr, hInstance, nullptr);
+	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, x, y, width, height, parent.GetHandle(), nullptr, hInstance, nullptr);
 
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
@@ -138,7 +138,7 @@ HWND System::CreateChildWindow(int x, int y, int width, int height, const string
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
 	
-	return hwnd;
+	return WindowHandle(hwnd, name);
 }
 
 void System::RegisterRawInputDevice(HWND hwnd)

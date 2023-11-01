@@ -6,6 +6,7 @@
 #include "D3D11GraphicsContext.h"
 #include "Handle.h"
 #include "TextureFormat.h"
+#include "WindowHandle.h"
 
 #include <d3d11.h>
 #include <memory>
@@ -24,7 +25,7 @@ using namespace std;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-D3D11GraphicsDevice::D3D11GraphicsDevice(int width, int height, bool vsync, HWND hwnd, bool fullscreen) : width(width), height(height), vsync(vsync)
+D3D11GraphicsDevice::D3D11GraphicsDevice(int width, int height, bool vsync, const WindowHandle& window, bool fullscreen) : width(width), height(height), vsync(vsync)
 {
 	ComPtr<IDXGIFactory> factory;
 	CheckError(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)factory.GetAddressOf()));
@@ -57,7 +58,7 @@ D3D11GraphicsDevice::D3D11GraphicsDevice(int width, int height, bool vsync, HWND
 	DXGI_RATIONAL refreshRate{ static_cast<UINT>(vsync ? numerator : 0), static_cast<UINT>(vsync ? denominator : 1) };
 	DXGI_MODE_DESC bufferDesc{ static_cast<UINT>(width), static_cast<UINT>(height), refreshRate, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED, DXGI_MODE_SCALING_UNSPECIFIED };
 	DXGI_SAMPLE_DESC sampleDesc{ 1, 0 };
-	DXGI_SWAP_CHAIN_DESC swapChainDesc{ bufferDesc, sampleDesc, DXGI_USAGE_RENDER_TARGET_OUTPUT, 1, hwnd, !fullscreen, DXGI_SWAP_EFFECT_DISCARD, 0 };
+	DXGI_SWAP_CHAIN_DESC swapChainDesc{ bufferDesc, sampleDesc, DXGI_USAGE_RENDER_TARGET_OUTPUT, 1, window.GetHandle(), !fullscreen, DXGI_SWAP_EFFECT_DISCARD, 0};
 
 	auto featureLevel = D3D_FEATURE_LEVEL_11_0;
 	CheckError(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, swapChain.GetAddressOf(), device.GetAddressOf(), nullptr, deviceContext.GetAddressOf()));
