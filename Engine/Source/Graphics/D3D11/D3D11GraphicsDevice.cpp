@@ -6,7 +6,7 @@
 #include "D3D11GraphicsContext.h"
 #include "Handle.h"
 #include "TextureFormat.h"
-#include "WindowHandle.h"
+#include "Window.h"
 
 #include <d3d11.h>
 #include <memory>
@@ -25,7 +25,7 @@ using namespace std;
 using namespace Microsoft::WRL;
 using namespace _com_util;
 
-D3D11GraphicsDevice::D3D11GraphicsDevice(int width, int height, bool vsync, const WindowHandle& window, bool fullscreen) : width(width), height(height), vsync(vsync)
+D3D11GraphicsDevice::D3D11GraphicsDevice(int width, int height, bool vsync, const Window& window, bool fullscreen) : width(width), height(height), vsync(vsync)
 {
 	ComPtr<IDXGIFactory> factory;
 	CheckError(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)factory.GetAddressOf()));

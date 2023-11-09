@@ -12,7 +12,7 @@ class ResourceManager;
 class Scene;
 class System;
 class TextureLoader;
-class WindowHandle;
+class Window;
 
 class Engine
 {
@@ -45,11 +45,11 @@ private:
 	std::unique_ptr<System> system;
 	std::unique_ptr<Input> input;
 	std::unique_ptr<GraphicsDevice> graphics;
-	std::unique_ptr<const WindowHandle> editorWindow;
-	std::unique_ptr<const WindowHandle> engineWindow;
-	std::unique_ptr<const WindowHandle> hierachyWindowHandle;
-	std::unique_ptr<const WindowHandle> inspectorWindowHandle;
-	std::unique_ptr<const WindowHandle> projectWindowHandle;
+	std::unique_ptr<const Window> editorWindow;
+	std::unique_ptr<const Window> engineWindow;
+	std::unique_ptr<const Window> hierachyWindow;
+	std::unique_ptr<const Window> inspectorWindow;
+	std::unique_ptr<const Window> projectWindow;
 	std::unique_ptr<const TextureLoader> textureLoader;
 	std::unique_ptr<ResourceManager> resourceManager;
 

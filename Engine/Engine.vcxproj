@@ -292,11 +292,13 @@
     <ClCompile Include="Source\Systems\System.cpp" />
     <ClCompile Include="Source\Systems\TextureLoader.cpp" />
     <ClCompile Include="Source\Systems\TgaLoader.cpp" />
-    <ClCompile Include="Source\Systems\WindowHandle.cpp" />
+    <ClCompile Include="Source\Systems\Window.cpp" />
     <ClCompile Include="Source\Systems\WindowsSystem.cpp" />
     <ClCompile Include="Source\Types\Int2.cpp" />
+    <ClCompile Include="Source\Types\Rect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Types\Rect.h" />
     <ClInclude Include="Source\Graphics\HandlePool.h" />
     <ClInclude Include="Source\Handle.h" />
     <ClInclude Include="Source\Graphics\D3D11\D3D11GraphicsContext.h" />
@@ -332,10 +334,10 @@
     <ClInclude Include="Source\Systems\System.h" />
     <ClInclude Include="Source\Systems\TextureLoader.h" />
     <ClInclude Include="Source\Systems\TgaLoader.h" />
-    <ClInclude Include="Source\Systems\WindowHandle.h" />
+    <ClInclude Include="Source\Systems\Window.h" />
     <ClInclude Include="Source\Types\Int2.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TextureFormat.h" />
+    <ClInclude Include="Source\Graphics\TextureFormat.h" />
     <ClInclude Include="Source\Systems\WindowsSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

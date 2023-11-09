@@ -10,7 +10,7 @@
 #include "Scene.h"
 #include "System.h"
 #include "TextureLoader.h"
-#include "WindowHandle.h"
+#include "Window.h"
 
 using namespace std;
 
@@ -20,22 +20,16 @@ Engine::Engine() : isBeingUnloaded(false)
 {
 	system = make_unique<System>(*this);
 	
-	auto editorWidth = 1024;// system->GetScreenWidth();
-	auto editorHeight = 768;// system->GetScreenHeight();
-
-	editorWindow = make_unique<WindowHandle>(system->CreateMainWindow(0, 0, editorWidth, editorHeight, "Editor"));
+	editorWindow = make_unique<Window>(system->CreateMainWindow(0, 0, 1024, 768, "Editor"));
 
 	// TODO: This should be in engine.. editor doesn't need raw input
 	system->RegisterRawInputDevice(editorWindow->GetHandle());
 
-	int windowWidth = 800, windowHeight = 600;
-	auto posX = 0;// (system->GetScreenWidth() - windowWidth) / 2;
-	auto posY = 0;// (system->GetScreenHeight() - windowHeight) / 2;
-	engineWindow = make_unique<WindowHandle>(system->CreateChildWindow(posX, posY, windowWidth, windowHeight, "Engine", *editorWindow.get()));
+	engineWindow = make_unique<Window>(system->CreateChildWindow(0, 0, 640, 480, "Engine", *editorWindow.get()));
 
 	//system->ToggleFullscreen(true);
-
-	graphics = make_unique<D3D11GraphicsDevice>(windowWidth, windowHeight, true, *engineWindow.get(), fullScreen);
+	auto engineRect = engineWindow->GetLocalRect();
+	graphics = make_unique<D3D11GraphicsDevice>(engineRect.GetWidth(), engineRect.GetHeight(), true, *engineWindow.get(), fullScreen);
 	input = make_unique<Input>();
 
 	textureLoader = make_unique<TextureLoader>();
@@ -45,12 +39,20 @@ Engine::Engine() : isBeingUnloaded(false)
 	AddScene(scene);
 
 	//system->ToggleCursor(false);
+
+	// Create other windows
+	auto editorRect = editorWindow->GetLocalRect();
+	auto engineWorldRect = engineWindow->GetRect();
+	hierachyWindow = make_unique<Window>(system->CreateChildWindow(engineWorldRect.right, 0, editorRect.GetWidth() - engineWorldRect.GetWidth(), engineWorldRect.GetHeight(), "Hierachy", *editorWindow.get()));
+
+
 }
 
 Engine::~Engine()
 {
 	system->ReleaseWindow(*engineWindow.get(), fullScreen);
 	system->ReleaseWindow(*editorWindow.get(), fullScreen);
+	system->ReleaseWindow(*hierachyWindow.get(), fullScreen);
 	//system->ToggleCursor(true);
 }
 
@@ -89,6 +91,12 @@ bool Engine::Update()
 
 void Engine::KeyDown(int key)
 {
+	if (key == VK_ESCAPE)
+	{
+		system->Quit();
+		return;
+	}
+
 	input->SetKeyDown(key);
 }
 

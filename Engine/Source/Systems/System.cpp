@@ -2,7 +2,7 @@
 
 #include "Engine.h"
 #include "System.h"
-#include "WindowHandle.h"
+#include "Window.h"
 
 #include <hidusage.h>
 #include <memory>
@@ -69,7 +69,7 @@ void System::ToggleFullscreen(bool isFullscreen)
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 }
 
-WindowHandle System::CreateMainWindow(int x, int y, int width, int height, const string& name)
+Window System::CreateMainWindow(int x, int y, int width, int height, const string& name)
 {
 	// Setup the windows class with default settings.
 	WNDCLASSEXA wc;
@@ -105,10 +105,10 @@ WindowHandle System::CreateMainWindow(int x, int y, int width, int height, const
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
 
-	return WindowHandle(hwnd, name);
+	return Window(hwnd, name);
 }
 
-WindowHandle System::CreateChildWindow(int x, int y, int width, int height, const string& name, const WindowHandle& parent)
+Window System::CreateChildWindow(int x, int y, int width, int height, const string& name, const Window& parent)
 {
 	// Setup the windows class with default settings.
 	WNDCLASSEXA wc;
@@ -138,7 +138,7 @@ WindowHandle System::CreateChildWindow(int x, int y, int width, int height, cons
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
 	
-	return WindowHandle(hwnd, name);
+	return Window(hwnd, name);
 }
 
 void System::RegisterRawInputDevice(HWND hwnd)
@@ -151,7 +151,7 @@ void System::RegisterRawInputDevice(HWND hwnd)
 	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
 }
 
-void System::ReleaseWindow(const WindowHandle& handle, bool fullScreen)
+void System::ReleaseWindow(const Window& handle, bool fullScreen)
 {
 	// Fix the display settings if leaving full screen mode.
 	if (fullScreen)

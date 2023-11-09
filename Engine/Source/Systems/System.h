@@ -7,7 +7,7 @@
 #include <windows.h>
 
 class Engine;
-class WindowHandle;
+class Window;
 
 class System
 {
@@ -22,10 +22,10 @@ public:
 
 	void ToggleFullscreen(bool isFullscreen);
 
-	WindowHandle CreateMainWindow(int x, int y, int width, int height, const std::string& name);
-	WindowHandle CreateChildWindow(int x, int y, int width, int height, const std::string& name, const WindowHandle& parent);
+	Window CreateMainWindow(int x, int y, int width, int height, const std::string& name);
+	Window CreateChildWindow(int x, int y, int width, int height, const std::string& name, const Window& parent);
 	void RegisterRawInputDevice(HWND hwnd);
-	void ReleaseWindow(const WindowHandle& handle, bool fullScreen);
+	void ReleaseWindow(const Window& handle, bool fullScreen);
 
 	void Update();
 
