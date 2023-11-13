@@ -14,8 +14,6 @@
 
 using namespace std;
 
-const bool fullScreen = false;
-
 Engine::Engine() : isBeingUnloaded(false)
 {
 	system = make_unique<System>(*this);
@@ -28,8 +26,8 @@ Engine::Engine() : isBeingUnloaded(false)
 	engineWindow = make_unique<Window>(system->CreateChildWindow(0, 0, 640, 480, "Engine", *editorWindow.get()));
 
 	//system->ToggleFullscreen(true);
-	auto engineRect = engineWindow->GetLocalRect();
-	graphics = make_unique<D3D11GraphicsDevice>(engineRect.GetWidth(), engineRect.GetHeight(), true, *engineWindow.get(), fullScreen);
+	auto engineViewport = engineWindow->GetViewport();
+	graphics = make_unique<D3D11GraphicsDevice>(engineViewport.GetWidth(), engineViewport.GetHeight(), true, *engineWindow.get(), false);
 	input = make_unique<Input>();
 
 	textureLoader = make_unique<TextureLoader>();
@@ -41,18 +39,20 @@ Engine::Engine() : isBeingUnloaded(false)
 	//system->ToggleCursor(false);
 
 	// Create other windows
-	auto editorRect = editorWindow->GetLocalRect();
-	auto engineWorldRect = engineWindow->GetRect();
-	hierachyWindow = make_unique<Window>(system->CreateChildWindow(engineWorldRect.right, 0, editorRect.GetWidth() - engineWorldRect.GetWidth(), engineWorldRect.GetHeight(), "Hierachy", *editorWindow.get()));
+	auto editorViewport = editorWindow->GetViewport();
+	auto engineRect = engineWindow->GetRect();
+	hierachyWindow = make_unique<Window>(system->CreateChildWindow(engineRect.GetWidth(), 0, 300, engineRect.GetHeight(), "Hierachy", *editorWindow.get()));
 
-
+	auto hierachyRect = hierachyWindow->GetRect();
+	inspectorWindow = make_unique<Window>(system->CreateChildWindow(hierachyRect.right, 0, editorViewport.GetWidth() - hierachyRect.right, editorViewport.GetHeight(), "Inspector", *editorWindow.get()));
 }
 
 Engine::~Engine()
 {
-	system->ReleaseWindow(*engineWindow.get(), fullScreen);
-	system->ReleaseWindow(*editorWindow.get(), fullScreen);
-	system->ReleaseWindow(*hierachyWindow.get(), fullScreen);
+	//system->ReleaseWindow(*engineWindow.get());
+	//system->ReleaseWindow(*editorWindow.get());
+	//system->ReleaseWindow(*hierachyWindow.get());
+	//system->ReleaseWindow(*inspectorWindow.get());
 	//system->ToggleCursor(true);
 }
 

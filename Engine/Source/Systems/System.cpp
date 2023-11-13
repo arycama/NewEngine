@@ -22,12 +22,8 @@ LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	return system->MessageHandler(hwnd, umessage, wparam, lParam);
 }
 
-System::System(Engine& engine) : hInstance(GetModuleHandle(nullptr)), engine(engine), quit(false)
+System::System(Engine& engine) : engine(engine), quit(false)
 {	
-}
-
-System::~System()
-{
 }
 
 bool System::GetQuit() const
@@ -50,25 +46,6 @@ int System::GetScreenHeight() const
 	return GetSystemMetrics(SM_CYSCREEN);
 }
 
-void System::ToggleFullscreen(bool isFullscreen)
-{
-	//	// If full screen set the screen to maximum size of the users desktop and 32bit.
-		DEVMODE dmScreenSettings;
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-
-		auto width = GetScreenWidth();
-		auto height = GetScreenHeight();
-
-		dmScreenSettings.dmPelsWidth = static_cast<unsigned long>(width);
-		dmScreenSettings.dmPelsHeight = static_cast<unsigned long>(height);
-		dmScreenSettings.dmBitsPerPel = 32;
-		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		// Change the display settings to full screen.
-		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-}
-
 Window System::CreateMainWindow(int x, int y, int width, int height, const string& name)
 {
 	// Setup the windows class with default settings.
@@ -78,7 +55,7 @@ Window System::CreateMainWindow(int x, int y, int width, int height, const strin
 	wc.lpfnWndProc = System::WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
+	wc.hInstance = GetModuleHandle(nullptr);
 	wc.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
@@ -100,7 +77,7 @@ Window System::CreateMainWindow(int x, int y, int width, int height, const strin
 
 	// Create the window with the screen settings and get the handle to it.
 	auto flags = WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN;
-	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, hMenubar, hInstance, nullptr);
+	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, hMenubar, GetModuleHandle(nullptr), nullptr);
 
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
@@ -117,7 +94,7 @@ Window System::CreateChildWindow(int x, int y, int width, int height, const stri
 	wc.lpfnWndProc = System::WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
+	wc.hInstance = GetModuleHandle(nullptr);
 	wc.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
@@ -129,7 +106,7 @@ Window System::CreateChildWindow(int x, int y, int width, int height, const stri
 
 	// Create the window with the screen settings and get the handle to it.
 	auto flags = WS_VISIBLE | WS_CHILD | WS_THICKFRAME;
-	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, x, y, width, height, parent.GetHandle(), nullptr, hInstance, nullptr);
+	auto hwnd = CreateWindowEx(WS_EX_APPWINDOW, name.c_str(), name.c_str(), flags, x, y, width, height, parent.GetHandle(), nullptr, GetModuleHandle(nullptr), nullptr);
 
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
@@ -151,19 +128,15 @@ void System::RegisterRawInputDevice(HWND hwnd)
 	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
 }
 
-void System::ReleaseWindow(const Window& handle, bool fullScreen)
+void System::ReleaseWindow(const Window& handle)
 {
-	// Fix the display settings if leaving full screen mode.
-	if (fullScreen)
-		ChangeDisplaySettings(nullptr, 0);
-
 	// Release the pointer to this class.
 	SetWindowLongPtr(handle.GetHandle(), GWLP_USERDATA, (LONG_PTR)nullptr);
 
 	// Remove the window.
 	DestroyWindow(handle.GetHandle());
 
-	UnregisterClass(handle.GetName().c_str(), hInstance);
+	UnregisterClass(handle.GetName().c_str(), GetModuleHandle(nullptr));
 }
 
 void System::Update()

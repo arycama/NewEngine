@@ -13,19 +13,16 @@ class System
 {
 public:
 	System(Engine& engine);
-	~System();
 
 	bool GetQuit() const;
 
 	int GetScreenWidth() const;
 	int GetScreenHeight() const;
 
-	void ToggleFullscreen(bool isFullscreen);
-
 	Window CreateMainWindow(int x, int y, int width, int height, const std::string& name);
 	Window CreateChildWindow(int x, int y, int width, int height, const std::string& name, const Window& parent);
 	void RegisterRawInputDevice(HWND hwnd);
-	void ReleaseWindow(const Window& handle, bool fullScreen);
+	void ReleaseWindow(const Window& handle);
 
 	void Update();
 
@@ -34,7 +31,6 @@ public:
 	void Quit();
 
 private:
-	const HINSTANCE hInstance;
 	bool quit;
 
 	Engine& engine;

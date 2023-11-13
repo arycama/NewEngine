@@ -7,12 +7,14 @@ class Window
 {
 public:
 	Window(HWND hwnd, const std::string& name);
+	Window(Window&& other);
+	~Window();
 
 	const HWND GetHandle() const;
 	const std::string& GetName() const;
 
 	Rect GetRect() const;
-	Rect GetLocalRect() const;
+	Rect GetViewport() const;
 
 private:
 	const HWND hwnd;

@@ -7,6 +7,18 @@ Window::Window(HWND hwnd, const string& name) : hwnd(hwnd), name(name)
 {
 }
 
+Window::Window(Window&& other)
+{
+
+}
+
+Window::~Window()
+{
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)nullptr);
+	DestroyWindow(hwnd);
+	UnregisterClass(name.c_str(), GetModuleHandle(nullptr));
+}
+
 const HWND Window::GetHandle() const
 {
 	return hwnd;
@@ -21,10 +33,11 @@ Rect Window::GetRect() const
 {
 	RECT rect;
 	GetWindowRect(hwnd, &rect);
+	MapWindowPoints(HWND_DESKTOP, GetParent(hwnd), (LPPOINT)&rect, 2);
 	return Rect(rect.left, rect.top, rect.right, rect.bottom);
 }
 
-Rect Window::GetLocalRect() const
+Rect Window::GetViewport() const
 {
 	RECT rect;
 	GetClientRect(hwnd, &rect);
