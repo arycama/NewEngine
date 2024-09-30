@@ -18,12 +18,12 @@ Engine::Engine() : isBeingUnloaded(false)
 {
 	system = make_unique<System>(*this);
 	
-	editorWindow = make_unique<Window>(system->CreateMainWindow(0, 0, 1024, 768, "Editor"));
+	editorWindow = make_unique<Window>(*system->CreateMainWindow(0, 0, 1024, 768, "Editor"));
 
 	// TODO: This should be in engine.. editor doesn't need raw input
 	system->RegisterRawInputDevice(editorWindow->GetHandle());
 
-	engineWindow = make_unique<Window>(system->CreateChildWindow(0, 0, 640, 480, "Engine", *editorWindow.get()));
+	engineWindow = make_unique<Window>(*system->CreateChildWindow(0, 0, 640, 480, "Engine", *editorWindow.get()));
 
 	//system->ToggleFullscreen(true);
 	auto engineViewport = engineWindow->GetViewport();
@@ -41,19 +41,10 @@ Engine::Engine() : isBeingUnloaded(false)
 	// Create other windows
 	auto editorViewport = editorWindow->GetViewport();
 	auto engineRect = engineWindow->GetRect();
-	hierachyWindow = make_unique<Window>(system->CreateChildWindow(engineRect.GetWidth(), 0, 300, engineRect.GetHeight(), "Hierachy", *editorWindow.get()));
+	hierachyWindow = make_unique<Window>(*system->CreateChildWindow(engineRect.GetWidth(), 0, 300, engineRect.GetHeight(), "Hierachy", *editorWindow.get()));
 
 	auto hierachyRect = hierachyWindow->GetRect();
-	inspectorWindow = make_unique<Window>(system->CreateChildWindow(hierachyRect.right, 0, editorViewport.GetWidth() - hierachyRect.right, editorViewport.GetHeight(), "Inspector", *editorWindow.get()));
-}
-
-Engine::~Engine()
-{
-	//system->ReleaseWindow(*engineWindow.get());
-	//system->ReleaseWindow(*editorWindow.get());
-	//system->ReleaseWindow(*hierachyWindow.get());
-	//system->ReleaseWindow(*inspectorWindow.get());
-	//system->ToggleCursor(true);
+	inspectorWindow = make_unique<Window>(*system->CreateChildWindow(hierachyRect.right, 0, editorViewport.GetWidth() - hierachyRect.right, editorViewport.GetHeight(), "Inspector", *editorWindow.get()));
 }
 
 bool Engine::Update()

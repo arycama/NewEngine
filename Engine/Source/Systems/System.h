@@ -19,8 +19,8 @@ public:
 	int GetScreenWidth() const;
 	int GetScreenHeight() const;
 
-	Window CreateMainWindow(int x, int y, int width, int height, const std::string& name);
-	Window CreateChildWindow(int x, int y, int width, int height, const std::string& name, const Window& parent);
+	Window* CreateMainWindow(int x, int y, int width, int height, const std::string& name);
+	Window* CreateChildWindow(int x, int y, int width, int height, const std::string& name, const Window& parent);
 	void RegisterRawInputDevice(HWND hwnd);
 	void ReleaseWindow(const Window& handle);
 

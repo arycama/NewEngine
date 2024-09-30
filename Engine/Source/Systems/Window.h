@@ -7,7 +7,6 @@ class Window
 {
 public:
 	Window(HWND hwnd, const std::string& name);
-	Window(Window&& other);
 	~Window();
 
 	const HWND GetHandle() const;

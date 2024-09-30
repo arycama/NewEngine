@@ -7,11 +7,6 @@ Window::Window(HWND hwnd, const string& name) : hwnd(hwnd), name(name)
 {
 }
 
-Window::Window(Window&& other)
-{
-
-}
-
 Window::~Window()
 {
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)nullptr);

@@ -18,7 +18,6 @@ class Engine
 {
 public:
 	Engine();
-	~Engine();
 
 	bool Update();
 

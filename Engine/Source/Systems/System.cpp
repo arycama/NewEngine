@@ -46,7 +46,7 @@ int System::GetScreenHeight() const
 	return GetSystemMetrics(SM_CYSCREEN);
 }
 
-Window System::CreateMainWindow(int x, int y, int width, int height, const string& name)
+Window* System::CreateMainWindow(int x, int y, int width, int height, const string& name)
 {
 	// Setup the windows class with default settings.
 	WNDCLASSEXA wc;
@@ -82,10 +82,10 @@ Window System::CreateMainWindow(int x, int y, int width, int height, const strin
 	// Set a pointer to this object so that messages can be forwarded
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
 
-	return Window(hwnd, name);
+	return new Window(hwnd, name);
 }
 
-Window System::CreateChildWindow(int x, int y, int width, int height, const string& name, const Window& parent)
+Window* System::CreateChildWindow(int x, int y, int width, int height, const string& name, const Window& parent)
 {
 	// Setup the windows class with default settings.
 	WNDCLASSEXA wc;
@@ -115,7 +115,7 @@ Window System::CreateChildWindow(int x, int y, int width, int height, const stri
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
 	
-	return Window(hwnd, name);
+	return new Window(hwnd, name);
 }
 
 void System::RegisterRawInputDevice(HWND hwnd)
