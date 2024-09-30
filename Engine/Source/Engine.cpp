@@ -47,6 +47,10 @@ Engine::Engine() : isBeingUnloaded(false)
 	inspectorWindow = make_unique<Window>(*system->CreateChildWindow(hierachyRect.right, 0, editorViewport.GetWidth() - hierachyRect.right, editorViewport.GetHeight(), "Inspector", *editorWindow.get()));
 }
 
+Engine::~Engine()
+{
+}
+
 bool Engine::Update()
 {
 	// Update system messages
