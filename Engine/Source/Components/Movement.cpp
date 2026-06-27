@@ -44,7 +44,7 @@ void Movement::Update()
 
 	transform->SetRotation(rotation);
 
-	auto movementSpeed = 0.1f;
+	auto movementSpeed = 1000.0f;
 	auto movement = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	if (input.IsKeyDown(0x57)) // W

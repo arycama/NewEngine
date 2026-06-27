@@ -140,6 +140,12 @@
     </None>
     <None Include="Assets\Surface.hlsl" />
     <None Include="Engine.aps" />
+    <None Include="Assets\Scene.scene">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Camera.prefab">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Components\Behaviour.cpp">
