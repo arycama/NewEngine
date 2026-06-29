@@ -24,6 +24,7 @@ struct VertexType
 {
 	XMFLOAT3 position, normal;
 	XMFLOAT2 uv;
+	XMFLOAT4 color;
 };
 
 Model::Model(const string& path, GraphicsDevice& graphicsDevice) : vertexStride(sizeof(VertexType)), path(path)
@@ -34,79 +35,94 @@ Model::Model(const string& path, GraphicsDevice& graphicsDevice) : vertexStride(
 	char input;
 	file.get(input);
 
-	auto positions = make_unique<vector<XMFLOAT3>>();
-	auto uvs = make_unique<vector<XMFLOAT2>>();
-	auto normals = make_unique<vector<XMFLOAT3>>();
 	auto vertices = make_unique<vector<VertexType>>();
 	auto indices = make_unique<vector<unsigned int>>();
 
-	while (!file.eof())
+	bool triangle = false;
+
+	if (triangle)
 	{
-		switch (input)
+		vertices->push_back({ XMFLOAT3(-0.5, -0.5, 0), XMFLOAT3(0, 0, -1), XMFLOAT2(-0.5, -0.5), XMFLOAT4(1, 0, 0, 1) });
+		vertices->push_back({ XMFLOAT3(0.0, 0.5, 0), XMFLOAT3(0, 0, -1), XMFLOAT2(0.0, 0.5), XMFLOAT4(0, 1, 0, 1) });
+		vertices->push_back({ XMFLOAT3(0.5, -0.5, 0), XMFLOAT3(0, 0, -1), XMFLOAT2(0.5, -0.5), XMFLOAT4(0, 0, 1, 1) });
+		indices->push_back(0);
+		indices->push_back(1);
+		indices->push_back(2);
+	}
+	else
+	{
+		auto positions = make_unique<vector<XMFLOAT3>>();
+		auto uvs = make_unique<vector<XMFLOAT2>>();
+		auto normals = make_unique<vector<XMFLOAT3>>();
+
+		while (!file.eof())
 		{
-			case 'v':
+			switch (input)
 			{
-				file.get(input);
-
-				switch (input)
+				case 'v':
 				{
-					case ' ':
+					file.get(input);
+
+					switch (input)
 					{
-						// Normal
-						float x, y, z;
-						file >> x >> y >> z;
-						positions->push_back(XMFLOAT3(x, y, z));
-						break;
+						case ' ':
+						{
+							// Normal
+							float x, y, z;
+							file >> x >> y >> z;
+							positions->push_back(XMFLOAT3(x, y, z));
+							break;
+						}
+						case 't':
+						{
+							// Uv
+							float x, y;
+							file >> x >> y;
+							uvs->push_back(XMFLOAT2(x, y));
+							break;
+						}
+						case 'n':
+						{
+							// Normal
+							float x, y, z;
+							file >> x >> y >> z;
+							normals->push_back(XMFLOAT3(x, y, z));
+							break;
+						}
 					}
-					case 't':
-					{
-						// Uv
-						float x, y;
-						file >> x >> y;
-						uvs->push_back(XMFLOAT2(x, y));
-						break;
-					}
-					case 'n':
-					{
-						// Normal
-						float x, y, z;
-						file >> x >> y >> z;
-						normals->push_back(XMFLOAT3(x, y, z));
-						break;
-					}
+
+					break;
 				}
 
-				break;
-			}
-
-			case 'f':
-			{
-				// Face
-				file.get(input);
-				if (input == ' ')
+				case 'f':
 				{
-					for (auto i = 0; i < 3; i++)
+					// Face
+					file.get(input);
+					if (input == ' ')
 					{
-						char input2;
-						unsigned int vIndex, tIndex, nIndex;
-						file >> vIndex >> input2 >> tIndex >> input2 >> nIndex;
+						for (auto i = 0; i < 3; i++)
+						{
+							char input2;
+							unsigned int vIndex, tIndex, nIndex;
+							file >> vIndex >> input2 >> tIndex >> input2 >> nIndex;
 
-						VertexType vertex{ positions->at(vIndex - 1), normals->at(nIndex - 1), uvs->at(tIndex - 1) };
-						vertices->push_back(vertex);
-						indices->push_back(indices->size());
+							VertexType vertex{ positions->at(vIndex - 1), normals->at(nIndex - 1), uvs->at(tIndex - 1) };
+							vertices->push_back(vertex);
+							indices->push_back(indices->size());
+						}
 					}
+
+					break;
 				}
-
-				break;
 			}
-		}
 
-		// Read in the remainder of the line.
-		while (input != '\n')
+			// Read in the remainder of the line.
+			while (input != '\n')
+				file.get(input);
+
+			// Start reading the beginning of the next line.
 			file.get(input);
-
-		// Start reading the beginning of the next line.
-		file.get(input);
+		}
 	}
 
 	vertexCount = vertices->size();

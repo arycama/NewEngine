@@ -3,6 +3,7 @@ struct VertexInput
 	float3 position : POSITION;
 	float3 normal : NORMAL;
 	float2 uv : TEXCOORD;
+	float4 color : COLOR;
 };
 
 struct PixelInput
@@ -10,6 +11,7 @@ struct PixelInput
 	float4 position : SV_POSITION;
 	float3 normal : NORMAL;
 	float2 uv : TEXCOORD;
+	float4 color : COLOR;
 };
 
 cbuffer PerCameraData
@@ -35,11 +37,14 @@ PixelInput Vertex(VertexInput input)
 	output.position = mul(projectionMatrix, float4(viewPosition, 1.0));
     output.uv = input.uv;
 	output.normal = input.normal;
+	output.color = input.color;
     return output;
 }
 
 float3 Pixel(PixelInput input) : SV_TARGET
 {
+	return input.color;
+
 	float3 color = shaderTexture.Sample(SampleType, input.uv);
 	float3 L = normalize(float3(0.75, 0.75, -0.75));
 	float3 N = normalize(input.normal);
